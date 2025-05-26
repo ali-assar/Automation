@@ -1,0 +1,173 @@
+package handler
+
+import (
+
+	"backend/pkg/security"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+)
+
+func CreateAdmin(s *Service) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var req struct {
+			NationalIDNumber string `json:"national_id_number" binding:"required"`
+			UserName         string `json:"user_name" binding:"required"`
+			Password         string `json:"password" binding:"required"`
+			RoleID           int64  `json:"role_id" binding:"required"`
+			CredentialsID    int64  `json:"credentials_id" binding:"required"`
+		}
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		actionBy := c.GetHeader("X-Action-By")
+		if actionBy == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
+			return
+		}
+		hash, err := security.HashPassword(req.Password)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to hash password"})
+			return
+		}
+		id, err := s.adminService.CreateAdmin(req.NationalIDNumber, req.UserName, hash, req.RoleID, req.CredentialsID, actionBy)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusCreated, gin.H{"id": id})
+	}
+}
+
+func GetAdminByID(s *Service) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := uuid.Parse(c.Param("id"))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+			return
+		}
+		admin, err := s.adminService.GetAdminByID(id)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "admin not found"})
+			return
+		}
+		c.JSON(http.StatusOK, admin)
+	}
+}
+
+func GetAdminByUsername(s *Service) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		username := c.Param("username")
+		admin, err := s.adminService.GetAdminByUsername(username)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "admin not found"})
+			return
+		}
+		c.JSON(http.StatusOK, admin)
+	}
+}
+
+func GetAllAdmins(s *Service) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		admins, err := s.adminService.GetAllAdmins()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, admins)
+	}
+}
+
+func UpdateAdmin(s *Service) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := uuid.Parse(c.Param("id"))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+			return
+		}
+		var updates map[string]interface{}
+		if err := c.ShouldBindJSON(&updates); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		actionBy := c.GetHeader("X-Action-By")
+		if actionBy == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
+			return
+		}
+		if err := s.adminService.UpdateAdmin(id, updates, actionBy); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "admin updated"})
+	}
+}
+
+func UpdateAdminPassword(s *Service) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := uuid.Parse(c.Param("id"))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+			return
+		}
+		var req struct {
+			Password string `json:"password" binding:"required"`
+		}
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		actionBy := c.GetHeader("X-Action-By")
+		if actionBy == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
+			return
+		}
+		if err := s.adminService.UpdateAdminPassword(id, req.Password, actionBy); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "password updated"})
+	}
+}
+
+func DeleteAdmin(s *Service) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := uuid.Parse(c.Param("id"))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+			return
+		}
+		actionBy := c.GetHeader("X-Action-By")
+		if actionBy == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
+			return
+		}
+		if err := s.adminService.DeleteAdmin(id, actionBy); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "admin deleted"})
+	}
+}
+
+func SoftDeleteAdmin(s *Service) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := uuid.Parse(c.Param("id"))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+			return
+		}
+		actionBy := c.GetHeader("X-Action-By")
+		if actionBy == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
+			return
+		}
+		if err := s.adminService.SoftDeleteAdmin(id, actionBy); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "admin soft deleted"})
+	}
+}

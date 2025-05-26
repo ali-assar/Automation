@@ -1,0 +1,17 @@
+### Create Admin
+POST http://localhost:8081/admin
+Content-Type: application/json
+X-Action-By: ce0abeec-2ad2-4052-bd32-084fd8abdaf2
+
+{
+    "national_id_number": "0924979011",
+    "user_name": "newadmin",
+    "password": "securepass",
+    "role_id": 1,
+    "credentials_id": 1
+}
+
+### Get Admin by ID
+GET http://localhost:8081/admin/4e4fb18f-8e0e-4699-b34a-8af2193b9198
+Content-Type: application/json
+X-Action-By: 796e62b1-b093-4a38-912d-26c1c82d763c

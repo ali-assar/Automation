@@ -1,0 +1,118 @@
+package handler
+
+import (
+	"net/http"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
+)
+
+func CreateContactInfo(s *Service) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var req struct {
+			Address              string `json:"address" binding:"required"`
+			EmailAddress         string `json:"email_address" binding:"required,email"`
+			SocialMedia          string `json:"social_media"`
+			PhoneNumber          string `json:"phone_number" binding:"required"`
+			EmergencyPhoneNumber string `json:"emergency_phone_number"`
+			LandlinePhone        string `json:"landline_phone"`
+		}
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		actionBy := c.GetHeader("X-Action-By")
+		if actionBy == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
+			return
+		}
+		id, err := s.contactInfoService.CreateContactInfo(
+			req.Address, req.EmailAddress, req.SocialMedia,
+			req.PhoneNumber, req.EmergencyPhoneNumber, req.LandlinePhone, actionBy,
+		)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusCreated, gin.H{"id": id})
+	}
+}
+
+func GetContactInfoByID(s *Service) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+			return
+		}
+		contactInfo, err := s.contactInfoService.GetContactInfoByID(id)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "contact info not found"})
+			return
+		}
+		c.JSON(http.StatusOK, contactInfo)
+	}
+}
+
+func GetContactInfoByEmail(s *Service) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		email := c.Param("email")
+		contactInfo, err := s.contactInfoService.GetContactInfoByEmail(email)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "contact info not found"})
+			return
+		}
+		c.JSON(http.StatusOK, contactInfo)
+	}
+}
+
+func GetAllContactInfos(s *Service) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		contactInfos, err := s.contactInfoService.GetAllContactInfos()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, contactInfos)
+	}
+}
+
+func DeleteContactInfo(s *Service) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+			return
+		}
+		actionBy := c.GetHeader("X-Action-By")
+		if actionBy == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
+			return
+		}
+		if err := s.contactInfoService.DeleteContactInfo(id, actionBy); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "contact info soft deleted"})
+	}
+}
+
+func DeleteContactInfoHard(s *Service) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+			return
+		}
+		actionBy := c.GetHeader("X-Action-By")
+		if actionBy == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
+			return
+		}
+		if err := s.contactInfoService.DeleteContactInfoHard(id, actionBy); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "contact info hard deleted"})
+	}
+}
