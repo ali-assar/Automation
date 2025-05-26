@@ -1,15 +1,14 @@
+// pkg/security/password.go
 package security
 
-import (
-	"golang.org/x/crypto/bcrypt"
-)
+import "golang.org/x/crypto/bcrypt"
 
 func HashPassword(password string) (string, error) {
-	b, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-	return string(b), err
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	return string(bytes), err
 }
 
-func ComparePasswords(hashedPassword, password string) (bool, error) {
-	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+func ComparePasswords(hashed, plain string) (bool, error) {
+	err := bcrypt.CompareHashAndPassword([]byte(hashed), []byte(plain))
 	return err == nil, err
 }

@@ -1,34 +1,19 @@
 package db
 
 import (
-	"database/sql"
-	"os"
-
-	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/postgres"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
-	_ "github.com/lib/pq"
+	"backend/internal/core/action"
+	"backend/internal/core/admin"
+	"backend/internal/core/credentials"
+	"backend/internal/core/person"
+	"backend/internal/core/role"
 )
 
-func RunMigrations() error {
-	sqlDB, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
-	if err != nil {
-		return err
-	}
-	driver, err := postgres.WithInstance(sqlDB, &postgres.Config{})
-	if err != nil {
-		return err
-	}
-	m, err := migrate.NewWithDatabaseInstance(
-		"file://migrations",
-		"postgres",
-		driver,
+func Migrate() error {
+	return db.AutoMigrate(
+		&admin.Admin{},
+		&person.Person{},
+		&credentials.Credentials{},
+		&role.Role{},
+		&action.Action{},
 	)
-	if err != nil {
-		return err
-	}
-	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
-		return err
-	}
-	return nil
 }

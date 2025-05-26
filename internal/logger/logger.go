@@ -1,45 +1,29 @@
 package logger
 
 import (
-	"os"
-	"strings"
-
 	"github.com/sirupsen/logrus"
 )
 
-var (
-	log *logrus.Logger
-)
+var log *logrus.Logger
 
-func Init(logLevel, logFormat string) {
+func Init(level, format string) {
 	log = logrus.New()
-	log.Out = os.Stdout
-
-	level, err := logrus.ParseLevel(strings.ToLower(logLevel))
-	if err != nil {
-		level = logrus.InfoLevel
-	}
-	log.SetLevel(level)
-
-	if logFormat == "json" {
+	if format == "json" {
 		log.SetFormatter(&logrus.JSONFormatter{})
 	} else {
-		log.SetFormatter(&logrus.TextFormatter{
-			FullTimestamp: true,
-		})
+		log.SetFormatter(&logrus.TextFormatter{})
 	}
+	lvl, err := logrus.ParseLevel(level)
+	if err != nil {
+		lvl = logrus.InfoLevel
+	}
+	log.SetLevel(lvl)
 }
 
-func Info(args ...any)  { log.Info(args...) }
-func Warn(args ...any)  { log.Warn(args...) }
-func Error(args ...any) { log.Error(args...) }
-func Debug(args ...any) { log.Debug(args...) }
-
-// WithField / WithFields if you want structured logging
-func WithField(key string, value any) *logrus.Entry {
-	return log.WithField(key, value)
+func Info(args ...interface{}) {
+	log.Info(args...)
 }
 
-func WithFields(fields logrus.Fields) *logrus.Entry {
-	return log.WithFields(fields)
+func Error(args ...interface{}) {
+	log.Error(args...)
 }
