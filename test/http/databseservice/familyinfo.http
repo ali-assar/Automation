@@ -1,0 +1,50 @@
+@baseUrl = http://localhost:8081
+@actionBy = 796e62b1-b093-4a38-912d-876c2d763c
+@token = <jwt_token>
+@familyId = 1
+
+### Create Family Info - Success
+POST {{baseUrl}}/familyinfo
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+Authorization: Bearer {{token}}
+
+{
+    "father_details": "John Doe",
+    "mother_details": "Jane Doe",
+    "childs_details": "Child1, Child2",
+    "husband_details": "Spouse Name"
+}
+
+### Create Family Info - Invalid Input
+POST {{baseUrl}}/familyinfo
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+Authorization: Bearer {{token}}
+
+{
+    "father_details": "John Doe"
+}
+
+### Get Family Info by ID - Success
+GET {{baseUrl}}/familyinfo/{{familyId}}
+Authorization: Bearer {{token}}
+
+### Get All Family Infos - Success
+GET {{baseUrl}}/familyinfo
+Authorization: Bearer {{token}}
+
+### Update Family Info - Success
+PUT {{baseUrl}}/familyinfo/{{familyId}}
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+Authorization: Bearer {{token}}
+
+{
+    "childs_details": "Child3"
+}
+
+### Delete Family Info - Success
+DELETE {{baseUrl}}/familyinfo/{{familyId}}
+X-Action-By: {{actionBy}}
+Authorization: Bearer {{token}}

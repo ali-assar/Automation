@@ -1,0 +1,102 @@
+@baseUrl = http://localhost:8081
+@actionBy = 796e62b1-b093-4a38-912d-876c2d763c
+@token = <jwt_token>
+@nationalId = 123456789012
+
+### Create Person - Success
+POST {{baseUrl}}/person
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+Authorization: Bearer {{token}}
+
+{
+    "national_id_number": "{{nationalId}}",
+    "first_name": "John",
+    "last_name": "Doe",
+    "family_info_id": 1,
+    "physical_info_id": 1,
+    "contact_info_id": 1,
+    "skills_id": 1,
+    "birth_date": "1990-01-01",
+    "religion_id": 1,
+    "person_type_id": 1,
+    "military_details_id": 1
+}
+
+### Create Person - Invalid Birth Date
+POST {{baseUrl}}/person
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+Authorization: Bearer {{token}}
+
+{
+    "national_id_number": "{{nationalId}}",
+    "first_name": "John",
+    "last_name": "Doe",
+    "family_info_id": 1,
+    "physical_info_id": 1,
+    "contact_info_id": 1,
+    "skills_id": 1,
+    "birth_date": "invalid",
+    "religion_id": 1,
+    "person_type_id": 1,
+    "military_details_id": 1
+}
+
+### Get Person by ID - Success
+GET {{baseUrl}}/person/{{nationalId}}
+Authorization: Bearer {{token}}
+
+### Get All Persons - Success
+GET {{baseUrl}}/person
+Authorization: Bearer {{token}}
+
+### Update Person - Success
+PUT {{baseUrl}}/person/{{nationalId}}
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+Authorization: Bearer {{token}}
+
+{
+    "first_name": "Jane"
+}
+
+### Update Contact Info - Success
+PUT {{baseUrl}}/person/{{nationalId}}/contactinfo
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+Authorization: Bearer {{token}}
+
+{
+    "contact_info_id": 2
+}
+
+### Update Military Details - Success
+PUT {{baseUrl}}/person/{{nationalId}}/militarydetails
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+Authorization: Bearer {{token}}
+
+{
+    "military_details_id": 2
+}
+
+### Delete Person - Success
+DELETE {{baseUrl}}/person/{{nationalId}}
+X-Action-By: {{actionBy}}
+Authorization: Bearer {{token}}
+
+### Delete Person Hard - Success
+DELETE {{baseUrl}}/person/hard/{{nationalId}}
+X-Action-By: {{actionBy}}
+Authorization: Bearer {{token}}
+
+### Search Persons by Name - Success
+GET {{baseUrl}}/person/search?first_name=John&last_name=Doe
+X-Action-By: {{actionBy}}
+Authorization: Bearer {{token}}
+
+### Filter Persons by Person Type - Success
+GET {{baseUrl}}/person/filter?person_type_id=1
+X-Action-By: {{actionBy}}
+Authorization: Bearer {{token}}

@@ -1,0 +1,52 @@
+@baseUrl = http://localhost:8081
+@actionBy = 796e62b1-b093-4a38-912d-876c2d763c
+@token = <jwt_token>
+@physicalId = 1
+
+### Create Physical Info - Success
+POST {{baseUrl}}/physicalinfo
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+Authorization: Bearer {{token}}
+
+{
+    "height": 175,
+    "weight": 70,
+    "eye_color": "Blue",
+    "blood_group_id": 1,
+    "gender_id": 1,
+    "physical_status_id": 1
+}
+
+### Create Physical Info - Invalid Input
+POST {{baseUrl}}/physicalinfo
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+Authorization: Bearer {{token}}
+
+{
+    "height": 175
+}
+
+### Get Physical Info by ID - Success
+GET {{baseUrl}}/physicalinfo/{{physicalId}}
+Authorization: Bearer {{token}}
+
+### Get All Physical Infos - Success
+GET {{baseUrl}}/physicalinfo
+Authorization: Bearer {{token}}
+
+### Update Physical Info - Success
+PUT {{baseUrl}}/physicalinfo/{{physicalId}}
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+Authorization: Bearer {{token}}
+
+{
+    "height": 180
+}
+
+### Delete Physical Info - Success
+DELETE {{baseUrl}}/physicalinfo/{{physicalId}}
+X-Action-By: {{actionBy}}
+Authorization: Bearer {{token}}
