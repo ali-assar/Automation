@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"strconv"
 )
 
 type Config struct {
@@ -16,6 +17,7 @@ type Config struct {
 	LogLevel     string
 	LogFormat    string
 	JWTSecret    string
+	IsTest       bool
 }
 
 func Load() *Config {
@@ -31,6 +33,7 @@ func Load() *Config {
 		LogLevel:     getEnv("LOG_LEVEL", "info"),
 		LogFormat:    getEnv("LOG_FORMAT", "json"),
 		JWTSecret:    getEnv("JWT_SECRET", "mysecretkey"),
+		IsTest:       getEnvAsBool("IS_TEST", true),
 	}
 }
 
@@ -39,4 +42,12 @@ func getEnv(key, defaultValue string) string {
 		return value
 	}
 	return defaultValue
+}
+
+func getEnvAsBool(key string, defaultVal bool) bool {
+	if value, exists := os.LookupEnv(key); exists {
+		parsed, _ := strconv.ParseBool(value)
+		return parsed
+	}
+	return defaultVal
 }

@@ -10,6 +10,7 @@ import (
 	"backend/internal/core/role"
 	"backend/internal/db"
 	"backend/internal/logger"
+	"backend/internal/seeder" // Add seeder package
 	"backend/pkg/services/router"
 
 	"github.com/gin-gonic/gin"
@@ -30,7 +31,16 @@ func main() {
 	adminService := admin.NewService(dbInstance, actionService, roleService)
 	personService := person.NewService(dbInstance, actionService)
 	credService := credentials.NewService(dbInstance, actionService)
-	
+
+	// Seed database for testing
+	if cfg.IsTest {
+		if err := seeder.Seed(true, actionService); err != nil {
+			logger.Error("Failed to seed database:", err)
+			panic(err)
+		}
+		logger.Info("Database seeded successfully")
+	}
+
 	handler := databaseservice.NewHandler(adminService, personService, credService)
 	if err := router.InitRouter(cfg.AppHost, "8081", func(r *gin.Engine) {
 		router.RegisterDatabaseRoutes(r, handler)

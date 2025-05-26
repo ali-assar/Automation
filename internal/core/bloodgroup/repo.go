@@ -15,6 +15,13 @@ func NewRepository(db *gorm.DB) *Repository {
 func (r *Repository) Create(bloodGroup *BloodGroup) error {
 	return r.db.Create(bloodGroup).Error
 }
+func (r *Repository) GetByName(name string) (*BloodGroup, error) {
+	var bloodGroup BloodGroup
+	if err := r.db.First(&bloodGroup, "name = ?", name).Error; err != nil {
+		return nil, err
+	}
+	return &bloodGroup, nil
+}
 
 func (r *Repository) GetByID(id int64) (*BloodGroup, error) {
 	var bloodGroup BloodGroup
@@ -26,7 +33,7 @@ func (r *Repository) GetByID(id int64) (*BloodGroup, error) {
 
 func (r *Repository) GetByGroup(group string) (*BloodGroup, error) {
 	var bloodGroup BloodGroup
-	if err := r.db.First(&bloodGroup, "group = ?", group).Error; err != nil {
+	if err := r.db.First(&bloodGroup, "name = ?", group).Error; err != nil {
 		return nil, err
 	}
 	return &bloodGroup, nil

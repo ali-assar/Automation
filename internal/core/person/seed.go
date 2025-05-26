@@ -42,7 +42,7 @@ func SeedPerson(db *gorm.DB, auditService audit.ActionLogger, isTest bool) error
 			NationalIDNumber: "012345678",
 			FirstName:        "John",
 			LastName:         "Doe",
-			FamilyFather:     `{"name": "John Sr."}`,
+			FamilyFather:     "John Sr.", // Just the name field
 			EmailAddress:     "john.doe@example.com",
 			BirthDate:        time.Date(1990, 1, 1, 0, 0, 0, 0, time.UTC),
 			ReligionName:     "Islam",
@@ -52,7 +52,7 @@ func SeedPerson(db *gorm.DB, auditService audit.ActionLogger, isTest bool) error
 			NationalIDNumber: "987654321",
 			FirstName:        "Jane",
 			LastName:         "Smith",
-			FamilyFather:     `{"name": "Robert"}`,
+			FamilyFather:     "Robert", // Just the name field
 			EmailAddress:     "jane.smith@example.com",
 			BirthDate:        time.Date(1992, 6, 15, 0, 0, 0, 0, time.UTC),
 			ReligionName:     "Christianity",
@@ -63,7 +63,7 @@ func SeedPerson(db *gorm.DB, auditService audit.ActionLogger, isTest bool) error
 	for _, p := range persons {
 		// Find dependencies
 		var familyinfo familyinfo.FamilyInfo
-		err := db.Where("father_details = ? AND deleted_at = 0", p.FamilyFather).First(&familyinfo).Error
+		err := db.Where("father_details->>'name' = ? AND deleted_at = 0", p.FamilyFather).First(&familyinfo).Error
 		if err != nil {
 			if err == gorm.ErrRecordNotFound {
 				continue
@@ -98,7 +98,7 @@ func SeedPerson(db *gorm.DB, auditService audit.ActionLogger, isTest bool) error
 		}
 
 		var religion religion.Religion
-		err = db.Where("religion_name = ? AND deleted_at = 0", p.ReligionName).First(&religion).Error
+		err = db.Where("religion_name = ?", p.ReligionName).First(&religion).Error
 		if err != nil {
 			if err == gorm.ErrRecordNotFound {
 				continue
@@ -107,7 +107,7 @@ func SeedPerson(db *gorm.DB, auditService audit.ActionLogger, isTest bool) error
 		}
 
 		var persontype persontype.PersonType
-		err = db.Where("type = ? AND deleted_at = 0", p.PersonType).First(&persontype).Error
+		err = db.Where("type = ? ", p.PersonType).First(&persontype).Error
 		if err != nil {
 			if err == gorm.ErrRecordNotFound {
 				continue
@@ -155,8 +155,8 @@ func SeedPerson(db *gorm.DB, auditService audit.ActionLogger, isTest bool) error
 			return err
 		}
 		if _, err := auditService.LogAction(1, "person", "seeder"); err != nil {
-            // Log error
-        }
+			// Log error
+		}
 	}
 
 	return nil

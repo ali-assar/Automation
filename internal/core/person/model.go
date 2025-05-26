@@ -24,11 +24,15 @@ type Person struct {
 	PersonTypeID      int64                           `gorm:"not null"`
 	MilitaryDetailsID int64                           `gorm:"not null"`
 	DeletedAt         int64                           `gorm:"not null"`
-	FamilyInfo        familyinfo.FamilyInfo           `gorm:"foreignKey:FamilyInfoID;references:ID"`
-	PhysicalInfo      physicalinfo.PhysicalInfo       `gorm:"foreignKey:PhysicalInfoID;references:ID"`
-	ContactInfo       contactinfo.ContactInfo         `gorm:"foreignKey:ContactInfoID;references:ID"`
-	Skills            skills.Skills                   `gorm:"foreignKey:SkillsID;references:ID"`
-	Religion          religion.Religion               `gorm:"foreignKey:ReligionID;references:ID"`
-	PersonType        persontype.PersonType           `gorm:"foreignKey:PersonTypeID;references:ID"`
-	MilitaryDetails   militarydetails.MilitaryDetails `gorm:"foreignKey:MilitaryDetailsID;references:ID"`
+	FamilyInfo        familyinfo.FamilyInfo           `gorm:"foreignKey:FamilyInfoID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
+	PhysicalInfo      physicalinfo.PhysicalInfo       `gorm:"foreignKey:PhysicalInfoID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
+	ContactInfo       contactinfo.ContactInfo         `gorm:"foreignKey:ContactInfoID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
+	Skills            skills.Skills                   `gorm:"foreignKey:SkillsID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
+	Religion          religion.Religion               `gorm:"foreignKey:ReligionID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
+	PersonType        persontype.PersonType           `gorm:"foreignKey:PersonTypeID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
+	MilitaryDetails   militarydetails.MilitaryDetails `gorm:"foreignKey:MilitaryDetailsID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
+}
+
+func (Person) TableName() string {
+	return "person"
 }

@@ -19,7 +19,7 @@ func NewService(db *gorm.DB, auditService audit.ActionLogger) *Service {
 }
 
 func (s *Service) CreateBloodGroup(group, actionBy string) (int64, error) {
-	bloodGroup := BloodGroup{Group: group}
+	bloodGroup := BloodGroup{Name: group}
 	if err := s.repo.Create(&bloodGroup); err != nil {
 		return 0, err
 	}
@@ -46,7 +46,7 @@ func (s *Service) UpdateBloodGroup(id int64, group, actionBy string) error {
 	if err != nil {
 		return err
 	}
-	bloodGroup.Group = group
+	bloodGroup.Name = group
 	if err := s.repo.Update(bloodGroup); err != nil {
 		return err
 	}

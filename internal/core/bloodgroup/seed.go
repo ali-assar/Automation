@@ -8,26 +8,31 @@ import (
 
 func SeedBloodGroup(db *gorm.DB, auditService audit.ActionLogger) error {
 	repo := NewRepository(db)
-	bloodGroups := []string{
-		"A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-",
+	bloodGroups := []struct {
+		ID   int64
+		Name string
+	}{
+		{ID: 1, Name: "A+"},
+		{ID: 2, Name: "A-"},
+		{ID: 3, Name: "B+"},
+		{ID: 4, Name: "B-"},
+		{ID: 5, Name: "AB+"},
+		{ID: 6, Name: "AB-"},
+		{ID: 7, Name: "O+"},
+		{ID: 8, Name: "O-"},
 	}
 
-	for _, group := range bloodGroups {
-		_, err := repo.GetByGroup(group)
+	for _, bg := range bloodGroups {
+		_, err := repo.GetByName(bg.Name)
 		if err == nil {
-			// if existing.DeletedAt != 0 {
-			// 	existing.DeletedAt = 0
-			// 	if err := repo.Update(existing); err != nil {
-			// 		return err
-			// 	}
-			// }
 			continue
 		} else if err != gorm.ErrRecordNotFound {
 			return err
 		}
 
 		bloodGroup := &BloodGroup{
-			Group: group,
+			ID:   bg.ID,
+			Name: bg.Name,
 		}
 		if err := repo.Create(bloodGroup); err != nil {
 			return err

@@ -19,20 +19,34 @@ func RegisterDatabaseRoutes(r *gin.Engine, h *databaseservice.Handler) {
 	r.GET("/admin/username/:username", h.GetAdminByUsername)
 	r.GET("/admins", h.GetAllAdmins)
 	r.PUT("/admin/:id", h.UpdateAdmin)
+	r.PUT("/admin/:id/password", h.UpdateAdminPassword)
 	r.DELETE("/admin/:id", h.DeleteAdmin)
+	r.DELETE("/admin/:id/soft", h.SoftDeleteAdmin)
+
 	// Person Routes
 	r.POST("/person", h.CreatePerson)
 	r.GET("/person/:national_id", h.GetPersonByID)
 	r.GET("/persons", h.GetAllPersons)
 	r.PUT("/person/:national_id", h.UpdatePerson)
+	r.PUT("/person/:national_id/contact", h.UpdateContactInfo)
+	r.PUT("/person/:national_id/military", h.UpdateMilitaryDetails)
 	r.DELETE("/person/:national_id", h.DeletePerson)
+	r.DELETE("/person/:national_id/hard", h.DeletePersonHard)
+	r.GET("/persons/search", h.SearchPersonsByName)       // Query params: first_name, last_name
+	r.GET("/persons/filter", h.FilterPersonsByPersonType) // Query param: person_type_id
+
 	// Credentials Routes
 	r.POST("/credentials", h.CreateCredentials)
 	r.GET("/credentials/:admin_id", h.GetCredentialsByAdminID)
+	r.GET("/credentials", h.GetAllCredentials)
+	r.GET("/credentials/deleted", h.GetSoftDeletedCredentials)
+	r.PUT("/credentials/:admin_id", h.UpdateCredentials)
 	r.POST("/credentials/:admin_id/dynamic", h.UpdateDynamicToken)
 	r.DELETE("/credentials/:admin_id", h.DeleteCredentials)
+	r.DELETE("/credentials/:admin_id/hard", h.DeleteCredentialsHard)
+	r.GET("/credentials/:admin_id/static-token", h.GetStaticTokenByAdminID)
+	r.GET("/credentials/:admin_id/dynamic-token", h.GetDynamicTokenByAdminID)
 }
-
 
 func RegisterPersonInfoRoutes(r *gin.Engine, adminCtrl *admin.Controller, personCtrl *person.Controller, credCtrl *credentials.Controller) {
 	r.Use(middleware.SetHeaders())

@@ -1,8 +1,6 @@
 module backend
 
-go 1.23.0
-
-toolchain go1.23.9
+go 1.24.3
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible

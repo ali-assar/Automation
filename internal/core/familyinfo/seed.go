@@ -34,7 +34,8 @@ func SeedFamilyInfo(db *gorm.DB, auditService audit.ActionLogger, isTest bool) e
 
 	for _, f := range families {
 		var existing FamilyInfo
-		err := db.Where("father_details = ? AND deleted_at = 0", f.FatherDetails).First(&existing).Error
+		// Use ->> to extract the 'name' field from father_details JSON
+		err := db.Where("father_details->>'name' = ? AND deleted_at = 0", f.FatherDetails).First(&existing).Error
 		if err == nil {
 			if existing.DeletedAt != 0 {
 				existing.DeletedAt = 0
@@ -59,8 +60,8 @@ func SeedFamilyInfo(db *gorm.DB, auditService audit.ActionLogger, isTest bool) e
 		}
 
 		if _, err := auditService.LogAction(1, "FamilyInfo", "seeder"); err != nil {
-            // Log error
-        }
+			// Log error
+		}
 	}
 
 	return nil

@@ -6,7 +6,7 @@ CREATE TABLE actiontype (
 
 CREATE TABLE bloodgroup (
     id BIGINT PRIMARY KEY,
-    "group" VARCHAR(255) NOT NULL UNIQUE,
+    name VARCHAR(255) NOT NULL UNIQUE,
     deleted_at BIGINT NOT NULL
 );
 
