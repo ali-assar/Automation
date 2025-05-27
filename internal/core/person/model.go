@@ -5,7 +5,6 @@ import (
 	"backend/internal/core/familyinfo"
 	"backend/internal/core/militarydetails"
 	"backend/internal/core/persontype"
-	"backend/internal/core/physicalinfo"
 	"backend/internal/core/religion"
 	"backend/internal/core/skills"
 	"time"
@@ -25,7 +24,6 @@ type Person struct {
 	MilitaryDetailsID int64                           `gorm:"not null"`
 	DeletedAt         int64                           `gorm:"not null"`
 	FamilyInfo        familyinfo.FamilyInfo           `gorm:"foreignKey:FamilyInfoID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
-	PhysicalInfo      physicalinfo.PhysicalInfo       `gorm:"foreignKey:PhysicalInfoID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
 	ContactInfo       contactinfo.ContactInfo         `gorm:"foreignKey:ContactInfoID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
 	Skills            skills.Skills                   `gorm:"foreignKey:SkillsID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
 	Religion          religion.Religion               `gorm:"foreignKey:ReligionID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`

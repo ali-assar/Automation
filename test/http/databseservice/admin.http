@@ -20,7 +20,7 @@ Content-Type: application/json
 
 {
     "username": "wrongadmin",
-    "password": "SecurePass123"
+    "password": "admin123"
 }
 
 ### Login with invalid password
@@ -28,13 +28,13 @@ POST http://localhost:8081/api/personinfo/login
 Content-Type: application/json
 
 {
-    "username": "testadmin",
+    "username": "admin1",
     "password": "WrongPass123"
 }
 
 ### Get all admins (valid static token)
 GET http://localhost:8081/api/personinfo/static/admins
-Authorization: Bearer {{static_token}}
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6IjRiYWY3OWU5LThkMWYtNDgyMi04YWU5LTY1NTZiMTZmOWM4ZSIsImV4cCI6MTc0ODQyMTkxNCwicm9sZSI6MX0.wNQUS8jUIyThX6ir0UhTs9uYlERxkKkTE3-TYYa0aCs
 
 ### Get all admins (invalid static token)
 GET http://localhost:8081/api/personinfo/static/admins
