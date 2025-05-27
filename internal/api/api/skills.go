@@ -1,4 +1,4 @@
-package handler
+package api
 
 import (
 	"net/http"
@@ -7,10 +7,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CreateRole(s *Service) gin.HandlerFunc {
+func CreateSkills(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req struct {
-			TypeName string `json:"type_name" binding:"required"`
+			EducationID       int64  `json:"education_id" binding:"required"`
+			Languages         string `json:"languages" binding:"required"`
+			SkillsDescription string `json:"skills_description" binding:"required"`
+			Certificates      string `json:"certificates"`
 		}
 		if err := c.ShouldBindJSON(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -21,7 +24,9 @@ func CreateRole(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		id, err := s.roleService.CreateRole(req.TypeName, actionBy)
+		id, err := s.SkillsService.CreateSkills(
+			req.EducationID, req.Languages, req.SkillsDescription, req.Certificates, actionBy,
+		)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
@@ -30,56 +35,58 @@ func CreateRole(s *Service) gin.HandlerFunc {
 	}
 }
 
-func GetRoleByID(s *Service) gin.HandlerFunc {
+func GetSkillsByID(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 			return
 		}
-		role, err := s.roleService.GetRoleByID(id)
+		skills, err := s.SkillsService.GetSkillsByID(id)
 		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "role not found"})
+			c.JSON(http.StatusNotFound, gin.H{"error": "skills not found"})
 			return
 		}
-		c.JSON(http.StatusOK, role)
+		c.JSON(http.StatusOK, skills)
 	}
 }
 
-func GetRoleByType(s *Service) gin.HandlerFunc {
+func GetSkillsByEducationID(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		typeName := c.Param("type")
-		role, err := s.roleService.GetRoleByType(typeName)
+		educationID, err := strconv.ParseInt(c.Param("education_id"), 10, 64)
 		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "role not found"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid education_id"})
 			return
 		}
-		c.JSON(http.StatusOK, role)
+		skills, err := s.SkillsService.GetSkillsByEducationID(educationID)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "skills not found"})
+			return
+		}
+		c.JSON(http.StatusOK, skills)
 	}
 }
 
-func GetAllRoles(s *Service) gin.HandlerFunc {
+func GetAllSkills(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		roles, err := s.roleService.GetAllRoles()
+		skills, err := s.SkillsService.GetAllSkills()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, roles)
+		c.JSON(http.StatusOK, skills)
 	}
 }
 
-func UpdateRole(s *Service) gin.HandlerFunc {
+func UpdateSkills(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 			return
 		}
-		var req struct {
-			TypeName string `json:"type_name" binding:"required"`
-		}
-		if err := c.ShouldBindJSON(&req); err != nil {
+		var updates map[string]interface{}
+		if err := c.ShouldBindJSON(&updates); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
@@ -88,15 +95,15 @@ func UpdateRole(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		if err := s.roleService.UpdateRole(id, req.TypeName, actionBy); err != nil {
+		if err := s.SkillsService.UpdateSkills(id, updates, actionBy); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"message": "role updated"})
+		c.JSON(http.StatusOK, gin.H{"message": "skills updated"})
 	}
 }
 
-func DeleteRole(s *Service) gin.HandlerFunc {
+func DeleteSkills(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
@@ -108,10 +115,10 @@ func DeleteRole(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		if err := s.roleService.DeleteRole(id, actionBy); err != nil {
+		if err := s.SkillsService.DeleteSkills(id, actionBy); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"message": "role deleted"})
+		c.JSON(http.StatusOK, gin.H{"message": "skills deleted"})
 	}
 }

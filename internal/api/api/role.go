@@ -1,4 +1,4 @@
-package handler
+package api
 
 import (
 	"net/http"
@@ -7,13 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CreateFamilyInfo(s *Service) gin.HandlerFunc {
+func CreateRole(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req struct {
-			FatherDetails  string `json:"father_details" binding:"required"`
-			MotherDetails  string `json:"mother_details" binding:"required"`
-			ChildsDetails  string `json:"childs_details"`
-			HusbandDetails string `json:"husband_details"`
+			TypeName string `json:"type_name" binding:"required"`
 		}
 		if err := c.ShouldBindJSON(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -24,9 +21,7 @@ func CreateFamilyInfo(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		id, err := s.familyInfoService.CreateFamilyInfo(
-			req.FatherDetails, req.MotherDetails, req.ChildsDetails, req.HusbandDetails, actionBy,
-		)
+		id, err := s.RoleService.CreateRole(req.TypeName, actionBy)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
@@ -35,42 +30,56 @@ func CreateFamilyInfo(s *Service) gin.HandlerFunc {
 	}
 }
 
-func GetFamilyInfoByID(s *Service) gin.HandlerFunc {
+func GetRoleByID(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 			return
 		}
-		familyInfo, err := s.familyInfoService.GetFamilyInfoByID(id)
+		role, err := s.RoleService.GetRoleByID(id)
 		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "family info not found"})
+			c.JSON(http.StatusNotFound, gin.H{"error": "role not found"})
 			return
 		}
-		c.JSON(http.StatusOK, familyInfo)
+		c.JSON(http.StatusOK, role)
 	}
 }
 
-func GetAllFamilyInfos(s *Service) gin.HandlerFunc {
+func GetRoleByType(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		familyInfos, err := s.familyInfoService.GetAllFamilyInfos()
+		typeName := c.Param("type")
+		role, err := s.RoleService.GetRoleByType(typeName)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "role not found"})
+			return
+		}
+		c.JSON(http.StatusOK, role)
+	}
+}
+
+func GetAllRoles(s *HandlerService) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		roles, err := s.RoleService.GetAllRoles()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, familyInfos)
+		c.JSON(http.StatusOK, roles)
 	}
 }
 
-func UpdateFamilyInfo(s *Service) gin.HandlerFunc {
+func UpdateRole(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 			return
 		}
-		var updates map[string]interface{}
-		if err := c.ShouldBindJSON(&updates); err != nil {
+		var req struct {
+			TypeName string `json:"type_name" binding:"required"`
+		}
+		if err := c.ShouldBindJSON(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
@@ -79,15 +88,15 @@ func UpdateFamilyInfo(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		if err := s.familyInfoService.UpdateFamilyInfo(id, updates, actionBy); err != nil {
+		if err := s.RoleService.UpdateRole(id, req.TypeName, actionBy); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"message": "family info updated"})
+		c.JSON(http.StatusOK, gin.H{"message": "role updated"})
 	}
 }
 
-func DeleteFamilyInfo(s *Service) gin.HandlerFunc {
+func DeleteRole(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
@@ -99,10 +108,10 @@ func DeleteFamilyInfo(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		if err := s.familyInfoService.DeleteFamilyInfo(id, actionBy); err != nil {
+		if err := s.RoleService.DeleteRole(id, actionBy); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"message": "family info soft deleted"})
+		c.JSON(http.StatusOK, gin.H{"message": "role deleted"})
 	}
 }

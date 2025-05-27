@@ -1,4 +1,4 @@
-package handler
+package api
 
 import (
 	"net/http"
@@ -7,13 +7,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CreateSkills(s *Service) gin.HandlerFunc {
+func CreatePhysicalStatus(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req struct {
-			EducationID       int64  `json:"education_id" binding:"required"`
-			Languages         string `json:"languages" binding:"required"`
-			SkillsDescription string `json:"skills_description" binding:"required"`
-			Certificates      string `json:"certificates"`
+			Status      string `json:"status" binding:"required"`
+			Description string `json:"description"`
 		}
 		if err := c.ShouldBindJSON(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -24,9 +22,7 @@ func CreateSkills(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		id, err := s.skillsService.CreateSkills(
-			req.EducationID, req.Languages, req.SkillsDescription, req.Certificates, actionBy,
-		)
+		id, err := s.PhysicalStatusService.CreatePhysicalStatus(req.Status, req.Description, actionBy)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
@@ -35,50 +31,34 @@ func CreateSkills(s *Service) gin.HandlerFunc {
 	}
 }
 
-func GetSkillsByID(s *Service) gin.HandlerFunc {
+func GetPhysicalStatusByID(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 			return
 		}
-		skills, err := s.skillsService.GetSkillsByID(id)
+		physicalStatus, err := s.PhysicalStatusService.GetPhysicalStatusByID(id)
 		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "skills not found"})
+			c.JSON(http.StatusNotFound, gin.H{"error": "physical status not found"})
 			return
 		}
-		c.JSON(http.StatusOK, skills)
+		c.JSON(http.StatusOK, physicalStatus)
 	}
 }
 
-func GetSkillsByEducationID(s *Service) gin.HandlerFunc {
+func GetAllPhysicalStatuses(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		educationID, err := strconv.ParseInt(c.Param("education_id"), 10, 64)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid education_id"})
-			return
-		}
-		skills, err := s.skillsService.GetSkillsByEducationID(educationID)
-		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "skills not found"})
-			return
-		}
-		c.JSON(http.StatusOK, skills)
-	}
-}
-
-func GetAllSkills(s *Service) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		skills, err := s.skillsService.GetAllSkills()
+		statuses, err := s.PhysicalStatusService.GetAllPhysicalStatuses()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, skills)
+		c.JSON(http.StatusOK, statuses)
 	}
 }
 
-func UpdateSkills(s *Service) gin.HandlerFunc {
+func UpdatePhysicalStatus(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
@@ -95,15 +75,15 @@ func UpdateSkills(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		if err := s.skillsService.UpdateSkills(id, updates, actionBy); err != nil {
+		if err := s.PhysicalStatusService.UpdatePhysicalStatus(id, updates, actionBy); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"message": "skills updated"})
+		c.JSON(http.StatusOK, gin.H{"message": "physical status updated"})
 	}
 }
 
-func DeleteSkills(s *Service) gin.HandlerFunc {
+func DeletePhysicalStatus(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
@@ -115,10 +95,10 @@ func DeleteSkills(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		if err := s.skillsService.DeleteSkills(id, actionBy); err != nil {
+		if err := s.PhysicalStatusService.DeletePhysicalStatus(id, actionBy); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"message": "skills deleted"})
+		c.JSON(http.StatusOK, gin.H{"message": "physical status deleted"})
 	}
 }

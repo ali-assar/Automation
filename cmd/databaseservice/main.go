@@ -1,7 +1,7 @@
 package main
 
 import (
-	"backend/internal/api/databaseservice/handler"
+	"backend/internal/api/api"
 	"backend/internal/config"
 	"backend/internal/core/action"
 	"backend/internal/core/admin"
@@ -17,7 +17,7 @@ import (
 	"backend/internal/core/skills"
 	"backend/internal/db"
 	"backend/internal/logger"
-	"backend/internal/seeder" // Add seeder package
+	"backend/internal/seeder"
 	"backend/pkg/services/router"
 
 	"github.com/gin-gonic/gin"
@@ -47,6 +47,7 @@ func main() {
 	physicalInfoService := physicalinfo.NewService(dbInstance, actionService)
 	physicalStatusService := physicalstatus.NewService(dbInstance, actionService)
 	skillsService := skills.NewService(dbInstance, actionService)
+
 	// Seed database for testing
 	if cfg.IsTest {
 		if err := seeder.Seed(true, actionService); err != nil {
@@ -56,7 +57,8 @@ func main() {
 		logger.Info("Database seeded successfully")
 	}
 
-	services := &handler.Services{
+	// Initialize CoreServices
+	coreServices := &api.CoreServices{
 		AdminService:           adminService,
 		ContactInfoService:     contactInfoService,
 		CredentialsService:     credService,
@@ -70,12 +72,14 @@ func main() {
 		SkillsService:          skillsService,
 	}
 
-	h := handler.NewService(services)
+	// Create HandlerService
+	h := api.NewHandlerService(coreServices)
 
+	// Initialize router
 	if err := router.InitRouter(cfg.AppHost, "8081", func(r *gin.Engine) {
-		router.RegisterDatabaseRoutes(r, h)
+		router.RegisterRoutes(r, h)
 	}); err != nil {
-		logger.Error("Failed to start DatabaseService:", err)
+		logger.Error("Failed to start API service:", err)
 		panic(err)
 	}
 }

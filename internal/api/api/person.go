@@ -1,4 +1,4 @@
-package handler
+package api
 
 import (
 	"backend/internal/core/person"
@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CreatePerson(s *Service) gin.HandlerFunc {
+func CreatePerson(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req struct {
 			NationalIDNumber  string `json:"national_id_number" binding:"required"`
@@ -52,7 +52,7 @@ func CreatePerson(s *Service) gin.HandlerFunc {
 			MilitaryDetailsID: req.MilitaryDetailsID,
 			DeletedAt:         0,
 		}
-		id, err := s.personService.CreatePerson(person, actionBy)
+		id, err := s.PersonService.CreatePerson(person, actionBy)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
@@ -61,10 +61,10 @@ func CreatePerson(s *Service) gin.HandlerFunc {
 	}
 }
 
-func GetPersonByID(s *Service) gin.HandlerFunc {
+func GetPersonByID(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		nationalID := c.Param("national_id")
-		person, err := s.personService.GetPersonByID(nationalID)
+		person, err := s.PersonService.GetPersonByID(nationalID)
 		if err != nil {
 			c.JSON(http.StatusNotFound, gin.H{"error": "person not found"})
 			return
@@ -73,9 +73,9 @@ func GetPersonByID(s *Service) gin.HandlerFunc {
 	}
 }
 
-func GetAllPersons(s *Service) gin.HandlerFunc {
+func GetAllPersons(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		persons, err := s.personService.GetAllPersons()
+		persons, err := s.PersonService.GetAllPersons()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
@@ -84,7 +84,7 @@ func GetAllPersons(s *Service) gin.HandlerFunc {
 	}
 }
 
-func UpdatePerson(s *Service) gin.HandlerFunc {
+func UpdatePerson(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		nationalID := c.Param("national_id")
 		var updates map[string]interface{}
@@ -97,7 +97,7 @@ func UpdatePerson(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		if err := s.personService.UpdatePerson(nationalID, updates, actionBy); err != nil {
+		if err := s.PersonService.UpdatePerson(nationalID, updates, actionBy); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
@@ -105,53 +105,8 @@ func UpdatePerson(s *Service) gin.HandlerFunc {
 	}
 }
 
-func UpdateContactInfo(s *Service) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		nationalID := c.Param("national_id")
-		var req struct {
-			ContactInfoID int64 `json:"contact_info_id" binding:"required"`
-		}
-		if err := c.ShouldBindJSON(&req); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		actionBy := c.GetHeader("X-Action-By")
-		if actionBy == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
-			return
-		}
-		if err := s.personService.UpdateContactInfo(nationalID, req.ContactInfoID, actionBy); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-		c.JSON(http.StatusOK, gin.H{"message": "contact info updated"})
-	}
-}
 
-func UpdateMilitaryDetails(s *Service) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		nationalID := c.Param("national_id")
-		var req struct {
-			MilitaryDetailsID int64 `json:"military_details_id" binding:"required"`
-		}
-		if err := c.ShouldBindJSON(&req); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		actionBy := c.GetHeader("X-Action-By")
-		if actionBy == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
-			return
-		}
-		if err := s.personService.UpdateMilitaryDetails(nationalID, req.MilitaryDetailsID, actionBy); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-		c.JSON(http.StatusOK, gin.H{"message": "military details updated"})
-	}
-}
-
-func DeletePerson(s *Service) gin.HandlerFunc {
+func DeletePerson(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		nationalID := c.Param("national_id")
 		actionBy := c.GetHeader("X-Action-By")
@@ -159,7 +114,7 @@ func DeletePerson(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		if err := s.personService.DeletePerson(nationalID, actionBy); err != nil {
+		if err := s.PersonService.DeletePerson(nationalID, actionBy); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
@@ -167,7 +122,7 @@ func DeletePerson(s *Service) gin.HandlerFunc {
 	}
 }
 
-func DeletePersonHard(s *Service) gin.HandlerFunc {
+func DeletePersonHard(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		nationalID := c.Param("national_id")
 		actionBy := c.GetHeader("X-Action-By")
@@ -175,7 +130,7 @@ func DeletePersonHard(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		if err := s.personService.DeletePersonHard(nationalID, actionBy); err != nil {
+		if err := s.PersonService.DeletePersonHard(nationalID, actionBy); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
@@ -183,7 +138,7 @@ func DeletePersonHard(s *Service) gin.HandlerFunc {
 	}
 }
 
-func SearchPersonsByName(s *Service) gin.HandlerFunc {
+func SearchPersonsByName(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		firstName := c.Query("first_name")
 		lastName := c.Query("last_name")
@@ -192,7 +147,7 @@ func SearchPersonsByName(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		persons, err := s.personService.SearchPersonsByName(firstName, lastName, actionBy)
+		persons, err := s.PersonService.SearchPersonsByName(firstName, lastName, actionBy)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
@@ -201,7 +156,7 @@ func SearchPersonsByName(s *Service) gin.HandlerFunc {
 	}
 }
 
-func FilterPersonsByPersonType(s *Service) gin.HandlerFunc {
+func FilterPersonsByPersonType(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		personTypeIDStr := c.Query("person_type_id")
 		personTypeID, err := strconv.ParseInt(personTypeIDStr, 10, 64)
@@ -214,7 +169,7 @@ func FilterPersonsByPersonType(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		persons, err := s.personService.FilterPersonsByPersonType(personTypeID, actionBy)
+		persons, err := s.PersonService.FilterPersonsByPersonType(personTypeID, actionBy)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return

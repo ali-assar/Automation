@@ -1,15 +1,58 @@
-package handler
+package api
 
 import (
-
 	"backend/pkg/security"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
-func CreateAdmin(s *Service) gin.HandlerFunc {
+func Login(s *HandlerService) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var req struct {
+			Username string `json:"username" binding:"required"`
+			Password string `json:"password" binding:"required"`
+		}
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		admin, err := s.AdminService.GetAdminByUsername(req.Username)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid username"})
+			return
+		}
+		if ok, err := security.ComparePasswords(admin.HashPassword, req.Password); !ok || err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid password"})
+			return
+		}
+		staticToken, err := security.GenerateStaticToken(admin.ID, int(admin.RoleID)) // Role 1 = admin
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate static token"})
+			return
+		}
+		dynamicToken, err := security.GenerateDynamicToken(admin.ID, int(admin.RoleID))
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate dynamic token"})
+			return
+		}
+
+		fmt.Println("here is good")
+		_, err = s.CredentialsService.CreateCredentials(admin.ID, staticToken, dynamicToken, admin.UserName)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create credentials"})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"admin":         admin,
+			"static_token":  staticToken,
+			"dynamic_token": dynamicToken,
+		})
+	}
+}
+func CreateAdmin(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req struct {
 			NationalIDNumber string `json:"national_id_number" binding:"required"`
@@ -32,7 +75,7 @@ func CreateAdmin(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to hash password"})
 			return
 		}
-		id, err := s.adminService.CreateAdmin(req.NationalIDNumber, req.UserName, hash, req.RoleID, req.CredentialsID, actionBy)
+		id, err := s.AdminService.CreateAdmin(req.NationalIDNumber, req.UserName, hash, req.RoleID, req.CredentialsID, actionBy)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
@@ -41,14 +84,14 @@ func CreateAdmin(s *Service) gin.HandlerFunc {
 	}
 }
 
-func GetAdminByID(s *Service) gin.HandlerFunc {
+func GetAdminByID(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := uuid.Parse(c.Param("id"))
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 			return
 		}
-		admin, err := s.adminService.GetAdminByID(id)
+		admin, err := s.AdminService.GetAdminByID(id)
 		if err != nil {
 			c.JSON(http.StatusNotFound, gin.H{"error": "admin not found"})
 			return
@@ -57,10 +100,10 @@ func GetAdminByID(s *Service) gin.HandlerFunc {
 	}
 }
 
-func GetAdminByUsername(s *Service) gin.HandlerFunc {
+func GetAdminByUsername(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		username := c.Param("username")
-		admin, err := s.adminService.GetAdminByUsername(username)
+		admin, err := s.AdminService.GetAdminByUsername(username)
 		if err != nil {
 			c.JSON(http.StatusNotFound, gin.H{"error": "admin not found"})
 			return
@@ -69,9 +112,9 @@ func GetAdminByUsername(s *Service) gin.HandlerFunc {
 	}
 }
 
-func GetAllAdmins(s *Service) gin.HandlerFunc {
+func GetAllAdmins(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		admins, err := s.adminService.GetAllAdmins()
+		admins, err := s.AdminService.GetAllAdmins()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
@@ -80,7 +123,7 @@ func GetAllAdmins(s *Service) gin.HandlerFunc {
 	}
 }
 
-func UpdateAdmin(s *Service) gin.HandlerFunc {
+func UpdateAdmin(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := uuid.Parse(c.Param("id"))
 		if err != nil {
@@ -97,7 +140,7 @@ func UpdateAdmin(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		if err := s.adminService.UpdateAdmin(id, updates, actionBy); err != nil {
+		if err := s.AdminService.UpdateAdmin(id, updates, actionBy); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
@@ -105,7 +148,7 @@ func UpdateAdmin(s *Service) gin.HandlerFunc {
 	}
 }
 
-func UpdateAdminPassword(s *Service) gin.HandlerFunc {
+func UpdateAdminPassword(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := uuid.Parse(c.Param("id"))
 		if err != nil {
@@ -124,7 +167,7 @@ func UpdateAdminPassword(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		if err := s.adminService.UpdateAdminPassword(id, req.Password, actionBy); err != nil {
+		if err := s.AdminService.UpdateAdminPassword(id, req.Password, actionBy); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
@@ -132,7 +175,7 @@ func UpdateAdminPassword(s *Service) gin.HandlerFunc {
 	}
 }
 
-func DeleteAdmin(s *Service) gin.HandlerFunc {
+func DeleteAdmin(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := uuid.Parse(c.Param("id"))
 		if err != nil {
@@ -144,7 +187,7 @@ func DeleteAdmin(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		if err := s.adminService.DeleteAdmin(id, actionBy); err != nil {
+		if err := s.AdminService.DeleteAdmin(id, actionBy); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
@@ -152,7 +195,7 @@ func DeleteAdmin(s *Service) gin.HandlerFunc {
 	}
 }
 
-func SoftDeleteAdmin(s *Service) gin.HandlerFunc {
+func SoftDeleteAdmin(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := uuid.Parse(c.Param("id"))
 		if err != nil {
@@ -164,7 +207,7 @@ func SoftDeleteAdmin(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		if err := s.adminService.SoftDeleteAdmin(id, actionBy); err != nil {
+		if err := s.AdminService.SoftDeleteAdmin(id, actionBy); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}

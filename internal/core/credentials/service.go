@@ -2,7 +2,9 @@ package credentials
 
 import (
 	"backend/internal/core/audit"
+	"backend/internal/logger"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -19,13 +21,22 @@ func NewService(db *gorm.DB, auditService audit.ActionLogger) *Service {
 	return &Service{
 		repo:         NewRepository(db),
 		auditService: auditService,
+		db:           db,
 	}
 }
 
 func (s *Service) CreateCredentials(adminID uuid.UUID, staticToken, dynamicToken, actionBy string) (*Credentials, error) {
+	if s.db == nil {
+		return nil, fmt.Errorf("database connection is nil")
+	}
+
 	tx := s.db.Begin()
+	if tx.Error != nil {
+		return nil, fmt.Errorf("failed to begin transaction: %w", tx.Error)
+	}
 	defer func() {
 		if r := recover(); r != nil {
+			logger.Error("Panic in CreateCredentials for adminID %s: %v", adminID.String(), r)
 			tx.Rollback()
 		}
 	}()
@@ -44,11 +55,13 @@ func (s *Service) CreateCredentials(adminID uuid.UUID, staticToken, dynamicToken
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			if err := s.repo.Create(&cred); err != nil {
 				tx.Rollback()
-				return nil, err
+				logger.Error("Failed to create credentials for adminID %s: %v", adminID.String(), err)
+				return nil, fmt.Errorf("failed to create credentials: %w", err)
 			}
 		} else {
 			tx.Rollback()
-			return nil, err
+			logger.Error("Failed to check existing credentials for adminID %s: %v", adminID.String(), err)
+			return nil, fmt.Errorf("failed to check existing credentials: %w", err)
 		}
 	} else {
 		updates := map[string]interface{}{
@@ -58,22 +71,23 @@ func (s *Service) CreateCredentials(adminID uuid.UUID, staticToken, dynamicToken
 		}
 		if err := tx.Model(&Credentials{}).Where("admin_id = ?", adminID).Updates(updates).Error; err != nil {
 			tx.Rollback()
-			return nil, err
+			logger.Error("Failed to update credentials for adminID %s: %v", adminID.String(), err)
+			return nil, fmt.Errorf("failed to update credentials: %w", err)
 		}
 		cred.ID = existing.ID
 	}
 
 	if err := tx.Commit().Error; err != nil {
 		tx.Rollback()
-		return nil, err
+		logger.Error("Failed to commit transaction for adminID %s: %v", adminID.String(), err)
+		return nil, fmt.Errorf("failed to commit transaction: %w", err)
 	}
 
 	if _, err := s.auditService.LogAction(1, "Credentials", actionBy); err != nil {
-		// Log error but don’t fail
+		logger.Error("Failed to log audit action for %s: %v", actionBy, err)
 	}
 	return &cred, nil
 }
-
 func (s *Service) GetCredentialsByAdminID(adminID uuid.UUID) (*Credentials, error) {
 	return s.repo.GetByAdminID(adminID)
 }

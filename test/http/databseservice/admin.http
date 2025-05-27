@@ -1,107 +1,130 @@
-@baseUrl = http://localhost:8081
-@actionBy = 5d2f044a-9d3e-4661-90d2-57ff7c236303
-@adminId = b6037cfb-9434-498f-a139-d925810257a3
-
-### Create Admin - Success
-POST {{baseUrl}}/admin
+### Login with valid credentials
+POST http://localhost:8081/api/personinfo/login
 Content-Type: application/json
-X-Action-By: {{actionBy}}
+
 
 {
-    "national_id_number": "123456789012",
-    "user_name": "testadmin",
-    "password": "SecurePass123",
-    "role_id": 1,
-    "credentials_id": 1
+    "username": "admin1",
+    "password": "admin123"
 }
 
-### Create Admin - Invalid Input (Missing Fields)
-POST {{baseUrl}}/admin
-Content-Type: application/json
-X-Action-By: {{actionBy}}
-{
-    "national_id_number": "123456789012",
-    "user_name": "testadmin"
-}
+> {%
+    client.global.set("static_token", response.body.static_token);
+    client.global.set("dynamic_token", response.body.dynamic_token);
+    client.global.set("admin_id", response.body.admin.id);
+%}
 
-### Create Admin - Missing X-Action-By
-POST {{baseUrl}}/admin
+### Login with invalid username
+POST http://localhost:8081/api/personinfo/login
 Content-Type: application/json
 
 {
-    "national_id_number": "123456789012",
-    "user_name": "testadmin",
-    "password": "SecurePass123",
-    "role_id": 1,
-    "credentials_id": 1
+    "username": "wrongadmin",
+    "password": "SecurePass123"
 }
 
-### Get Admin by ID - Success
-GET {{baseUrl}}/admin/{{"adminId"}}
-
-
-### Get Admin by ID - Invalid ID
-GET {{baseUrl}}/admin/invalid-uuid
-
-### Get Admin by Username - Success
-GET {{baseUrl}}/admin/username/testadmin
-
-
-### Get Admin by Username - Not Found
-GET {{baseUrl}}/admin/username/nonexistent
-
-### Get All Admins - Success
-GET {{baseUrl}}/admin
-
-
-### Update Admin - Success
-PUT {{baseUrl}}/admin/{{adminId}}
+### Login with invalid password
+POST http://localhost:8081/api/personinfo/login
 Content-Type: application/json
-X-Action-By: {{actionBy}}
 
+{
+    "username": "testadmin",
+    "password": "WrongPass123"
+}
+
+### Get all admins (valid static token)
+GET http://localhost:8081/api/personinfo/static/admins
+Authorization: Bearer {{static_token}}
+
+### Get all admins (invalid static token)
+GET http://localhost:8081/api/personinfo/static/admins
+Authorization: Bearer invalid_token
+
+### Get admin by ID (valid static token)
+GET http://localhost:8081/api/personinfo/static/admin/{{admin_id}}
+Authorization: Bearer {{static_token}}
+
+### Get admin by ID (invalid ID)
+GET http://localhost:8081/api/personinfo/static/admin/invalid-uuid
+Authorization: Bearer {{static_token}}
+
+### Get admin by username (valid static token)
+GET http://localhost:8081/api/personinfo/static/admin/username/testadmin
+Authorization: Bearer {{static_token}}
+
+### Get admin by username (non-existent username)
+GET http://localhost:8081/api/personinfo/static/admin/username/nonexistent
+Authorization: Bearer {{static_token}}
+
+### Create admin (valid dynamic token, admin role)
+POST http://localhost:8081/api/personinfo/dynamic/admin
+Authorization: Bearer {{dynamic_token}}
+X-Action-By: testadmin
+Content-Type: application/json
+
+{
+    "national_id_number": "1234567890",
+    "user_name": "newadmin",
+    "password": "NewPass123",
+    "role_id": "1",
+    "credentials_id": "{{admin_id}}"
+}
+
+> {% client.global.set("new_admin_id", response.body.id); %}
+
+### Create admin (invalid dynamic token)
+POST http://localhost:8081/api/personinfo/dynamic/admin
+Authorization: Bearer invalid_token
+X-Action-By: testadmin
+Content-Type: application/json
+
+{
+    "national_id_number": "1234567890",
+    "user_name": "newadmin",
+    "password": "NewPass123",
+    "role_id": "1",
+    "credentials_id": "{{admin_id}}"
+}
+
+### Create admin (missing X-Action-By)
+POST http://localhost:8081/api/personinfo/dynamic/admin
+Authorization: Bearer {{dynamic_token}}
+Content-Type: application/json
+
+{
+    "national_id_number": "1234567890",
+    "user_name": "newadmin",
+    "password": "NewPass123",
+    "role_id": "1",
+    "credentials_id": "{{admin_id}}"
+}
+
+### Update admin (valid dynamic token)
+PUT http://localhost:8081/api/personinfo/dynamic/admin/{{new_admin_id}}
+Authorization: Bearer {{dynamic_token}}
+X-Action-By: testadmin
+Content-Type: application/json
 
 {
     "user_name": "updatedadmin"
 }
 
-### Update Admin - Invalid ID
-PUT {{baseUrl}}/admin/invalid-uuid
-Content-Type: application/json
-X-Action-By: {{actionBy}}
-
-
-{
-    "user_name": "updatedadmin"
-}
-
-### Update Admin Password - Success
-PUT {{baseUrl}}/admin/password/{{adminId}}
-Content-Type: application/json
-X-Action-By: {{actionBy}}
-
-
-{
-    "password": "NewPass456"
-}
-
-### Update Admin Password - Missing X-Action-By
-PUT {{baseUrl}}/admin/password/{{adminId}}
+### Update admin password (valid dynamic token)
+PUT http://localhost:8081/api/personinfo/dynamic/admin/password/{{new_admin_id}}
+Authorization: Bearer {{dynamic_token}}
+X-Action-By: testadmin
 Content-Type: application/json
 
 {
-    "password": "NewPass456"
+    "password": "UpdatedPass123"
 }
 
-### Delete Admin - Success
-DELETE {{baseUrl}}/admin/{{adminId}}
-X-Action-By: {{actionBy}}
+### Soft delete admin (valid dynamic token)
+DELETE http://localhost:8081/api/personinfo/dynamic/admin/soft/{{new_admin_id}}
+Authorization: Bearer {{dynamic_token}}
+X-Action-By: testadmin
 
-
-### Delete Admin - Invalid ID
-DELETE {{baseUrl}}/admin/invalid-uuid
-X-Action-By: {{actionBy}}
-
-
-### Soft Delete Admin - Success
-DELETE {{baseUrl}}/admin/soft/{{adminId}}
-X-Action-By: {{actionBy}}
+### Hard delete admin (valid dynamic token)
+DELETE http://localhost:8081/api/personinfo/dynamic/admin/{{new_admin_id}}
+Authorization: Bearer {{dynamic_token}}
+X-Action-By: testadmin

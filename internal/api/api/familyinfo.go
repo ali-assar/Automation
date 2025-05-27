@@ -1,4 +1,4 @@
-package handler
+package api
 
 import (
 	"net/http"
@@ -7,15 +7,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CreateEducation(s *Service) gin.HandlerFunc {
+func CreateFamilyInfo(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req struct {
-			EducationLevelID int64  `json:"education_level_id" binding:"required"`
-			FieldOfStudy     int64  `json:"field_of_study" binding:"required"`
-			Description      string `json:"description"`
-			University       string `json:"university" binding:"required"`
-			StartDate        int64  `json:"start_date" binding:"required"`
-			EndDate          int64  `json:"end_date" binding:"required"`
+			FatherDetails  string `json:"father_details" binding:"required"`
+			MotherDetails  string `json:"mother_details" binding:"required"`
+			ChildsDetails  string `json:"childs_details"`
+			HusbandDetails string `json:"husband_details"`
 		}
 		if err := c.ShouldBindJSON(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -26,9 +24,8 @@ func CreateEducation(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		id, err := s.educationService.CreateEducation(
-			req.EducationLevelID, req.FieldOfStudy, req.Description,
-			req.University, req.StartDate, req.EndDate, actionBy,
+		id, err := s.FamilyInfoService.CreateFamilyInfo(
+			req.FatherDetails, req.MotherDetails, req.ChildsDetails, req.HusbandDetails, actionBy,
 		)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -38,34 +35,34 @@ func CreateEducation(s *Service) gin.HandlerFunc {
 	}
 }
 
-func GetEducationByID(s *Service) gin.HandlerFunc {
+func GetFamilyInfoByID(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 			return
 		}
-		education, err := s.educationService.GetEducationByID(id)
+		familyInfo, err := s.FamilyInfoService.GetFamilyInfoByID(id)
 		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "education not found"})
+			c.JSON(http.StatusNotFound, gin.H{"error": "family info not found"})
 			return
 		}
-		c.JSON(http.StatusOK, education)
+		c.JSON(http.StatusOK, familyInfo)
 	}
 }
 
-func GetAllEducations(s *Service) gin.HandlerFunc {
+func GetAllFamilyInfos(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		educations, err := s.educationService.GetAllEducations()
+		familyInfos, err := s.FamilyInfoService.GetAllFamilyInfos()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, educations)
+		c.JSON(http.StatusOK, familyInfos)
 	}
 }
 
-func UpdateEducation(s *Service) gin.HandlerFunc {
+func UpdateFamilyInfo(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
@@ -82,15 +79,15 @@ func UpdateEducation(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		if err := s.educationService.UpdateEducation(id, updates, actionBy); err != nil {
+		if err := s.FamilyInfoService.UpdateFamilyInfo(id, updates, actionBy); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"message": "education updated"})
+		c.JSON(http.StatusOK, gin.H{"message": "family info updated"})
 	}
 }
 
-func DeleteEducation(s *Service) gin.HandlerFunc {
+func DeleteFamilyInfo(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
@@ -102,27 +99,10 @@ func DeleteEducation(s *Service) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		if err := s.educationService.DeleteEducation(id, actionBy); err != nil {
+		if err := s.FamilyInfoService.DeleteFamilyInfo(id, actionBy); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"message": "education soft deleted"})
-	}
-}
-
-func SearchEducationsByUniversity(s *Service) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		university := c.Query("university")
-		actionBy := c.GetHeader("X-Action-By")
-		if actionBy == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
-			return
-		}
-		educations, err := s.educationService.SearchEducationsByUniversity(university, actionBy)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-		c.JSON(http.StatusOK, educations)
+		c.JSON(http.StatusOK, gin.H{"message": "family info soft deleted"})
 	}
 }
