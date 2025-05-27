@@ -7,20 +7,17 @@ import (
 )
 
 type MedicalProfile struct {
-	ID                    int64                                   `gorm:"primaryKey;autoIncrement"`
-	PersonID              string                                  `gorm:"type:varchar(255);not null"`
+	ID             int64  `gorm:"primaryKey;autoIncrement"`
+	PersonID       string `gorm:"type:varchar(255);not null"`
+	PhysicalInfoID int64  `gorm:"not null"`
+
 	Allergies             string                                  `gorm:"type:text"`
 	MedicalHistory        string                                  `gorm:"type:text"`
 	Vaccinations          string                                  `gorm:"type:jsonb"`
 	BloodTypeID           int64                                   `gorm:"not null"`
-	PhysicalStatusID      int64                                   `gorm:"not null"`
 	PsychologicalStatusID int64                                   `gorm:"not null"`
 	DeletedAt             int64                                   `gorm:"not null"`
 	Person                person.Person                           `gorm:"foreignKey:PersonID;references:NationalIDNumber;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
 	PhysicalInfo          physicalinfo.PhysicalInfo               `gorm:"foreignKey:PhysicalInfoID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
 	PsychologicalStatus   psychologicalstatus.PsychologicalStatus `gorm:"foreignKey:PsychologicalStatusID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
-}
-
-func (MedicalProfile) TableName() string {
-	return "medical_profile"
 }

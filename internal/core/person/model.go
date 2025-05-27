@@ -5,6 +5,7 @@ import (
 	"backend/internal/core/familyinfo"
 	"backend/internal/core/militarydetails"
 	"backend/internal/core/persontype"
+	"backend/internal/core/physicalinfo"
 	"backend/internal/core/religion"
 	"backend/internal/core/skills"
 	"time"
@@ -15,9 +16,9 @@ type Person struct {
 	FirstName         string                          `gorm:"type:varchar(255);not null"`
 	LastName          string                          `gorm:"type:varchar(255);not null"`
 	FamilyInfoID      int64                           `gorm:"not null"`
-	PhysicalInfoID    int64                           `gorm:"not null"`
 	ContactInfoID     int64                           `gorm:"not null"`
 	SkillsID          int64                           `gorm:"not null"`
+	PhysicalInfoID    int64                           `gorm:"not null"` // New field to link to PhysicalInfo
 	BirthDate         time.Time                       `gorm:"type:date;not null"`
 	ReligionID        int64                           `gorm:"not null"`
 	PersonTypeID      int64                           `gorm:"not null"`
@@ -29,6 +30,7 @@ type Person struct {
 	Religion          religion.Religion               `gorm:"foreignKey:ReligionID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
 	PersonType        persontype.PersonType           `gorm:"foreignKey:PersonTypeID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
 	MilitaryDetails   militarydetails.MilitaryDetails `gorm:"foreignKey:MilitaryDetailsID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
+	PhysicalInfo      physicalinfo.PhysicalInfo       `gorm:"foreignKey:PhysicalInfoID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
 }
 
 func (Person) TableName() string {

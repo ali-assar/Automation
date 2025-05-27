@@ -12,5 +12,5 @@ type HospitalDispatch struct {
 }
 
 func (HospitalDispatch) TableName() string {
-	return "hospital_dispatch"
+	return "HospitalDispatch" // Changed to lowercase with underscore for consistency
 }

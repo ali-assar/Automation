@@ -16,5 +16,5 @@ type Visit struct {
 }
 
 func (Visit) TableName() string {
-	return "visits"
+	return "visits" // Already consistent
 }

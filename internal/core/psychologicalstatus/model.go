@@ -5,6 +5,3 @@ type PsychologicalStatus struct {
 	Status string `gorm:"type:text;not null"`
 }
 
-func (PsychologicalStatus) TableName() string {
-	return "psychological_status"
-}

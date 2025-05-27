@@ -6,7 +6,11 @@ import (
 	"gorm.io/gorm"
 )
 
-func SeedPsychologicalStatus(db *gorm.DB, auditService audit.ActionLogger) error {
+func SeedPsychologicalStatus(db *gorm.DB, auditService audit.ActionLogger, isTest bool) error {
+	if !isTest {
+		return nil
+	}
+
 	repo := NewRepository(db)
 	statuses := []PsychologicalStatus{
 		{Status: "Stable"},

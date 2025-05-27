@@ -16,6 +16,3 @@ type Prescription struct {
 	Medicine   medicines.Medicine  `gorm:"foreignKey:MedicineID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
 }
 
-func (Prescription) TableName() string {
-	return "prescriptions"
-}

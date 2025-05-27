@@ -7,7 +7,3 @@ type Medicine struct {
 	Description string `gorm:"type:text"`
 	DeletedAt   int64  `gorm:"not null"`
 }
-
-func (Medicine) TableName() string {
-	return "medicines"
-}

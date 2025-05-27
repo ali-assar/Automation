@@ -19,7 +19,6 @@ func SeedMedicalProfile(db *gorm.DB, auditService audit.ActionLogger, isTest boo
 			MedicalHistory:        "Asthma",
 			Vaccinations:          `{"vaccines": ["MMR", "Flu"]}`,
 			BloodTypeID:           1, // Assumes BloodType with ID 1 exists
-			PhysicalStatusID:      1, // Assumes PhysicalStatus with ID 1 exists
 			PsychologicalStatusID: 1, // Assumes PsychologicalStatus with ID 1 exists
 			DeletedAt:             0,
 		},
