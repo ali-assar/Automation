@@ -1,13 +1,11 @@
 @baseUrl = http://localhost:8081
-@actionBy = 796e62b1-b093-4a38-912d-876c2d763c
-@token = <jwt_token>
-@adminId = 550e8400-e29b-41d4-a716-446655440000
+@actionBy = 5d2f044a-9d3e-4661-90d2-57ff7c236303
+@adminId = b6037cfb-9434-498f-a139-d925810257a3
 
 ### Create Admin - Success
 POST {{baseUrl}}/admin
 Content-Type: application/json
 X-Action-By: {{actionBy}}
-Authorization: Bearer {{token}}
 
 {
     "national_id_number": "123456789012",
@@ -21,8 +19,6 @@ Authorization: Bearer {{token}}
 POST {{baseUrl}}/admin
 Content-Type: application/json
 X-Action-By: {{actionBy}}
-Authorization: Bearer {{token}}
-
 {
     "national_id_number": "123456789012",
     "user_name": "testadmin"
@@ -31,7 +27,6 @@ Authorization: Bearer {{token}}
 ### Create Admin - Missing X-Action-By
 POST {{baseUrl}}/admin
 Content-Type: application/json
-Authorization: Bearer {{token}}
 
 {
     "national_id_number": "123456789012",
@@ -42,30 +37,28 @@ Authorization: Bearer {{token}}
 }
 
 ### Get Admin by ID - Success
-GET {{baseUrl}}/admin/{{adminId}}
-Authorization: Bearer {{token}}
+GET {{baseUrl}}/admin/{{"adminId"}}
+
 
 ### Get Admin by ID - Invalid ID
 GET {{baseUrl}}/admin/invalid-uuid
-Authorization: Bearer {{token}}
 
 ### Get Admin by Username - Success
 GET {{baseUrl}}/admin/username/testadmin
-Authorization: Bearer {{token}}
+
 
 ### Get Admin by Username - Not Found
 GET {{baseUrl}}/admin/username/nonexistent
-Authorization: Bearer {{token}}
 
 ### Get All Admins - Success
 GET {{baseUrl}}/admin
-Authorization: Bearer {{token}}
+
 
 ### Update Admin - Success
 PUT {{baseUrl}}/admin/{{adminId}}
 Content-Type: application/json
 X-Action-By: {{actionBy}}
-Authorization: Bearer {{token}}
+
 
 {
     "user_name": "updatedadmin"
@@ -75,7 +68,7 @@ Authorization: Bearer {{token}}
 PUT {{baseUrl}}/admin/invalid-uuid
 Content-Type: application/json
 X-Action-By: {{actionBy}}
-Authorization: Bearer {{token}}
+
 
 {
     "user_name": "updatedadmin"
@@ -85,7 +78,7 @@ Authorization: Bearer {{token}}
 PUT {{baseUrl}}/admin/password/{{adminId}}
 Content-Type: application/json
 X-Action-By: {{actionBy}}
-Authorization: Bearer {{token}}
+
 
 {
     "password": "NewPass456"
@@ -94,7 +87,6 @@ Authorization: Bearer {{token}}
 ### Update Admin Password - Missing X-Action-By
 PUT {{baseUrl}}/admin/password/{{adminId}}
 Content-Type: application/json
-Authorization: Bearer {{token}}
 
 {
     "password": "NewPass456"
@@ -103,14 +95,13 @@ Authorization: Bearer {{token}}
 ### Delete Admin - Success
 DELETE {{baseUrl}}/admin/{{adminId}}
 X-Action-By: {{actionBy}}
-Authorization: Bearer {{token}}
+
 
 ### Delete Admin - Invalid ID
 DELETE {{baseUrl}}/admin/invalid-uuid
 X-Action-By: {{actionBy}}
-Authorization: Bearer {{token}}
+
 
 ### Soft Delete Admin - Success
 DELETE {{baseUrl}}/admin/soft/{{adminId}}
 X-Action-By: {{actionBy}}
-Authorization: Bearer {{token}}

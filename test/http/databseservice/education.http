@@ -1,13 +1,13 @@
 @baseUrl = http://localhost:8081
-@actionBy = 796e62b1-b093-4a38-912d-876c2d763c
-@token = <jwt_token>
+@actionBy = b6037cfb-9434-498f-a139-d925810257a3
+
 @educationId = 1
 
 ### Create Education - Success
 POST {{baseUrl}}/education
 Content-Type: application/json
 X-Action-By: {{actionBy}}
-Authorization: Bearer {{token}}
+
 
 {
     "education_level_id": 1,
@@ -22,7 +22,7 @@ Authorization: Bearer {{token}}
 POST {{baseUrl}}/education
 Content-Type: application/json
 X-Action-By: {{actionBy}}
-Authorization: Bearer {{token}}
+
 
 {
     "education_level_id": 1
@@ -30,21 +30,21 @@ Authorization: Bearer {{token}}
 
 ### Get Education by ID - Success
 GET {{baseUrl}}/education/{{educationId}}
-Authorization: Bearer {{token}}
+
 
 ### Get Education by ID - Invalid ID
 GET {{baseUrl}}/education/invalid
-Authorization: Bearer {{token}}
+
 
 ### Get All Educations - Success
 GET {{baseUrl}}/education
-Authorization: Bearer {{token}}
+
 
 ### Update Education - Success
 PUT {{baseUrl}}/education/{{educationId}}
 Content-Type: application/json
 X-Action-By: {{actionBy}}
-Authorization: Bearer {{token}}
+
 
 {
     "description": "Updated Description"
@@ -53,9 +53,8 @@ Authorization: Bearer {{token}}
 ### Delete Education - Success
 DELETE {{baseUrl}}/education/{{educationId}}
 X-Action-By: {{actionBy}}
-Authorization: Bearer {{token}}
+
 
 ### Search Educations by University - Success
 GET {{baseUrl}}/education/search?university=Test%20University
 X-Action-By: {{actionBy}}
-Authorization: Bearer {{token}}
