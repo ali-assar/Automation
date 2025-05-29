@@ -11,11 +11,9 @@ func SeedPhysicalStatus(db *gorm.DB, auditService audit.ActionLogger) error {
 	statuses := []struct {
 		ID          int64
 		Status      string
-		Description string
 	}{
-		{ID: 1, Status: "Fit", Description: `{"details": "Fully fit for duty"}`},
-		{ID: 2, Status: "Restricted", Description: `{"details": "Limited duty due to injury"}`},
-		{ID: 3, Status: "Unfit", Description: `{"details": "Not fit for active duty"}`},
+		{ID: 1, Status: "سالم"},
+		{ID: 2, Status: "ناسالم"},
 	}
 
 	for _, s := range statuses {

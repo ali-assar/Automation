@@ -12,9 +12,8 @@ func SeedGender(db *gorm.DB, auditService audit.ActionLogger) error {
 		ID     int64
 		Gender string
 	}{
-		{ID: 1, Gender: "Male"},
-		{ID: 2, Gender: "Female"},
-		{ID: 3, Gender: "Other"},
+		{ID: 1, Gender: "مرد"},
+		{ID: 2, Gender: "زن"},
 	}
 
 	for _, g := range genders {

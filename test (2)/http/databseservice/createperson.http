@@ -14,7 +14,7 @@ Content-Type: application/json
 
 GET http://localhost:8080/api/personinfo/static/static-tables
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImVkODZjZjAyLWEyZjMtNDU2ZS05ZjI1LWQzN2Q5ZGUzODNiYiIsImV4cCI6MTc0ODYwMDEwOSwicm9sZSI6MX0.jbXVdwwap-0HLh36XyM5fR1sZ18yStSWYyYvCC3-aEs
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6IjAzZGU5NDZiLTk0YjMtNGQ2ZS1iNTY3LWM3MTI0MTJkYTkzZiIsImV4cCI6MTc0ODYwMjYwNSwicm9sZSI6MX0.IOzvE3PTw1B_6nBoEgeHxkXJR2ZDhmoAX-teCK6of-s
 ###
 
 ### Create Full Person (Protected Endpoint)

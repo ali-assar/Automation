@@ -8,7 +8,7 @@ import (
 
 func SeedEducationLevels(db *gorm.DB, auditService audit.ActionLogger) error {
 	repo := NewRepository(db)
-	levels := []string{"illiterate", "diploma", "bachelor", "master", "phd"}
+	levels := []string{"بی سواد", "سیکل", "دیپلم", "کارشناسی", "کارشناسی ارشد","دکترا"}
 
 	for _, level := range levels {
 		var existing EducationLevel

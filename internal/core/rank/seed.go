@@ -12,9 +12,29 @@ func SeedRank(db *gorm.DB, auditService audit.ActionLogger) error {
 		ID   int64
 		Name string
 	}{
-		{ID: 1, Name: "Private"},
-		{ID: 2, Name: "Sergeant"},
-		{ID: 3, Name: "Lieutenant"},
+		{ID: 1, Name: "سرباز آموزشی"},
+		{ID: 2, Name: "سرباز"},
+		{ID: 3, Name: "سرباز دوم"},
+		{ID: 4, Name: "سرباز یکم"},
+		{ID: 5, Name: "سرجوخه"},
+		{ID: 6, Name: "گروهبان سوم"},
+		{ID: 7, Name: "گروهبان دوم"},
+		{ID: 8, Name: "گروهبان یکم"},
+		{ID: 9, Name: "استوار دوم"},
+		{ID: 10, Name: "استوار یکم"},
+		{ID: 11, Name: "ناویگ دومی"},
+		{ID: 12, Name: "ناویگ اول"},
+		{ID: 13, Name: "ستوان سوم"},
+		{ID: 14, Name: "ستوان دوم"},
+		{ID: 15, Name: "ستوان یکم"},
+		{ID: 16, Name: "سرگرد"},
+		{ID: 17, Name: "سروان"},
+		{ID: 18, Name: "سرهنگ دوم"},
+		{ID: 19, Name: "سرهنگ یکم"},
+		{ID: 20, Name: "سرتیپ دوم"},
+		{ID: 21, Name: "سرتیپ یکم"},
+		{ID: 22, Name: "سپهبد"},
+		{ID: 23, Name: "سرلشکر"},
 	}
 
 	for _, r := range ranks {
