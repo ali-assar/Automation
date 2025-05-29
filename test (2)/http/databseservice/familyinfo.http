@@ -1,0 +1,49 @@
+@baseUrl = http://localhost:8081
+@actionBy = b6037cfb-9434-498f-a139-d925810257a3
+
+@familyId = 1
+
+### Create Family Info - Success
+POST {{baseUrl}}/familyinfo
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+
+
+{
+    "father_details": "John Doe",
+    "mother_details": "Jane Doe",
+    "childs_details": "Child1, Child2",
+    "husband_details": "Spouse Name"
+}
+
+### Create Family Info - Invalid Input
+POST {{baseUrl}}/familyinfo
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+
+
+{
+    "father_details": "John Doe"
+}
+
+### Get Family Info by ID - Success
+GET {{baseUrl}}/familyinfo/{{familyId}}
+
+
+### Get All Family Infos - Success
+GET {{baseUrl}}/familyinfo
+
+
+### Update Family Info - Success
+PUT {{baseUrl}}/familyinfo/{{familyId}}
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+
+
+{
+    "childs_details": "Child3"
+}
+
+### Delete Family Info - Success
+DELETE {{baseUrl}}/familyinfo/{{familyId}}
+X-Action-By: {{actionBy}}

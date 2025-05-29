@@ -2,6 +2,7 @@ package api
 
 import (
 	"backend/internal/core/person"
+	"database/sql"
 	"net/http"
 	"strconv"
 	"time"
@@ -15,14 +16,14 @@ func CreatePerson(s *HandlerService) gin.HandlerFunc {
 			NationalIDNumber  string `json:"national_id_number" binding:"required"`
 			FirstName         string `json:"first_name" binding:"required"`
 			LastName          string `json:"last_name" binding:"required"`
-			FamilyInfoID      int64  `json:"family_info_id" binding:"required"`
-			PhysicalInfoID    int64  `json:"physical_info_id" binding:"required"`
-			ContactInfoID     int64  `json:"contact_info_id" binding:"required"`
-			SkillsID          int64  `json:"skills_id" binding:"required"`
+			FamilyInfoID      int64  `json:"family_info_id"`
+			ContactInfoID     int64  `json:"contact_info_id"`
+			SkillsID          int64  `json:"skills_id"`
+			PhysicalInfoID    int64  `json:"physical_info_id"`
 			BirthDate         string `json:"birth_date" binding:"required"`
-			ReligionID        int64  `json:"religion_id" binding:"required"`
-			PersonTypeID      int64  `json:"person_type_id" binding:"required"`
-			MilitaryDetailsID int64  `json:"military_details_id" binding:"required"`
+			ReligionID        int64  `json:"religion_id"`
+			PersonTypeID      int64  `json:"person_type_id"`
+			MilitaryDetailsID int64  `json:"military_details_id"`
 		}
 		if err := c.ShouldBindJSON(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -39,18 +40,33 @@ func CreatePerson(s *HandlerService) gin.HandlerFunc {
 			return
 		}
 		person := &person.Person{
-			NationalIDNumber:  req.NationalIDNumber,
-			FirstName:         req.FirstName,
-			LastName:          req.LastName,
-			FamilyInfoID:      req.FamilyInfoID,
-			PhysicalInfoID:    req.PhysicalInfoID,
-			ContactInfoID:     req.ContactInfoID,
-			SkillsID:          req.SkillsID,
-			BirthDate:         birthDate,
-			ReligionID:        req.ReligionID,
-			PersonTypeID:      req.PersonTypeID,
-			MilitaryDetailsID: req.MilitaryDetailsID,
-			DeletedAt:         0,
+			NationalIDNumber: req.NationalIDNumber,
+			FirstName:        req.FirstName,
+			LastName:         req.LastName,
+			BirthDate:        birthDate,
+			DeletedAt:        0,
+		}
+		// Set nullable IDs if provided
+		if req.FamilyInfoID != 0 {
+			person.SetFamilyInfoID(req.FamilyInfoID)
+		}
+		if req.ContactInfoID != 0 {
+			person.SetContactInfoID(req.ContactInfoID)
+		}
+		if req.SkillsID != 0 {
+			person.SetSkillsID(req.SkillsID)
+		}
+		if req.PhysicalInfoID != 0 {
+			person.SetPhysicalInfoID(req.PhysicalInfoID)
+		}
+		if req.ReligionID != 0 {
+			person.SetReligionID(req.ReligionID)
+		}
+		if req.PersonTypeID != 0 {
+			person.SetPersonTypeID(req.PersonTypeID)
+		}
+		if req.MilitaryDetailsID != 0 {
+			person.SetMilitaryDetailsID(req.MilitaryDetailsID)
 		}
 		id, err := s.PersonService.CreatePerson(person, actionBy)
 		if err != nil {
@@ -60,7 +76,6 @@ func CreatePerson(s *HandlerService) gin.HandlerFunc {
 		c.JSON(http.StatusCreated, gin.H{"national_id_number": id})
 	}
 }
-
 func GetPersonByID(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		nationalID := c.Param("national_id")
@@ -97,6 +112,28 @@ func UpdatePerson(s *HandlerService) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
+		// Handle nullable fields in updates
+		if familyInfoID, ok := updates["family_info_id"].(int64); ok && familyInfoID != 0 {
+			updates["family_info_id"] = sql.NullInt64{Int64: familyInfoID, Valid: true}
+		}
+		if contactInfoID, ok := updates["contact_info_id"].(int64); ok && contactInfoID != 0 {
+			updates["contact_info_id"] = sql.NullInt64{Int64: contactInfoID, Valid: true}
+		}
+		if skillsID, ok := updates["skills_id"].(int64); ok && skillsID != 0 {
+			updates["skills_id"] = sql.NullInt64{Int64: skillsID, Valid: true}
+		}
+		if physicalInfoID, ok := updates["physical_info_id"].(int64); ok && physicalInfoID != 0 {
+			updates["physical_info_id"] = sql.NullInt64{Int64: physicalInfoID, Valid: true}
+		}
+		if religionID, ok := updates["religion_id"].(int64); ok && religionID != 0 {
+			updates["religion_id"] = sql.NullInt64{Int64: religionID, Valid: true}
+		}
+		if personTypeID, ok := updates["person_type_id"].(int64); ok && personTypeID != 0 {
+			updates["person_type_id"] = sql.NullInt64{Int64: personTypeID, Valid: true}
+		}
+		if militaryDetailsID, ok := updates["military_details_id"].(int64); ok && militaryDetailsID != 0 {
+			updates["military_details_id"] = sql.NullInt64{Int64: militaryDetailsID, Valid: true}
+		}
 		if err := s.PersonService.UpdatePerson(nationalID, updates, actionBy); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
@@ -104,8 +141,6 @@ func UpdatePerson(s *HandlerService) gin.HandlerFunc {
 		c.JSON(http.StatusOK, gin.H{"message": "person updated"})
 	}
 }
-
-
 func DeletePerson(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		nationalID := c.Param("national_id")

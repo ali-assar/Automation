@@ -1,0 +1,75 @@
+@baseUrl = http://localhost:8081
+@actionBy = b6037cfb-9434-498f-a139-d925810257a3
+
+@contactId = 1
+@email = jane.smith@example.com
+
+### Create Contact Info - Success
+POST {{baseUrl}}/contactinfo
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+
+{
+    "address": "123 Main St",
+    "email_address": "{{email}}",
+    "phone_number": "1234567890",
+    "social_media": "{\"linkedin\": \"linkedin.com/test\"}",
+    "emergency_phone_number": "0987654321",
+    "landline_phone": "555-1234"
+}
+
+### Create Contact Info - Invalid Input (Invalid Email)
+POST {{baseUrl}}/contactinfo
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+
+
+{
+    "address": "123 Main St",
+    "email_address": "invalid",
+    "phone_number": "1234567890"
+}
+
+### Create Contact Info - Missing X-Action-By
+POST {{baseUrl}}/contactinfo
+Content-Type: application/json
+
+
+{
+    "address": "123 Main St",
+    "email_address": "{{email}}",
+    "phone_number": "1234567890"
+}
+
+### Get Contact Info by ID - Success
+GET {{baseUrl}}/contactinfo/{{contactId}}
+
+
+### Get Contact Info by ID - Invalid ID
+GET {{baseUrl}}/contactinfo/invalid
+
+
+### Get Contact Info by Email - Success
+GET {{baseUrl}}/contactinfo/email/{{email}}
+
+
+### Get Contact Info by Email - Not Found
+GET {{baseUrl}}/contactinfo/email/nonexistent@example.com
+
+
+### Get All Contact Infos - Success
+GET {{baseUrl}}/contactinfo
+
+
+### Delete Contact Info - Success
+DELETE {{baseUrl}}/contactinfo/{{contactId}}
+X-Action-By: {{actionBy}}
+
+
+### Delete Contact Info - Invalid ID
+DELETE {{baseUrl}}/contactinfo/invalid
+X-Action-By: {{actionBy}}
+
+### Delete Contact Info Hard - Success
+DELETE {{baseUrl}}/contactinfo/hard/{{contactId}}
+X-Action-By: {{actionBy}}

@@ -62,12 +62,17 @@ func RegisterRoutes(r *gin.Engine, s *api.HandlerService) {
 		staticGroup.GET("/skills/:id", api.GetSkillsByID(s))
 		staticGroup.GET("/skills/education/:education_id", api.GetSkillsByEducationID(s))
 		staticGroup.GET("/skills", api.GetAllSkills(s))
+
+		// Get Info for person creation
+		staticGroup.GET("/static-tables", api.GetStaticTables(s))
 	}
 
 	// Dynamic Protected Routes (POST, PUT, DELETE)
 	dynamicGroup := public.Group("/dynamic").Use(middleware.DynamicAuth(s))
 	{
-		// Admin
+
+		// Create a full person
+		dynamicGroup.POST("/persons/full", api.CreateFullPerson(s)) // Admin
 		dynamicGroup.POST("/admin", api.CreateAdmin(s))
 		dynamicGroup.PUT("/admin/:id", api.UpdateAdmin(s))
 		dynamicGroup.PUT("/admin/password/:id", api.UpdateAdminPassword(s))

@@ -2,7 +2,6 @@ package api
 
 import (
 	"backend/pkg/security"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -39,7 +38,6 @@ func Login(s *HandlerService) gin.HandlerFunc {
 			return
 		}
 
-		fmt.Println("here is good")
 		_, err = s.CredentialsService.CreateCredentials(admin.ID, staticToken, dynamicToken, admin.UserName)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create credentials"})

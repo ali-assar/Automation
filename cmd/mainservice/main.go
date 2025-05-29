@@ -5,14 +5,18 @@ import (
 	"backend/internal/config"
 	"backend/internal/core/action"
 	"backend/internal/core/admin"
+	"backend/internal/core/bloodgroup"
 	"backend/internal/core/contactinfo"
 	"backend/internal/core/credentials"
 	"backend/internal/core/education"
 	"backend/internal/core/familyinfo"
 	"backend/internal/core/militarydetails"
 	"backend/internal/core/person"
+	"backend/internal/core/persontype"
 	"backend/internal/core/physicalinfo"
 	"backend/internal/core/physicalstatus"
+	"backend/internal/core/rank"
+	"backend/internal/core/religion"
 	"backend/internal/core/role"
 	"backend/internal/core/skills"
 	"backend/internal/db"
@@ -47,6 +51,10 @@ func main() {
 	physicalInfoService := physicalinfo.NewService(dbInstance, actionService)
 	physicalStatusService := physicalstatus.NewService(dbInstance, actionService)
 	skillsService := skills.NewService(dbInstance, actionService)
+	bloodGroupService := bloodgroup.NewService(dbInstance, actionService)
+	rankService := rank.NewService(dbInstance, actionService)
+	religionService := religion.NewService(dbInstance, actionService)
+	personTypeService := persontype.NewService(dbInstance, actionService)
 
 	// Seed database for testing
 	if cfg.IsTest {
@@ -70,13 +78,17 @@ func main() {
 		PhysicalStatusService:  physicalStatusService,
 		RoleService:            roleService,
 		SkillsService:          skillsService,
+		BloodGroupService:      bloodGroupService,
+		RankService:            rankService,
+		ReligionService:        religionService,
+		PersonTypeService:      personTypeService,
 	}
 
 	// Create HandlerService
 	h := api.NewHandlerService(coreServices)
 
 	// Initialize router
-	if err := router.InitRouter(cfg.AppHost, "8081", func(r *gin.Engine) {
+	if err := router.InitRouter(cfg.AppHost, cfg.AppPort, func(r *gin.Engine) {
 		router.RegisterRoutes(r, h)
 	}); err != nil {
 		logger.Error("Failed to start API service:", err)

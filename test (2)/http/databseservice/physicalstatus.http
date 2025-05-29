@@ -1,0 +1,48 @@
+@baseUrl = http://localhost:8081
+@actionBy = 796e62b1-b093-4a38-912d-876c2d763c
+@token = <jwt_token>
+@statusId = 1
+
+### Create Physical Status - Success
+POST {{baseUrl}}/physicalstatus
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+Authorization: Bearer {{token}}
+
+{
+    "status": "Active",
+    "description": "Healthy"
+}
+
+### Create Physical Status - Invalid Input
+POST {{baseUrl}}/physicalstatus
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+Authorization: Bearer {{token}}
+
+{
+    "description": "Healthy"
+}
+
+### Get Physical Status by ID - Success
+GET {{baseUrl}}/physicalstatus/{{statusId}}
+Authorization: Bearer {{token}}
+
+### Get All Physical Statuses - Success
+GET {{baseUrl}}/physicalstatus
+Authorization: Bearer {{token}}
+
+### Update Physical Status - Success
+PUT {{baseUrl}}/physicalstatus/{{statusId}}
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+Authorization: Bearer {{token}}
+
+{
+    "description": "Updated Healthy"
+}
+
+### Delete Physical Status - Success
+DELETE {{baseUrl}}/physicalstatus/{{statusId}}
+X-Action-By: {{actionBy}}
+Authorization: Bearer {{token}}

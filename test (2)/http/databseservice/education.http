@@ -1,0 +1,60 @@
+@baseUrl = http://localhost:8081
+@actionBy = b6037cfb-9434-498f-a139-d925810257a3
+
+@educationId = 1
+
+### Create Education - Success
+POST {{baseUrl}}/education
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+
+
+{
+    "education_level_id": 1,
+    "field_of_study": 1,
+    "description": "Computer Science",
+    "university": "Test University",
+    "start_date": 1609459200,
+    "end_date": 1640995200
+}
+
+### Create Education - Invalid Input
+POST {{baseUrl}}/education
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+
+
+{
+    "education_level_id": 1
+}
+
+### Get Education by ID - Success
+GET {{baseUrl}}/education/{{educationId}}
+
+
+### Get Education by ID - Invalid ID
+GET {{baseUrl}}/education/invalid
+
+
+### Get All Educations - Success
+GET {{baseUrl}}/education
+
+
+### Update Education - Success
+PUT {{baseUrl}}/education/{{educationId}}
+Content-Type: application/json
+X-Action-By: {{actionBy}}
+
+
+{
+    "description": "Updated Description"
+}
+
+### Delete Education - Success
+DELETE {{baseUrl}}/education/{{educationId}}
+X-Action-By: {{actionBy}}
+
+
+### Search Educations by University - Success
+GET {{baseUrl}}/education/search?university=Test%20University
+X-Action-By: {{actionBy}}

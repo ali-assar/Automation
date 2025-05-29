@@ -26,6 +26,14 @@ func (r *Repository) GetByID(id int64) (*Rank, error) {
 	return &rank, nil
 }
 
+func (r *Repository) GetByName(name string) (string, error) {
+	var rank string
+	if err := r.db.First(&rank, "name = ?", name).Error; err != nil {
+		return "", err
+	}
+	return rank, nil
+}
+
 func (r *Repository) GetAll() ([]Rank, error) {
 	var ranks []Rank
 	if err := r.db.Find(&ranks).Error; err != nil {
@@ -37,8 +45,6 @@ func (r *Repository) GetAll() ([]Rank, error) {
 func (r *Repository) Update(rank *Rank) error {
 	return r.db.Save(rank).Error
 }
-
-
 
 func (r *Repository) DeleteSoft(id int64) error {
 	return r.db.Model(&Rank{}).Where("id = ?", id).Update("deleted_at", time.Now().Unix()).Error

@@ -42,7 +42,7 @@ func SeedPerson(db *gorm.DB, auditService audit.ActionLogger, isTest bool) error
 			NationalIDNumber: "012345678",
 			FirstName:        "John",
 			LastName:         "Doe",
-			FamilyFather:     "John Sr.", // Just the name field
+			FamilyFather:     "John Sr.",
 			EmailAddress:     "john.doe@example.com",
 			BirthDate:        time.Date(1990, 1, 1, 0, 0, 0, 0, time.UTC),
 			ReligionName:     "Islam",
@@ -52,7 +52,7 @@ func SeedPerson(db *gorm.DB, auditService audit.ActionLogger, isTest bool) error
 			NationalIDNumber: "987654321",
 			FirstName:        "Jane",
 			LastName:         "Smith",
-			FamilyFather:     "Robert", // Just the name field
+			FamilyFather:     "Robert",
 			EmailAddress:     "jane.smith@example.com",
 			BirthDate:        time.Date(1992, 6, 15, 0, 0, 0, 0, time.UTC),
 			ReligionName:     "Christianity",
@@ -62,8 +62,8 @@ func SeedPerson(db *gorm.DB, auditService audit.ActionLogger, isTest bool) error
 
 	for _, p := range persons {
 		// Find dependencies
-		var familyinfo familyinfo.FamilyInfo
-		err := db.Where("father_details->>'name' = ? AND deleted_at = 0", p.FamilyFather).First(&familyinfo).Error
+		var familyInfo familyinfo.FamilyInfo
+		err := db.Where("father_details->>'name' = ? AND deleted_at = 0", p.FamilyFather).First(&familyInfo).Error
 		if err != nil {
 			if err == gorm.ErrRecordNotFound {
 				continue
@@ -71,8 +71,8 @@ func SeedPerson(db *gorm.DB, auditService audit.ActionLogger, isTest bool) error
 			return err
 		}
 
-		var physicalinfo physicalinfo.PhysicalInfo
-		err = db.Where("blood_group_id = ? AND deleted_at = 0", 1).First(&physicalinfo).Error // Assuming A+=1
+		var physicalInfo physicalinfo.PhysicalInfo
+		err = db.Where("blood_group_id = ? AND deleted_at = 0", 1).First(&physicalInfo).Error // Assuming A+=1
 		if err != nil {
 			if err == gorm.ErrRecordNotFound {
 				continue
@@ -80,7 +80,7 @@ func SeedPerson(db *gorm.DB, auditService audit.ActionLogger, isTest bool) error
 			return err
 		}
 
-		contactinfo, err := contactinfoRepo.GetByEmail(p.EmailAddress)
+		contactInfo, err := contactinfoRepo.GetByEmail(p.EmailAddress)
 		if err != nil {
 			if err == gorm.ErrRecordNotFound {
 				continue
@@ -88,8 +88,8 @@ func SeedPerson(db *gorm.DB, auditService audit.ActionLogger, isTest bool) error
 			return err
 		}
 
-		var skills skills.Skills
-		err = db.Where("education_id = ? AND deleted_at = 0", 1).First(&skills).Error // Assuming first education
+		var skillsInfo skills.Skills
+		err = db.Where("education_id = ? AND deleted_at = 0", 1).First(&skillsInfo).Error // Assuming first education
 		if err != nil {
 			if err == gorm.ErrRecordNotFound {
 				continue
@@ -97,8 +97,8 @@ func SeedPerson(db *gorm.DB, auditService audit.ActionLogger, isTest bool) error
 			return err
 		}
 
-		var religion religion.Religion
-		err = db.Where("religion_name = ?", p.ReligionName).First(&religion).Error
+		var religionInfo religion.Religion
+		err = db.Where("religion_name = ?", p.ReligionName).First(&religionInfo).Error
 		if err != nil {
 			if err == gorm.ErrRecordNotFound {
 				continue
@@ -106,8 +106,8 @@ func SeedPerson(db *gorm.DB, auditService audit.ActionLogger, isTest bool) error
 			return err
 		}
 
-		var persontype persontype.PersonType
-		err = db.Where("type = ? ", p.PersonType).First(&persontype).Error
+		var personType persontype.PersonType
+		err = db.Where("type = ?", p.PersonType).First(&personType).Error
 		if err != nil {
 			if err == gorm.ErrRecordNotFound {
 				continue
@@ -115,8 +115,8 @@ func SeedPerson(db *gorm.DB, auditService audit.ActionLogger, isTest bool) error
 			return err
 		}
 
-		var militarydetails militarydetails.MilitaryDetails
-		err = db.Where("rank_id = ? AND deleted_at = 0", 1).First(&militarydetails).Error // Assuming Private=1
+		var militaryDetails militarydetails.MilitaryDetails
+		err = db.Where("rank_id = ? AND deleted_at = 0", 1).First(&militaryDetails).Error // Assuming Private=1
 		if err != nil {
 			if err == gorm.ErrRecordNotFound {
 				continue
@@ -138,24 +138,25 @@ func SeedPerson(db *gorm.DB, auditService audit.ActionLogger, isTest bool) error
 		}
 
 		person := &Person{
-			NationalIDNumber:  p.NationalIDNumber,
-			FirstName:         p.FirstName,
-			LastName:          p.LastName,
-			FamilyInfoID:      familyinfo.ID,
-			PhysicalInfoID:    physicalinfo.ID,
-			ContactInfoID:     contactinfo.ID,
-			SkillsID:          skills.ID,
-			BirthDate:         p.BirthDate,
-			ReligionID:        religion.ID,
-			PersonTypeID:      persontype.ID,
-			MilitaryDetailsID: militarydetails.ID,
-			DeletedAt:         0,
+			NationalIDNumber: p.NationalIDNumber,
+			FirstName:        p.FirstName,
+			LastName:         p.LastName,
+			BirthDate:        p.BirthDate,
+			DeletedAt:        0,
 		}
+		person.SetFamilyInfoID(familyInfo.ID)
+		person.SetPhysicalInfoID(physicalInfo.ID)
+		person.SetContactInfoID(contactInfo.ID)
+		person.SetSkillsID(skillsInfo.ID)
+		person.SetReligionID(religionInfo.ID)
+		person.SetPersonTypeID(personType.ID)
+		person.SetMilitaryDetailsID(militaryDetails.ID)
+
 		if err := repo.Create(person); err != nil {
 			return err
 		}
 		if _, err := auditService.LogAction(1, "person", "seeder"); err != nil {
-			// Log error
+			// Log error (consider logging instead of ignoring)
 		}
 	}
 
