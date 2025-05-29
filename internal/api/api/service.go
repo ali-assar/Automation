@@ -6,6 +6,7 @@ import (
 	"backend/internal/core/contactinfo"
 	"backend/internal/core/credentials"
 	"backend/internal/core/education"
+	educationlevel "backend/internal/core/educationLevel"
 	"backend/internal/core/familyinfo"
 	"backend/internal/core/hospitaldispatch"
 	"backend/internal/core/medicalprofile"
@@ -29,6 +30,7 @@ type CoreServices struct {
 	ContactInfoService     *contactinfo.Service
 	CredentialsService     *credentials.Service
 	EducationService       *education.Service
+	EducationLevelService  *educationlevel.Service
 	FamilyInfoService      *familyinfo.Service
 	MilitaryDetailsService *militarydetails.Service
 	PersonService          *person.Service
@@ -50,10 +52,12 @@ type CoreServices struct {
 
 // HandlerService aggregates core services for API handlers.
 type HandlerService struct {
-	AdminService           *admin.Service
-	ContactInfoService     *contactinfo.Service
-	CredentialsService     *credentials.Service
-	EducationService       *education.Service
+	AdminService          *admin.Service
+	ContactInfoService    *contactinfo.Service
+	CredentialsService    *credentials.Service
+	EducationService      *education.Service
+	EducationLevelService *educationlevel.Service
+
 	FamilyInfoService      *familyinfo.Service
 	MilitaryDetailsService *militarydetails.Service
 	PersonService          *person.Service
@@ -80,6 +84,7 @@ func NewHandlerService(cs *CoreServices) *HandlerService {
 		ContactInfoService:     cs.ContactInfoService,
 		CredentialsService:     cs.CredentialsService,
 		EducationService:       cs.EducationService,
+		EducationLevelService:  cs.EducationLevelService,
 		FamilyInfoService:      cs.FamilyInfoService,
 		MilitaryDetailsService: cs.MilitaryDetailsService,
 		PersonService:          cs.PersonService,
@@ -87,7 +92,7 @@ func NewHandlerService(cs *CoreServices) *HandlerService {
 		PhysicalStatusService:  cs.PhysicalStatusService,
 		RoleService:            cs.RoleService,
 		SkillsService:          cs.SkillsService,
-		BloodGroupService:      cs.BloodGroupService ,
+		BloodGroupService:      cs.BloodGroupService,
 		RankService:            cs.RankService,
 		ReligionService:        cs.ReligionService,
 

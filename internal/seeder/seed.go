@@ -8,6 +8,7 @@ import (
 	"backend/internal/core/contactinfo"
 	"backend/internal/core/credentials"
 	"backend/internal/core/education"
+	educationlevel "backend/internal/core/educationLevel"
 	"backend/internal/core/familyinfo"
 	"backend/internal/core/gender"
 	"backend/internal/core/hospitaldispatch"
@@ -51,6 +52,8 @@ func Seed(isTest bool, auditService audit.ActionLogger) error {
 		{"Rank", rank.SeedRank},
 		{"Religion", religion.SeedReligion},
 		{"Role", role.SeedRole},
+		{"Role", role.SeedRole},
+		{"EducationLevel",educationlevel.SeedEducationLevels},
 	}
 
 	for _, sf := range seedFunctions {

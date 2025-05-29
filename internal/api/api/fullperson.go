@@ -1,12 +1,14 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
 	"backend/internal/core/bloodgroup" // Assuming BloodGroup model package
 	"backend/internal/core/contactinfo"
 	"backend/internal/core/education" // Assuming Education model package
+	educationlevel "backend/internal/core/educationLevel"
 	"backend/internal/core/familyinfo"
 	"backend/internal/core/militarydetails"
 	"backend/internal/core/person"
@@ -20,10 +22,11 @@ import (
 )
 
 type StaticTablesResponse struct {
-	BloodGroups []bloodgroup.BloodGroup `json:"blood_groups"`
-	Religions   []religion.Religion     `json:"religions"`
-	PersonTypes []persontype.PersonType `json:"person_types"`
-	Ranks       []rank.Rank             `json:"ranks"`
+	BloodGroups    []bloodgroup.BloodGroup         `json:"blood_groups"`
+	Religions      []religion.Religion             `json:"religions"`
+	PersonTypes    []persontype.PersonType         `json:"person_types"`
+	Ranks          []rank.Rank                     `json:"ranks"`
+	EducationLevel []educationlevel.EducationLevel `json:"education_level"`
 }
 
 func GetStaticTables(s *HandlerService) gin.HandlerFunc {
@@ -55,12 +58,20 @@ func GetStaticTables(s *HandlerService) gin.HandlerFunc {
 			return
 		}
 
+		// Fetch education level
+		educationlevel, err := s.EducationLevelService.GetAllEducations()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch education level: " + err.Error()})
+			return
+		}
+
 		// Construct response
 		response := StaticTablesResponse{
-			BloodGroups: bloodGroups,
-			Religions:   religions,
-			PersonTypes: personTypes,
-			Ranks:       ranks,
+			BloodGroups:    bloodGroups,
+			Religions:      religions,
+			PersonTypes:    personTypes,
+			Ranks:          ranks,
+			EducationLevel: educationlevel,
 		}
 
 		c.JSON(http.StatusOK, response)
@@ -89,7 +100,6 @@ type FullPersonRequest struct {
 	Skills struct {
 		Education struct {
 			EducationLevelID int64  `json:"education_level_id" binding:"required"`
-			FieldOfStudy     int64  `json:"field_of_study" binding:"required"`
 			Description      string `json:"description" binding:"required"`
 			University       string `json:"university" binding:"required"`
 			StartDate        int64  `json:"start_date" binding:"required"`
@@ -149,7 +159,7 @@ func CreateFullPerson(s *HandlerService) gin.HandlerFunc {
 			HusbandDetails: req.FamilyInfo.HusbandDetails,
 			DeletedAt:      0,
 		}
-		_, err = s.FamilyInfoService.CreateFamilyInfo(familyInfo.FatherDetails, familyInfo.MotherDetails, familyInfo.ChildsDetails, familyInfo.HusbandDetails, actionBy)
+		familyinfoID, err := s.FamilyInfoService.CreateFamilyInfo(familyInfo.FatherDetails, familyInfo.MotherDetails, familyInfo.ChildsDetails, familyInfo.HusbandDetails, actionBy)
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create family info: " + err.Error()})
@@ -167,7 +177,7 @@ func CreateFullPerson(s *HandlerService) gin.HandlerFunc {
 			DeletedAt:            0,
 		}
 
-		_, err = s.ContactInfoService.CreateContactInfo(
+		contactInfoID, err := s.ContactInfoService.CreateContactInfo(
 			contactInfo.Address, contactInfo.EmailAddress, contactInfo.SocialMedia,
 			contactInfo.PhoneNumber, contactInfo.EmergencyPhoneNumber, contactInfo.LandlinePhone, actionBy,
 		)
@@ -179,7 +189,6 @@ func CreateFullPerson(s *HandlerService) gin.HandlerFunc {
 		// Create Education (dependency for Skills)
 		education := &education.Education{
 			EducationLevelID: req.Skills.Education.EducationLevelID,
-			FieldOfStudy:     req.Skills.Education.FieldOfStudy,
 			Description:      req.Skills.Education.Description,
 			University:       req.Skills.Education.University,
 			StartDate:        req.Skills.Education.StartDate,
@@ -187,8 +196,8 @@ func CreateFullPerson(s *HandlerService) gin.HandlerFunc {
 			DeletedAt:        0,
 		}
 
-		_, err = s.EducationService.CreateEducation(
-			education.EducationLevelID, education.FieldOfStudy, education.Description,
+		educationInfoID, err := s.EducationService.CreateEducation(
+			education.EducationLevelID, education.Description,
 			education.University, education.StartDate, education.EndDate, actionBy,
 		)
 		if err != nil {
@@ -198,7 +207,7 @@ func CreateFullPerson(s *HandlerService) gin.HandlerFunc {
 
 		// Create Skills
 		skills := &skills.Skills{
-			EducationID:       education.ID,
+			EducationID:       educationInfoID,
 			Languages:         req.Skills.Languages,
 			SkillsDescription: req.Skills.SkillsDescription,
 			Certificates:      req.Skills.Certificates,
@@ -220,7 +229,7 @@ func CreateFullPerson(s *HandlerService) gin.HandlerFunc {
 			Weight:       req.PhysicalInfo.Weight,
 			DeletedAt:    0,
 		}
-		_, err = s.PhysicalInfoService.CreatePhysicalInfo(
+		physicalInfoID, err := s.PhysicalInfoService.CreatePhysicalInfo(
 			physicalInfo.Height, physicalInfo.Weight, physicalInfo.EyeColor,
 			physicalInfo.BloodGroupID, physicalInfo.GenderID, physicalInfo.PhysicalStatusID, actionBy,
 		)
@@ -240,7 +249,8 @@ func CreateFullPerson(s *HandlerService) gin.HandlerFunc {
 			DeletedAt:           0,
 		}
 
-		_, err = s.MilitaryDetailsService.CreateMilitaryDetails(
+
+		militaryDetailsID, err := s.MilitaryDetailsService.CreateMilitaryDetails(
 			militaryDetails.RankID, militaryDetails.ServiceStartDate, militaryDetails.ServiceDispatchDate,
 			militaryDetails.ServiceUnit, militaryDetails.BattalionUnit, militaryDetails.CompanyUnit, actionBy,
 		)
@@ -248,7 +258,7 @@ func CreateFullPerson(s *HandlerService) gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create military details: " + err.Error()})
 			return
 		}
-
+		fmt.Println("militaryDetailsid", militaryDetailsID)
 		// Create Person
 		person := &person.Person{
 			NationalIDNumber: req.NationalIDNumber,
@@ -257,13 +267,13 @@ func CreateFullPerson(s *HandlerService) gin.HandlerFunc {
 			BirthDate:        birthDate,
 			DeletedAt:        0,
 		}
-		person.SetFamilyInfoID(familyInfo.ID)
-		person.SetContactInfoID(contactInfo.ID)
+		person.SetFamilyInfoID(familyinfoID)
+		person.SetContactInfoID(contactInfoID)
 		person.SetSkillsID(skillsID)
-		person.SetPhysicalInfoID(physicalInfo.ID)
+		person.SetPhysicalInfoID(physicalInfoID)
 		person.SetReligionID(req.Religion.ReligionID)
 		person.SetPersonTypeID(req.PersonType.PersonTypeID)
-		person.SetMilitaryDetailsID(militaryDetails.ID)
+		person.SetMilitaryDetailsID(militaryDetailsID)
 
 		strID, err := s.PersonService.CreatePerson(person, actionBy)
 		if err != nil {

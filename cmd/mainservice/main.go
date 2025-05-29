@@ -9,6 +9,7 @@ import (
 	"backend/internal/core/contactinfo"
 	"backend/internal/core/credentials"
 	"backend/internal/core/education"
+	educationlevel "backend/internal/core/educationLevel"
 	"backend/internal/core/familyinfo"
 	"backend/internal/core/militarydetails"
 	"backend/internal/core/person"
@@ -46,6 +47,7 @@ func main() {
 	credService := credentials.NewService(dbInstance, actionService)
 	contactInfoService := contactinfo.NewService(dbInstance, actionService)
 	educationService := education.NewService(dbInstance, actionService)
+	educationLevelService := educationlevel.NewService(dbInstance, actionService)
 	familyInfoService := familyinfo.NewService(dbInstance, actionService)
 	militaryDetailsService := militarydetails.NewService(dbInstance, actionService)
 	physicalInfoService := physicalinfo.NewService(dbInstance, actionService)
@@ -82,6 +84,7 @@ func main() {
 		RankService:            rankService,
 		ReligionService:        religionService,
 		PersonTypeService:      personTypeService,
+		EducationLevelService: educationLevelService,
 	}
 
 	// Create HandlerService

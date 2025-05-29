@@ -1,6 +1,6 @@
 ### Login Request (Public Endpoint)
 
-POST https://api.sorooshdavoodi.ir/api/personinfo/login
+POST http://localhost:8080/api/personinfo/login
 Content-Type: application/json
 
 {
@@ -12,20 +12,20 @@ Content-Type: application/json
 
 ### Get Static Tables (Protected Endpoint)
 
-GET https://api.sorooshdavoodi.ir/api/personinfo/static/static-tables
+GET http://localhost:8080/api/personinfo/static/static-tables
 Content-Type: application/json
 X-Action-By: 083308ac-3c6b-4c5a-a1f5-6dfc63d4d63f
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6IjRkNTM5Mjc2LWNhZGItNDE2ZC1hYzQ2LTA2YTUwYjFmYTkyZSIsImV4cCI6MTc0ODUxNjc0OSwicm9sZSI6MX0.Wx2sQ3zl1MXsQxveg2glEiXczG7BIa731mxs8vYjXQw
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImU1ZGE4NDU2LTM4NGUtNGY5YS04ZTdmLWJmMmE2ZTdkZjM4YyIsImV4cCI6MTc0ODU5MDY1MSwicm9sZSI6MX0.JsS6yGjmTdVIvQbI5VWWFdYTqzIPM2ostuYSiGjxHPo
 ###
 
 ### Create Full Person (Protected Endpoint)
-POST https://api.sorooshdavoodi.ir/api/personinfo/dynamic/persons/full
+POST http://localhost:8080/api/personinfo/dynamic/persons/full
 Content-Type: application/json
 X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6IjRkNTM5Mjc2LWNhZGItNDE2ZC1hYzQ2LTA2YTUwYjFmYTkyZSIsImV4cCI6MTc0ODQzNjA1OSwicm9sZSI6MX0.7zoH-_WPD10TZ9c0jFv27jpbo9KfeDDwX8d7pzHxMnI
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6IjgxNTNlOTEyLTk1YzAtNDlkNi05ZDI5LTY1Mjk3YWY2ZDIwNyIsImV4cCI6MTc0ODUwNjI5NSwicm9sZSI6MX0.a4lbEMy0mozcHsWLo7H4R67aQr-pYsHrS1bhD9oSags
 
 {
-  "national_id_number": "012345689",
+  "national_id_number": "012347789",
   "first_name": "John",
   "last_name": "Doe",
   "birth_date": "1990-01-01",
@@ -45,8 +45,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6IjRkNTM5Mjc2
   },
   "skills": {
     "education": {
-      "education_level_id": 1,
-      "field_of_study": 1,
+      "education_level_id": 3,
       "description": "BSc in Computer Science",
       "university": "Example University",
       "start_date": 1514764800,

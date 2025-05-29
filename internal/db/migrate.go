@@ -8,6 +8,7 @@ import (
 	"backend/internal/core/contactinfo"
 	"backend/internal/core/credentials"
 	"backend/internal/core/education"
+	educationlevel "backend/internal/core/educationLevel"
 	"backend/internal/core/familyinfo"
 	"backend/internal/core/gender"
 	"backend/internal/core/hospitaldispatch"
@@ -40,6 +41,7 @@ func Migrate() error {
 		&religion.Religion{},
 		&role.Role{},
 		&education.Education{},
+		&educationlevel.EducationLevel{},
 		&skills.Skills{},
 		&physicalinfo.PhysicalInfo{},
 		&militarydetails.MilitaryDetails{},

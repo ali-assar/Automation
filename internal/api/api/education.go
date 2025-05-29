@@ -27,7 +27,7 @@ func CreateEducation(s *HandlerService) gin.HandlerFunc {
 			return
 		}
 		id, err := s.EducationService.CreateEducation(
-			req.EducationLevelID, req.FieldOfStudy, req.Description,
+			req.EducationLevelID, req.Description,
 			req.University, req.StartDate, req.EndDate, actionBy,
 		)
 		if err != nil {

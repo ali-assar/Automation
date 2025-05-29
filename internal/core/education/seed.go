@@ -22,7 +22,6 @@ func SeedEducation(db *gorm.DB, auditService audit.ActionLogger, isTest bool) er
 	}{
 		{
 			EducationLevelID: 1, // Placeholder
-			FieldOfStudy:     1, // Placeholder
 			Description:      "BSc in Computer Science",
 			University:       "State University",
 			StartDate:        1577836800, // 2020-01-01
@@ -30,7 +29,6 @@ func SeedEducation(db *gorm.DB, auditService audit.ActionLogger, isTest bool) er
 		},
 		{
 			EducationLevelID: 2,
-			FieldOfStudy:     2,
 			Description:      "MA in Military Strategy",
 			University:       "National Defense Academy",
 			StartDate:        1609459200, // 2021-01-01
@@ -56,7 +54,6 @@ func SeedEducation(db *gorm.DB, auditService audit.ActionLogger, isTest bool) er
 
 		education := &Education{
 			EducationLevelID: e.EducationLevelID,
-			FieldOfStudy:     e.FieldOfStudy,
 			Description:      e.Description,
 			University:       e.University,
 			StartDate:        e.StartDate,
