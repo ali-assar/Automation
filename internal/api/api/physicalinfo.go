@@ -10,12 +10,13 @@ import (
 func CreatePhysicalInfo(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req struct {
-			Height           int    `json:"height" binding:"required"`
-			Weight           int    `json:"weight" binding:"required"`
-			EyeColor         string `json:"eye_color" binding:"required"`
-			BloodGroupID     int64  `json:"blood_group_id" binding:"required"`
-			GenderID         int64  `json:"gender_id" binding:"required"`
-			PhysicalStatusID int64  `json:"physical_status_id" binding:"required"`
+			Height              int    `json:"height" binding:"required"`
+			Weight              int    `json:"weight" binding:"required"`
+			EyeColor            string `json:"eye_color" binding:"required"`
+			BloodGroupID        int64  `json:"blood_group_id" binding:"required"`
+			GenderID            int64  `json:"gender_id" binding:"required"`
+			PhysicalStatusID    int64  `json:"physical_status_id" binding:"required"`
+			DescriptionOfHealth string `json:"description_of_health" binding:"required"`
 		}
 		if err := c.ShouldBindJSON(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -27,8 +28,9 @@ func CreatePhysicalInfo(s *HandlerService) gin.HandlerFunc {
 			return
 		}
 		id, err := s.PhysicalInfoService.CreatePhysicalInfo(
-			req.Height, req.Weight, req.EyeColor,
-			req.BloodGroupID, req.GenderID, req.PhysicalStatusID, actionBy,
+			req.Height, req.Weight, req.EyeColor, req.DescriptionOfHealth,
+			req.BloodGroupID, req.GenderID, req.PhysicalStatusID,
+			actionBy,
 		)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

@@ -10,10 +10,12 @@ import (
 	"backend/internal/core/education" // Assuming Education model package
 	educationlevel "backend/internal/core/educationLevel"
 	"backend/internal/core/familyinfo"
+	"backend/internal/core/gender"
 	"backend/internal/core/militarydetails"
 	"backend/internal/core/person"
 	"backend/internal/core/persontype"
 	"backend/internal/core/physicalinfo"
+	"backend/internal/core/physicalstatus"
 	"backend/internal/core/rank" // Assuming Rank model package
 	"backend/internal/core/religion"
 	"backend/internal/core/skills"
@@ -22,11 +24,13 @@ import (
 )
 
 type StaticTablesResponse struct {
-	BloodGroups    []bloodgroup.BloodGroup         `json:"blood_groups"`
-	Religions      []religion.Religion             `json:"religions"`
-	PersonTypes    []persontype.PersonType         `json:"person_types"`
-	Ranks          []rank.Rank                     `json:"ranks"`
-	EducationLevel []educationlevel.EducationLevel `json:"education_level"`
+	BloodGroups      []bloodgroup.BloodGroup         `json:"blood_groups"`
+	Religions        []religion.Religion             `json:"religions"`
+	PersonTypes      []persontype.PersonType         `json:"person_types"`
+	Ranks            []rank.Rank                     `json:"ranks"`
+	EducationLevel   []educationlevel.EducationLevel `json:"education_level"`
+	Gender           []gender.Gender                 `json:"gender"`
+	PhysicalStatuses []physicalstatus.PhysicalStatus `json:"physical_statuses"`
 }
 
 func GetStaticTables(s *HandlerService) gin.HandlerFunc {
@@ -65,13 +69,28 @@ func GetStaticTables(s *HandlerService) gin.HandlerFunc {
 			return
 		}
 
+		// Fetch physical Status level
+		gender, err := s.GenderService.GetAllGenders()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch gender: " + err.Error()})
+			return
+		}
+
+		physStatuses, err := s.PhysicalStatusService.GetAllPhysicalStatuses()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch physical statuses: " + err.Error()})
+			return
+		}
+
 		// Construct response
 		response := StaticTablesResponse{
-			BloodGroups:    bloodGroups,
-			Religions:      religions,
-			PersonTypes:    personTypes,
-			Ranks:          ranks,
-			EducationLevel: educationlevel,
+			BloodGroups:      bloodGroups,
+			Religions:        religions,
+			PersonTypes:      personTypes,
+			Ranks:            ranks,
+			EducationLevel:   educationlevel,
+			Gender:           gender,
+			PhysicalStatuses: physStatuses,
 		}
 
 		c.JSON(http.StatusOK, response)
@@ -110,9 +129,13 @@ type FullPersonRequest struct {
 		Certificates      string `json:"certificates" binding:"required"`
 	} `json:"skills"`
 	PhysicalInfo struct {
-		BloodGroupID int64 `json:"blood_group_id" binding:"required"`
-		Height       int   `json:"height" binding:"required"`
-		Weight       int   `json:"weight" binding:"required"`
+		BloodGroupID        int64  `json:"blood_group_id" binding:"required"`
+		Height              int    `json:"height" binding:"required"`
+		Weight              int    `json:"weight" binding:"required"`
+		EyeColor            string `json:"eye_color" binding:"required"`
+		GenderID            int64  `json:"gender_id" binding:"required"`
+		PhysicalStatusID    int64  `json:"physical_status_id" binding:"required"`
+		DescriptionOfHealth string `json:"description_of_health" binding:"required"`
 	} `json:"physical_info"`
 	Religion struct {
 		ReligionID int64 `json:"religion_id" binding:"required"`
@@ -143,6 +166,8 @@ func CreateFullPerson(s *HandlerService) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
+
+		// TODO: add x action by validation
 
 		// Parse birth date
 		birthDate, err := time.Parse("2006-01-02", req.BirthDate)
@@ -222,16 +247,28 @@ func CreateFullPerson(s *HandlerService) gin.HandlerFunc {
 			return
 		}
 
-		// Create PhysicalInfo
+		// 2) Now build & persist PhysicalInfo with that new status ID:
 		physicalInfo := &physicalinfo.PhysicalInfo{
-			BloodGroupID: req.PhysicalInfo.BloodGroupID,
-			Height:       req.PhysicalInfo.Height,
-			Weight:       req.PhysicalInfo.Weight,
-			DeletedAt:    0,
+			BloodGroupID:        req.PhysicalInfo.BloodGroupID,
+			Height:              req.PhysicalInfo.Height,
+			Weight:              req.PhysicalInfo.Weight,
+			EyeColor:            req.PhysicalInfo.EyeColor,
+			GenderID:            req.PhysicalInfo.GenderID,
+			PhysicalStatusID:    req.PhysicalInfo.PhysicalStatusID,
+			DescriptionOfHealth: req.PhysicalInfo.DescriptionOfHealth,
+			DeletedAt:           0,
 		}
+
 		physicalInfoID, err := s.PhysicalInfoService.CreatePhysicalInfo(
-			physicalInfo.Height, physicalInfo.Weight, physicalInfo.EyeColor,
-			physicalInfo.BloodGroupID, physicalInfo.GenderID, physicalInfo.PhysicalStatusID, actionBy,
+			physicalInfo.Height,
+			physicalInfo.Weight,
+			physicalInfo.EyeColor,
+			physicalInfo.DescriptionOfHealth,
+			physicalInfo.BloodGroupID,
+			physicalInfo.GenderID,
+			physicalInfo.PhysicalStatusID,
+
+			actionBy,
 		)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create physical info: " + err.Error()})
@@ -248,7 +285,6 @@ func CreateFullPerson(s *HandlerService) gin.HandlerFunc {
 			CompanyUnit:         req.MilitaryDetails.CompanyUnit,
 			DeletedAt:           0,
 		}
-
 
 		militaryDetailsID, err := s.MilitaryDetailsService.CreateMilitaryDetails(
 			militaryDetails.RankID, militaryDetails.ServiceStartDate, militaryDetails.ServiceDispatchDate,

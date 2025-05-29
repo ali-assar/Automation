@@ -8,6 +8,7 @@ import (
 	"backend/internal/core/education"
 	educationlevel "backend/internal/core/educationLevel"
 	"backend/internal/core/familyinfo"
+	"backend/internal/core/gender"
 	"backend/internal/core/hospitaldispatch"
 	"backend/internal/core/medicalprofile"
 	"backend/internal/core/medicines"
@@ -42,6 +43,7 @@ type CoreServices struct {
 	BloodGroupService      *bloodgroup.Service
 	ReligionService        *religion.Service
 	PersonTypeService      *persontype.Service
+	GenderService          *gender.Service
 
 	MedicalProfile      *medicalprofile.Service
 	HospitalDispatch    *hospitaldispatch.Service
@@ -69,6 +71,7 @@ type HandlerService struct {
 	RankService            *rank.Service
 	ReligionService        *religion.Service
 	PersonTypeService      *persontype.Service
+	GenderService          *gender.Service
 
 	MedicalProfile      *medicalprofile.Service
 	HospitalDispatch    *hospitaldispatch.Service
@@ -95,6 +98,7 @@ func NewHandlerService(cs *CoreServices) *HandlerService {
 		BloodGroupService:      cs.BloodGroupService,
 		RankService:            cs.RankService,
 		ReligionService:        cs.ReligionService,
+		GenderService:          cs.GenderService,
 
 		MedicalProfile:      cs.MedicalProfile,
 		HospitalDispatch:    cs.HospitalDispatch,

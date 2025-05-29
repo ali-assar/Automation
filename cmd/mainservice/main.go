@@ -11,6 +11,7 @@ import (
 	"backend/internal/core/education"
 	educationlevel "backend/internal/core/educationLevel"
 	"backend/internal/core/familyinfo"
+	"backend/internal/core/gender"
 	"backend/internal/core/militarydetails"
 	"backend/internal/core/person"
 	"backend/internal/core/persontype"
@@ -57,7 +58,7 @@ func main() {
 	rankService := rank.NewService(dbInstance, actionService)
 	religionService := religion.NewService(dbInstance, actionService)
 	personTypeService := persontype.NewService(dbInstance, actionService)
-
+	genderService := gender.NewService(dbInstance, actionService)
 	// Seed database for testing
 	if cfg.IsTest {
 		if err := seeder.Seed(true, actionService); err != nil {
@@ -84,7 +85,8 @@ func main() {
 		RankService:            rankService,
 		ReligionService:        religionService,
 		PersonTypeService:      personTypeService,
-		EducationLevelService: educationLevelService,
+		EducationLevelService:  educationLevelService,
+		GenderService:          genderService,
 	}
 
 	// Create HandlerService

@@ -20,9 +20,22 @@ func (r *Repository) Create(person *Person) error {
 
 func (r *Repository) GetByID(nationalID string) (*Person, error) {
 	var person Person
-	if err := r.db.Preload("FamilyInfo").Preload("PhysicalInfo").Preload("ContactInfo").
-		Preload("Skills").Preload("Religion").Preload("PersonType").Preload("MilitaryDetails").
-		First(&person, "national_id_number = ?", nationalID).Error; err != nil {
+	if err := r.db.
+		Preload("FamilyInfo").
+		Preload("ContactInfo").
+		Preload("Skills").
+		Preload("Skills.Education").
+		Preload("Skills.Education.EducationLevel").
+		Preload("PhysicalInfo").
+		Preload("PhysicalInfo.BloodGroup").
+		Preload("PhysicalInfo.Gender").
+		Preload("PhysicalInfo.PhysicalStatus").
+		Preload("Religion").
+		Preload("PersonType").
+		Preload("MilitaryDetails").
+		Preload("MilitaryDetails.RankRef").
+		First(&person, "national_id_number = ?", nationalID).
+		Error; err != nil {
 		return nil, err
 	}
 	return &person, nil
@@ -30,8 +43,19 @@ func (r *Repository) GetByID(nationalID string) (*Person, error) {
 
 func (r *Repository) GetAll() ([]Person, error) {
 	var persons []Person
-	if err := r.db.Preload("FamilyInfo").Preload("PhysicalInfo").Preload("ContactInfo").
-		Preload("Skills").Preload("Religion").Preload("PersonType").Preload("MilitaryDetails").
+	if err := r.db.Preload("FamilyInfo").
+		Preload("ContactInfo").
+		Preload("Skills").
+		Preload("Skills.Education").
+		Preload("Skills.Education.EducationLevel").
+		Preload("PhysicalInfo").
+		Preload("PhysicalInfo.BloodGroup").
+		Preload("PhysicalInfo.Gender").
+		Preload("PhysicalInfo.PhysicalStatus").
+		Preload("Religion").
+		Preload("PersonType").
+		Preload("MilitaryDetails").
+		Preload("MilitaryDetails.RankRef").
 		Where("deleted_at = 0").Find(&persons).Error; err != nil {
 		return nil, err
 	}

@@ -44,14 +44,12 @@ Authorization: Bearer {{token}}
 }
 
 ### Get Person by ID - Success
-GET {{baseUrl}}/person/012345689
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6IjRkNTM5Mjc2LWNhZGItNDE2ZC1hYzQ2LTA2YTUwYjFmYTkyZSIsImV4cCI6MTc0ODUyMTY3Nywicm9sZSI6MX0.LaZfJIgnhhs1p71UNX6163cD_3Y9_ANCLIV0GaUY66M
+GET http://localhost:8080/api/personinfo/static/person/019333789
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImVkODZjZjAyLWEyZjMtNDU2ZS05ZjI1LWQzN2Q5ZGUzODNiYiIsImV4cCI6MTc0ODYwMDEwOSwicm9sZSI6MX0.jbXVdwwap-0HLh36XyM5fR1sZ18yStSWYyYvCC3-aEs
 
 ### Get All Persons - Success
-GET {{baseUrl}}/persons
-Content-Type: application/json
-X-Action-By: 083308ac-3c6b-4c5a-a1f5-6dfc63d4d63f
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6IjA4MzMwOGFjLTNjNmItNGM1YS1hMWY1LTZkZmM2M2Q0ZDYzZiIsImV4cCI6MTc0ODUwMDQwNywicm9sZSI6MX0.rFYywtTXQJbRRrY5Ixu3oZW-TIhzuoNooK8x0a6TPM0
+GET http://localhost:8080/api/personinfo/static/persons
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImVkODZjZjAyLWEyZjMtNDU2ZS05ZjI1LWQzN2Q5ZGUzODNiYiIsImV4cCI6MTc0ODYwMDEwOSwicm9sZSI6MX0.jbXVdwwap-0HLh36XyM5fR1sZ18yStSWYyYvCC3-aEs
 
 
 ### Update Person - Success

@@ -18,15 +18,16 @@ func NewService(db *gorm.DB, auditService audit.ActionLogger) *Service {
 	}
 }
 
-func (s *Service) CreatePhysicalInfo(height, weight int, eyeColor string, bloodGroupID, genderID, physicalStatusID int64, actionBy string) (int64, error) {
+func (s *Service) CreatePhysicalInfo(height, weight int, eyeColor, descriptionOfHealth string, bloodGroupID, genderID, physicalStatusID int64, actionBy string) (int64, error) {
 	physicalInfo := PhysicalInfo{
-		Height:           height,
-		Weight:           weight,
-		EyeColor:         eyeColor,
-		BloodGroupID:     bloodGroupID,
-		GenderID:         genderID,
-		PhysicalStatusID: physicalStatusID,
-		DeletedAt:        0,
+		Height:              height,
+		Weight:              weight,
+		EyeColor:            eyeColor,
+		BloodGroupID:        bloodGroupID,
+		GenderID:            genderID,
+		PhysicalStatusID:    physicalStatusID,
+		DescriptionOfHealth: descriptionOfHealth,
+		DeletedAt:           0,
 	}
 	if err := s.repo.Create(&physicalInfo); err != nil {
 		return 0, err

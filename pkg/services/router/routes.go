@@ -51,9 +51,6 @@ func RegisterRoutes(r *gin.Engine, s *api.HandlerService) {
 		// PhysicalInfo
 		staticGroup.GET("/physicalinfo/:id", api.GetPhysicalInfoByID(s))
 		staticGroup.GET("/physicalinfos", api.GetAllPhysicalInfos(s))
-		// PhysicalStatus
-		staticGroup.GET("/physicalstatus/:id", api.GetPhysicalStatusByID(s))
-		staticGroup.GET("/physicalstatuses", api.GetAllPhysicalStatuses(s))
 		// Role
 		staticGroup.GET("/role/:id", api.GetRoleByID(s))
 		staticGroup.GET("/role/type/:type", api.GetRoleByType(s))
@@ -112,10 +109,6 @@ func RegisterRoutes(r *gin.Engine, s *api.HandlerService) {
 		dynamicGroup.POST("/physicalinfo", api.CreatePhysicalInfo(s))
 		dynamicGroup.PUT("/physicalinfo/:id", api.UpdatePhysicalInfo(s))
 		dynamicGroup.DELETE("/physicalinfo/:id", api.DeletePhysicalInfo(s))
-		// PhysicalStatus
-		dynamicGroup.POST("/physicalstatus", api.CreatePhysicalStatus(s))
-		dynamicGroup.PUT("/physicalstatus/:id", api.UpdatePhysicalStatus(s))
-		dynamicGroup.DELETE("/physicalstatus/:id", api.DeletePhysicalStatus(s))
 		// Role
 		dynamicGroup.POST("/role", api.CreateRole(s))
 		dynamicGroup.PUT("/role/:id", api.UpdateRole(s))

@@ -19,31 +19,14 @@ func SeedPhysicalStatus(db *gorm.DB, auditService audit.ActionLogger) error {
 	}
 
 	for _, s := range statuses {
-		existing, err := repo.GetByID(s.ID)
-		if err == nil {
-			if existing.DeletedAt != 0 {
-				existing.DeletedAt = 0
-				if err := repo.Update(existing); err != nil {
-					return err
-				}
-			}
-			if existing.Status != s.Status || existing.Description != s.Description {
-				existing.Status = s.Status
-				existing.Description = s.Description
-				if err := repo.Update(existing); err != nil {
-					return err
-				}
-			}
-			continue
-		} else if err != gorm.ErrRecordNotFound {
+		_, err := repo.GetByID(s.ID)
+		if err != gorm.ErrRecordNotFound {
 			return err
 		}
 
 		status := &PhysicalStatus{
 			ID:          s.ID,
 			Status:      s.Status,
-			Description: s.Description,
-			DeletedAt:   0,
 		}
 		if err := repo.Create(status); err != nil {
 			return err
