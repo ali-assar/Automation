@@ -1,15 +1,15 @@
 # Makefile for Automation project
 
 # Variables
-BINARY_NAME = main
+BINARY_NAME = backend
 GOCMD = go
 GOBUILD = $(GOCMD) build
 GOCLEAN = $(GOCMD) clean
 GOTEST = $(GOCMD) test
 GOMOD = $(GOCMD) mod
-PROJECT_DIR = /root/04Automation/backend"
+PROJECT_DIR = /root/04Automation/backend
 CMD_DIR = $(PROJECT_DIR)/cmd/mainservice
-OUTPUT_DIR = $(PROJECT_DIR)/bin
+OUTPUT_DIR = $(PROJECT_DIR)
 
 # Build the binary
 build:

@@ -105,28 +105,28 @@ type FullPersonRequest struct {
 	FamilyInfo       struct {
 		FatherDetails  string `json:"father_details" binding:"required"`
 		MotherDetails  string `json:"mother_details" binding:"required"`
-		ChildsDetails  string `json:"childs_details" binding:"required"`
-		HusbandDetails string `json:"husband_details" binding:"required"`
+		ChildsDetails  string `json:"childs_details" `
+		HusbandDetails string `json:"husband_details"`
 	} `json:"family_info"`
 	ContactInfo struct {
 		Address              string `json:"address" binding:"required"`
 		PhoneNumber          string `json:"phone_number" binding:"required"`
 		EmergencyPhoneNumber string `json:"emergency_phone_number" binding:"required"`
 		LandlinePhone        string `json:"landline_phone" binding:"required"`
-		EmailAddress         string `json:"email_address" binding:"required,email"`
-		SocialMedia          string `json:"social_media" binding:"required"`
+		EmailAddress         string `json:"email_address"`
+		SocialMedia          string `json:"social_media"`
 	} `json:"contact_info"`
 	Skills struct {
 		Education struct {
 			EducationLevelID int64  `json:"education_level_id" binding:"required"`
-			Description      string `json:"description" binding:"required"`
-			University       string `json:"university" binding:"required"`
-			StartDate        int64  `json:"start_date" binding:"required"`
-			EndDate          int64  `json:"end_date" binding:"required"`
+			Description      string `json:"description"`
+			University       string `json:"university" `
+			StartDate        int64  `json:"start_date" `
+			EndDate          int64  `json:"end_date" `
 		} `json:"education"`
-		Languages         string `json:"languages" binding:"required"`
-		SkillsDescription string `json:"skills_description" binding:"required"`
-		Certificates      string `json:"certificates" binding:"required"`
+		Languages         string `json:"languages" `
+		SkillsDescription string `json:"skills_description"`
+		Certificates      string `json:"certificates"`
 	} `json:"skills"`
 	PhysicalInfo struct {
 		BloodGroupID        int64  `json:"blood_group_id" binding:"required"`
@@ -135,7 +135,7 @@ type FullPersonRequest struct {
 		EyeColor            string `json:"eye_color" binding:"required"`
 		GenderID            int64  `json:"gender_id" binding:"required"`
 		PhysicalStatusID    int64  `json:"physical_status_id" binding:"required"`
-		DescriptionOfHealth string `json:"description_of_health" binding:"required"`
+		DescriptionOfHealth string `json:"description_of_health"`
 	} `json:"physical_info"`
 	Religion struct {
 		ReligionID int64 `json:"religion_id" binding:"required"`
@@ -145,11 +145,11 @@ type FullPersonRequest struct {
 	} `json:"person_type"`
 	MilitaryDetails struct {
 		RankID              int64 `json:"rank_id" binding:"required"`
-		ServiceStartDate    int64 `json:"service_start_date" binding:"required"`
-		ServiceDispatchDate int64 `json:"service_dispatch_date" binding:"required"`
-		ServiceUnit         int64 `json:"service_unit" binding:"required"`
-		BattalionUnit       int64 `json:"battalion_unit" binding:"required"`
-		CompanyUnit         int64 `json:"company_unit" binding:"required"`
+		ServiceStartDate    int64 `json:"service_start_date"`
+		ServiceDispatchDate int64 `json:"service_dispatch_date"`
+		ServiceUnit         int64 `json:"service_unit"`
+		BattalionUnit       int64 `json:"battalion_unit"`
+		CompanyUnit         int64 `json:"company_unit"`
 	} `json:"military_details"`
 }
 

@@ -57,7 +57,7 @@ func CreateAdmin(s *HandlerService) gin.HandlerFunc {
 			UserName         string `json:"user_name" binding:"required"`
 			Password         string `json:"password" binding:"required"`
 			RoleID           int64  `json:"role_id" binding:"required"`
-			CredentialsID    int64  `json:"credentials_id" binding:"required"`
+			CredentialsID    int64  `json:"credentials_id" ` //TODO:fix this when add in repo
 		}
 		if err := c.ShouldBindJSON(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

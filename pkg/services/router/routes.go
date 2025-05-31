@@ -8,7 +8,8 @@ import (
 )
 
 func RegisterRoutes(r *gin.Engine, s *api.HandlerService) {
-	r.Use(middleware.SetHeaders())
+
+	r.Use(middleware.CORSMiddleware())
 
 	// Public Routes
 	public := r.Group("/api/personinfo")

@@ -30,8 +30,8 @@ func SeedPhysicalInfo(db *gorm.DB, auditService audit.ActionLogger, isTest bool)
 		PhysicalStatusID    int64
 		DescriptionOfHealth string
 	}{
-		{175, 70, "Brown", "A+", 1, 1, `{"notes":"Healthy, no issues"}`},
-		{165, 60, "Blue", "O-", 2, 3, `{"notes":"Joint issue detected"}`},
+		{175, 70, "Brown", "A+", 1, 1, `"Healthy, no issues"`},
+		{165, 60, "Blue", "O-", 2, 3, `"Joint issue detected"`},
 	}
 
 	for _, r := range records {

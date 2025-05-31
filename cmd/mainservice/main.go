@@ -88,10 +88,9 @@ func main() {
 		EducationLevelService:  educationLevelService,
 		GenderService:          genderService,
 	}
-
+	gin.SetMode(gin.DebugMode)
 	// Create HandlerService
 	h := api.NewHandlerService(coreServices)
-
 	// Initialize router
 	if err := router.InitRouter(cfg.AppHost, cfg.AppPort, func(r *gin.Engine) {
 		router.RegisterRoutes(r, h)
