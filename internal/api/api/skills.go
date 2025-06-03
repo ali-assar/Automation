@@ -25,7 +25,7 @@ func CreateSkills(s *HandlerService) gin.HandlerFunc {
 			return
 		}
 		id, err := s.SkillsService.CreateSkills(
-			req.EducationID, req.Languages, req.SkillsDescription, req.Certificates, actionBy,
+			req.EducationID, &req.Languages, &req.SkillsDescription, &req.Certificates, actionBy,
 		)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

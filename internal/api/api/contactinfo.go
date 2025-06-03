@@ -27,7 +27,7 @@ func CreateContactInfo(s *HandlerService) gin.HandlerFunc {
 			return
 		}
 		id, err := s.ContactInfoService.CreateContactInfo(
-			req.Address, req.EmailAddress, req.SocialMedia,
+			req.Address, &req.EmailAddress, &req.SocialMedia,
 			req.PhoneNumber, req.EmergencyPhoneNumber, req.LandlinePhone, actionBy,
 		)
 		if err != nil {

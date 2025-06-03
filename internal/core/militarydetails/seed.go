@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
+
 func SeedMilitaryDetails(db *gorm.DB, auditService audit.ActionLogger, isTest bool) error {
 	if !isTest {
 		return nil
@@ -63,13 +64,19 @@ func SeedMilitaryDetails(db *gorm.DB, auditService audit.ActionLogger, isTest bo
 			return err
 		}
 
+		serviceStartDate := md.ServiceStartDate
+		serviceDispatchDate := md.ServiceDispatchDate
+		serviceUint := md.ServiceUnit
+		battalionUnit := md.BattalionUnit
+		companyUnit := md.CompanyUnit
+
 		detail := &MilitaryDetails{
 			RankID:              rank.ID,
-			ServiceStartDate:    md.ServiceStartDate,
-			ServiceDispatchDate: md.ServiceDispatchDate,
-			ServiceUnit:         md.ServiceUnit,
-			BattalionUnit:       md.BattalionUnit,
-			CompanyUnit:         md.CompanyUnit,
+			ServiceStartDate:    &serviceStartDate,
+			ServiceDispatchDate: &serviceDispatchDate,
+			ServiceUnit:         &serviceUint,
+			BattalionUnit:       &battalionUnit,
+			CompanyUnit:         &companyUnit,
 			DeletedAt:           0,
 		}
 		if err := repo.Create(detail); err != nil {

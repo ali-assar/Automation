@@ -1,28 +1,25 @@
 package api
 
 import (
-	"fmt"
+	"encoding/json"
 	"net/http"
+	"strings"
 	"time"
 
-	"backend/internal/core/bloodgroup" // Assuming BloodGroup model package
-	"backend/internal/core/contactinfo"
-	"backend/internal/core/education" // Assuming Education model package
+	"backend/internal/core/bloodgroup"
 	educationlevel "backend/internal/core/educationLevel"
-	"backend/internal/core/familyinfo"
 	"backend/internal/core/gender"
-	"backend/internal/core/militarydetails"
 	"backend/internal/core/person"
 	"backend/internal/core/persontype"
-	"backend/internal/core/physicalinfo"
 	"backend/internal/core/physicalstatus"
-	"backend/internal/core/rank" // Assuming Rank model package
+	"backend/internal/core/rank"
 	"backend/internal/core/religion"
-	"backend/internal/core/skills"
+	"backend/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
+// StaticTablesResponse defines the structure of the response for static table data.
 type StaticTablesResponse struct {
 	BloodGroups      []bloodgroup.BloodGroup         `json:"blood_groups"`
 	Religions        []religion.Religion             `json:"religions"`
@@ -33,6 +30,7 @@ type StaticTablesResponse struct {
 	PhysicalStatuses []physicalstatus.PhysicalStatus `json:"physical_statuses"`
 }
 
+// GetStaticTables retrieves all static table data and returns it in a single response.
 func GetStaticTables(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Fetch BloodGroups
@@ -41,6 +39,7 @@ func GetStaticTables(s *HandlerService) gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch blood groups: " + err.Error()})
 			return
 		}
+
 		// Fetch Religions
 		religions, err := s.ReligionService.GetAllReligions()
 		if err != nil {
@@ -62,72 +61,78 @@ func GetStaticTables(s *HandlerService) gin.HandlerFunc {
 			return
 		}
 
-		// Fetch education level
-		educationlevel, err := s.EducationLevelService.GetAllEducations()
+		// Fetch Education Levels
+		educationLevels, err := s.EducationLevelService.GetAllEducations()
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch education level: " + err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch education levels: " + err.Error()})
 			return
 		}
 
-		// Fetch physical Status level
-		gender, err := s.GenderService.GetAllGenders()
+		// Fetch Genders
+		genders, err := s.GenderService.GetAllGenders()
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch gender: " + err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch genders: " + err.Error()})
 			return
 		}
 
-		physStatuses, err := s.PhysicalStatusService.GetAllPhysicalStatuses()
+		// Fetch Physical Statuses
+		physicalStatuses, err := s.PhysicalStatusService.GetAllPhysicalStatuses()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch physical statuses: " + err.Error()})
 			return
 		}
 
-		// Construct response
+		// Construct the response
 		response := StaticTablesResponse{
 			BloodGroups:      bloodGroups,
 			Religions:        religions,
 			PersonTypes:      personTypes,
 			Ranks:            ranks,
-			EducationLevel:   educationlevel,
-			Gender:           gender,
-			PhysicalStatuses: physStatuses,
+			EducationLevel:   educationLevels,
+			Gender:           genders,
+			PhysicalStatuses: physicalStatuses,
 		}
 
 		c.JSON(http.StatusOK, response)
 	}
 }
 
+// FullPersonRequest defines the structure of the JSON request for creating a full person record.
 type FullPersonRequest struct {
 	NationalIDNumber string `json:"national_id_number" binding:"required"`
 	FirstName        string `json:"first_name" binding:"required"`
 	LastName         string `json:"last_name" binding:"required"`
 	BirthDate        string `json:"birth_date" binding:"required"`
-	FamilyInfo       struct {
-		FatherDetails  string `json:"father_details" binding:"required"`
-		MotherDetails  string `json:"mother_details" binding:"required"`
-		ChildsDetails  string `json:"childs_details" `
-		HusbandDetails string `json:"husband_details"`
+
+	FamilyInfo struct {
+		FatherDetails  string  `json:"father_details" binding:"required"` // required JSON string
+		MotherDetails  string  `json:"mother_details" binding:"required"` // required JSON string
+		ChildsDetails  string  `json:"childs_details"`                    // optional JSON string
+		HusbandDetails *string `json:"husband_details"`                   // optional JSON string
 	} `json:"family_info"`
+
 	ContactInfo struct {
 		Address              string `json:"address" binding:"required"`
 		PhoneNumber          string `json:"phone_number" binding:"required"`
 		EmergencyPhoneNumber string `json:"emergency_phone_number" binding:"required"`
 		LandlinePhone        string `json:"landline_phone" binding:"required"`
-		EmailAddress         string `json:"email_address"`
-		SocialMedia          string `json:"social_media"`
+		EmailAddress         string `json:"email_address"` // optional
+		SocialMedia          string `json:"social_media"`  // optional JSON string
 	} `json:"contact_info"`
+
 	Skills struct {
 		Education struct {
 			EducationLevelID int64  `json:"education_level_id" binding:"required"`
-			Description      string `json:"description"`
-			University       string `json:"university" `
-			StartDate        int64  `json:"start_date" `
-			EndDate          int64  `json:"end_date" `
+			Description      string `json:"description"` // optional
+			University       string `json:"university"`  // optional
+			StartDate        int64  `json:"start_date"`  // optional
+			EndDate          int64  `json:"end_date"`    // optional
 		} `json:"education"`
-		Languages         string `json:"languages" `
-		SkillsDescription string `json:"skills_description"`
-		Certificates      string `json:"certificates"`
+		Languages         string `json:"languages"`          // optional JSON string
+		SkillsDescription string `json:"skills_description"` // optional
+		Certificates      string `json:"certificates"`       // optional
 	} `json:"skills"`
+
 	PhysicalInfo struct {
 		BloodGroupID        int64  `json:"blood_group_id" binding:"required"`
 		Height              int    `json:"height" binding:"required"`
@@ -135,139 +140,158 @@ type FullPersonRequest struct {
 		EyeColor            string `json:"eye_color" binding:"required"`
 		GenderID            int64  `json:"gender_id" binding:"required"`
 		PhysicalStatusID    int64  `json:"physical_status_id" binding:"required"`
-		DescriptionOfHealth string `json:"description_of_health"`
+		DescriptionOfHealth string `json:"description_of_health"` // optional
 	} `json:"physical_info"`
+
 	Religion struct {
 		ReligionID int64 `json:"religion_id" binding:"required"`
 	} `json:"religion"`
+
 	PersonType struct {
 		PersonTypeID int64 `json:"person_type_id" binding:"required"`
 	} `json:"person_type"`
+
 	MilitaryDetails struct {
 		RankID              int64 `json:"rank_id" binding:"required"`
-		ServiceStartDate    int64 `json:"service_start_date"`
-		ServiceDispatchDate int64 `json:"service_dispatch_date"`
-		ServiceUnit         int64 `json:"service_unit"`
-		BattalionUnit       int64 `json:"battalion_unit"`
-		CompanyUnit         int64 `json:"company_unit"`
+		ServiceStartDate    int64 `json:"service_start_date"`    // optional
+		ServiceDispatchDate int64 `json:"service_dispatch_date"` // optional
+		ServiceUnit         int64 `json:"service_unit"`          // optional
+		BattalionUnit       int64 `json:"battalion_unit"`        // optional
+		CompanyUnit         int64 `json:"company_unit"`          // optional
 	} `json:"military_details"`
 }
 
+// CreateFullPerson handles the creation of a full person record with related entities.
 func CreateFullPerson(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req FullPersonRequest
 		if err := c.ShouldBindJSON(&req); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request payload: " + err.Error()})
 			return
 		}
 
+		// Check for X-Action-By header
 		actionBy := c.GetHeader("X-Action-By")
 		if actionBy == "" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
 
-		// TODO: add x action by validation
-
 		// Parse birth date
 		birthDate, err := time.Parse("2006-01-02", req.BirthDate)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid birth_date format, should be YYYY-MM-DD"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid birth_date format, expected YYYY-MM-DD: " + err.Error()})
 			return
 		}
 
-		// Create FamilyInfo
-		familyInfo := &familyinfo.FamilyInfo{
-			FatherDetails:  req.FamilyInfo.FatherDetails,
-			MotherDetails:  req.FamilyInfo.MotherDetails,
-			ChildsDetails:  req.FamilyInfo.ChildsDetails,
-			HusbandDetails: req.FamilyInfo.HusbandDetails,
-			DeletedAt:      0,
+		// **Family Info**: Validate and create
+		fatherDetails, err := utils.ValidateRequiredJSON(req.FamilyInfo.FatherDetails)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "father_details must be non-empty valid JSON: " + err.Error()})
+			return
 		}
-		familyinfoID, err := s.FamilyInfoService.CreateFamilyInfo(familyInfo.FatherDetails, familyInfo.MotherDetails, familyInfo.ChildsDetails, familyInfo.HusbandDetails, actionBy)
-
+		motherDetails, err := utils.ValidateRequiredJSON(req.FamilyInfo.MotherDetails)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "mother_details must be non-empty valid JSON: " + err.Error()})
+			return
+		}
+		childsDetails, err := utils.SafeJSONPtr(req.FamilyInfo.ChildsDetails)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "childs_details must be valid JSON: " + err.Error()})
+			return
+		}
+		var husbandDetails *string
+		if req.FamilyInfo.HusbandDetails != nil {
+			s := strings.TrimSpace(*req.FamilyInfo.HusbandDetails)
+			if s != "" {
+				var js json.RawMessage
+				if err := json.Unmarshal([]byte(s), &js); err != nil {
+					c.JSON(http.StatusBadRequest, gin.H{"error": "husband_details must be valid JSON: " + err.Error()})
+					return
+				}
+				husbandDetails = &s
+			}
+		}
+		familyInfoID, err := s.FamilyInfoService.CreateFamilyInfo(fatherDetails, motherDetails, childsDetails, husbandDetails, actionBy)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create family info: " + err.Error()})
 			return
 		}
 
-		// Create ContactInfo
-		contactInfo := &contactinfo.ContactInfo{
-			Address:              req.ContactInfo.Address,
-			PhoneNumber:          req.ContactInfo.PhoneNumber,
-			EmergencyPhoneNumber: req.ContactInfo.EmergencyPhoneNumber,
-			LandlinePhone:        req.ContactInfo.LandlinePhone,
-			EmailAddress:         req.ContactInfo.EmailAddress,
-			SocialMedia:          req.ContactInfo.SocialMedia,
-			DeletedAt:            0,
+		// **Contact Info**: Handle optional fields and create
+		email := utils.NilIfEmpty(req.ContactInfo.EmailAddress)
+		var socialMedia *string
+		if req.ContactInfo.SocialMedia != "" {
+			s := strings.TrimSpace(req.ContactInfo.SocialMedia)
+			if s != "" {
+				var js json.RawMessage
+				if err := json.Unmarshal([]byte(s), &js); err != nil {
+					c.JSON(http.StatusBadRequest, gin.H{"error": "social_media must be valid JSON: " + err.Error()})
+					return
+				}
+				socialMedia = &s
+			}
 		}
-
 		contactInfoID, err := s.ContactInfoService.CreateContactInfo(
-			contactInfo.Address, contactInfo.EmailAddress, contactInfo.SocialMedia,
-			contactInfo.PhoneNumber, contactInfo.EmergencyPhoneNumber, contactInfo.LandlinePhone, actionBy,
+			req.ContactInfo.Address,
+			email,
+			socialMedia,
+			req.ContactInfo.PhoneNumber,
+			req.ContactInfo.EmergencyPhoneNumber,
+			req.ContactInfo.LandlinePhone,
+			actionBy,
 		)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create contact info: " + err.Error()})
 			return
 		}
 
-		// Create Education (dependency for Skills)
-		education := &education.Education{
-			EducationLevelID: req.Skills.Education.EducationLevelID,
-			Description:      req.Skills.Education.Description,
-			University:       req.Skills.Education.University,
-			StartDate:        req.Skills.Education.StartDate,
-			EndDate:          req.Skills.Education.EndDate,
-			DeletedAt:        0,
-		}
-
-		educationInfoID, err := s.EducationService.CreateEducation(
-			education.EducationLevelID, education.Description,
-			education.University, education.StartDate, education.EndDate, actionBy,
+		// **Education**: Convert optional fields to pointers and create
+		edu := req.Skills.Education
+		educationID, err := s.EducationService.CreateEducation(
+			edu.EducationLevelID,
+			utils.NilIfEmpty(edu.Description),
+			utils.NilIfEmpty(edu.University),
+			utils.Int64PtrIfNonZero(edu.StartDate),
+			utils.Int64PtrIfNonZero(edu.EndDate),
+			actionBy,
 		)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create education: " + err.Error()})
 			return
 		}
 
-		// Create Skills
-		skills := &skills.Skills{
-			EducationID:       educationInfoID,
-			Languages:         req.Skills.Languages,
-			SkillsDescription: req.Skills.SkillsDescription,
-			Certificates:      req.Skills.Certificates,
-			DeletedAt:         0,
+		// **Skills**: Validate JSON and create
+		sk := req.Skills
+		languages, err := utils.SafeJSONPtr(sk.Languages)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "languages must be valid JSON: " + err.Error()})
+			return
 		}
-
 		skillsID, err := s.SkillsService.CreateSkills(
-			skills.EducationID, skills.Languages, skills.SkillsDescription, skills.Certificates, actionBy,
+			educationID,
+			languages,
+			utils.NilIfEmpty(sk.SkillsDescription),
+			utils.NilIfEmpty(sk.Certificates),
+			actionBy,
 		)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create skills: " + err.Error()})
 			return
 		}
 
-		// 2) Now build & persist PhysicalInfo with that new status ID:
-		physicalInfo := &physicalinfo.PhysicalInfo{
-			BloodGroupID:        req.PhysicalInfo.BloodGroupID,
-			Height:              req.PhysicalInfo.Height,
-			Weight:              req.PhysicalInfo.Weight,
-			EyeColor:            req.PhysicalInfo.EyeColor,
-			GenderID:            req.PhysicalInfo.GenderID,
-			PhysicalStatusID:    req.PhysicalInfo.PhysicalStatusID,
-			DescriptionOfHealth: req.PhysicalInfo.DescriptionOfHealth,
-			DeletedAt:           0,
-		}
-
+		// **Physical Info**: Convert optional field to pointer and create
+		pi := req.PhysicalInfo
+		descriptionOfHealth := utils.NilIfEmpty(pi.DescriptionOfHealth)
 		physicalInfoID, err := s.PhysicalInfoService.CreatePhysicalInfo(
-			physicalInfo.Height,
-			physicalInfo.Weight,
-			physicalInfo.EyeColor,
-			physicalInfo.DescriptionOfHealth,
-			physicalInfo.BloodGroupID,
-			physicalInfo.GenderID,
-			physicalInfo.PhysicalStatusID,
 
+			pi.Height,
+			pi.Weight,
+			pi.EyeColor,
+			descriptionOfHealth,
+			pi.BloodGroupID,
+			pi.GenderID,
+			pi.PhysicalStatusID,
 			actionBy,
 		)
 		if err != nil {
@@ -275,48 +299,45 @@ func CreateFullPerson(s *HandlerService) gin.HandlerFunc {
 			return
 		}
 
-		// Create MilitaryDetails
-		militaryDetails := &militarydetails.MilitaryDetails{
-			RankID:              req.MilitaryDetails.RankID,
-			ServiceStartDate:    req.MilitaryDetails.ServiceStartDate,
-			ServiceDispatchDate: req.MilitaryDetails.ServiceDispatchDate,
-			ServiceUnit:         req.MilitaryDetails.ServiceUnit,
-			BattalionUnit:       req.MilitaryDetails.BattalionUnit,
-			CompanyUnit:         req.MilitaryDetails.CompanyUnit,
-			DeletedAt:           0,
-		}
-
+		// **Military Details**: Convert optional fields to pointers and create
+		mdet := req.MilitaryDetails
 		militaryDetailsID, err := s.MilitaryDetailsService.CreateMilitaryDetails(
-			militaryDetails.RankID, militaryDetails.ServiceStartDate, militaryDetails.ServiceDispatchDate,
-			militaryDetails.ServiceUnit, militaryDetails.BattalionUnit, militaryDetails.CompanyUnit, actionBy,
+			mdet.RankID,
+			utils.Int64PtrIfNonZero(mdet.ServiceStartDate),
+			utils.Int64PtrIfNonZero(mdet.ServiceDispatchDate),
+			utils.Int64PtrIfNonZero(mdet.ServiceUnit),
+			utils.Int64PtrIfNonZero(mdet.BattalionUnit),
+			utils.Int64PtrIfNonZero(mdet.CompanyUnit),
+			actionBy,
 		)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create military details: " + err.Error()})
 			return
 		}
-		fmt.Println("militaryDetailsid", militaryDetailsID)
-		// Create Person
-		person := &person.Person{
+
+		// **Create Person**: Assemble and create the person record
+		p := &person.Person{
 			NationalIDNumber: req.NationalIDNumber,
 			FirstName:        req.FirstName,
 			LastName:         req.LastName,
 			BirthDate:        birthDate,
 			DeletedAt:        0,
 		}
-		person.SetFamilyInfoID(familyinfoID)
-		person.SetContactInfoID(contactInfoID)
-		person.SetSkillsID(skillsID)
-		person.SetPhysicalInfoID(physicalInfoID)
-		person.SetReligionID(req.Religion.ReligionID)
-		person.SetPersonTypeID(req.PersonType.PersonTypeID)
-		person.SetMilitaryDetailsID(militaryDetailsID)
+		p.SetFamilyInfoID(familyInfoID)
+		p.SetContactInfoID(contactInfoID)
+		p.SetSkillsID(skillsID)
+		p.SetPhysicalInfoID(physicalInfoID)
+		p.SetReligionID(req.Religion.ReligionID)
+		p.SetPersonTypeID(req.PersonType.PersonTypeID)
+		p.SetMilitaryDetailsID(militaryDetailsID)
 
-		strID, err := s.PersonService.CreatePerson(person, actionBy)
+		personID, err := s.PersonService.CreatePerson(p, actionBy)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create person: " + err.Error()})
 			return
 		}
 
-		c.JSON(http.StatusCreated, gin.H{"national_id_number": strID})
+		// Return success response
+		c.JSON(http.StatusCreated, gin.H{"national_id_number": personID})
 	}
 }

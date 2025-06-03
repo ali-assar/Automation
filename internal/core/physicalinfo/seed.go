@@ -67,8 +67,8 @@ func SeedPhysicalInfo(db *gorm.DB, auditService audit.ActionLogger, isTest bool)
 			First(&existing).Error
 		if err == nil {
 			// update description if changed
-			if existing.DescriptionOfHealth != r.DescriptionOfHealth {
-				existing.DescriptionOfHealth = r.DescriptionOfHealth
+			if existing.DescriptionOfHealth != &r.DescriptionOfHealth {
+				existing.DescriptionOfHealth = &r.DescriptionOfHealth
 				if err := repo.Update(&existing); err != nil {
 					return err
 				}
@@ -86,7 +86,7 @@ func SeedPhysicalInfo(db *gorm.DB, auditService audit.ActionLogger, isTest bool)
 			BloodGroupID:        bg.ID,
 			GenderID:            g.ID,
 			PhysicalStatusID:    ps.ID,
-			DescriptionOfHealth: r.DescriptionOfHealth,
+			DescriptionOfHealth: &r.DescriptionOfHealth,
 			DeletedAt:           0,
 		}
 		if err := repo.Create(newPI); err != nil {

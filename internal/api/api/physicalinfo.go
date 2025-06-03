@@ -28,7 +28,7 @@ func CreatePhysicalInfo(s *HandlerService) gin.HandlerFunc {
 			return
 		}
 		id, err := s.PhysicalInfoService.CreatePhysicalInfo(
-			req.Height, req.Weight, req.EyeColor, req.DescriptionOfHealth,
+			req.Height, req.Weight, req.EyeColor, &req.DescriptionOfHealth,
 			req.BloodGroupID, req.GenderID, req.PhysicalStatusID,
 			actionBy,
 		)

@@ -51,15 +51,20 @@ func SeedEducation(db *gorm.DB, auditService audit.ActionLogger, isTest bool) er
 		} else if err != gorm.ErrRecordNotFound {
 			return err
 		}
+		desc := e.Description
+		uni := e.University
+		start := e.StartDate
+		end := e.EndDate
 
 		education := &Education{
 			EducationLevelID: e.EducationLevelID,
-			Description:      e.Description,
-			University:       e.University,
-			StartDate:        e.StartDate,
-			EndDate:          e.EndDate,
+			Description:      &desc,
+			University:       &uni,
+			StartDate:        &start,
+			EndDate:          &end,
 			DeletedAt:        0,
 		}
+
 		if err := repo.Create(education); err != nil {
 			return err
 		}

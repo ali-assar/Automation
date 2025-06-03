@@ -27,8 +27,8 @@ func CreateMilitaryDetails(s *HandlerService) gin.HandlerFunc {
 			return
 		}
 		id, err := s.MilitaryDetailsService.CreateMilitaryDetails(
-			req.RankID, req.ServiceStartDate, req.ServiceDispatchDate,
-			req.ServiceUnit, req.BattalionUnit, req.CompanyUnit, actionBy,
+			req.RankID, &req.ServiceStartDate, &req.ServiceDispatchDate,
+			&req.ServiceUnit, &req.BattalionUnit, &req.CompanyUnit, actionBy,
 		)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -37,7 +37,6 @@ func CreateMilitaryDetails(s *HandlerService) gin.HandlerFunc {
 		c.JSON(http.StatusCreated, gin.H{"id": id})
 	}
 }
-
 
 func UpdateMilitaryDetails(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -88,8 +87,6 @@ func GetAllMilitaryDetails(s *HandlerService) gin.HandlerFunc {
 		c.JSON(http.StatusOK, militaryDetails)
 	}
 }
-
-
 
 func DeleteMilitaryDetails(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {

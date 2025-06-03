@@ -27,8 +27,8 @@ func CreateEducation(s *HandlerService) gin.HandlerFunc {
 			return
 		}
 		id, err := s.EducationService.CreateEducation(
-			req.EducationLevelID, req.Description,
-			req.University, req.StartDate, req.EndDate, actionBy,
+			req.EducationLevelID, &req.Description,
+			&req.University, &req.StartDate, &req.EndDate, actionBy,
 		)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

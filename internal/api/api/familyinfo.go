@@ -25,7 +25,7 @@ func CreateFamilyInfo(s *HandlerService) gin.HandlerFunc {
 			return
 		}
 		id, err := s.FamilyInfoService.CreateFamilyInfo(
-			req.FatherDetails, req.MotherDetails, req.ChildsDetails, req.HusbandDetails, actionBy,
+			req.FatherDetails, req.MotherDetails, &req.ChildsDetails, &req.HusbandDetails, actionBy,
 		)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

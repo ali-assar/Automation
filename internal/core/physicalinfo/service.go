@@ -18,7 +18,7 @@ func NewService(db *gorm.DB, auditService audit.ActionLogger) *Service {
 	}
 }
 
-func (s *Service) CreatePhysicalInfo(height, weight int, eyeColor, descriptionOfHealth string, bloodGroupID, genderID, physicalStatusID int64, actionBy string) (int64, error) {
+func (s *Service) CreatePhysicalInfo(height, weight int, eyeColor string, descriptionOfHealth *string, bloodGroupID, genderID, physicalStatusID int64, actionBy string) (int64, error) {
 	physicalInfo := PhysicalInfo{
 		Height:              height,
 		Weight:              weight,
@@ -26,7 +26,7 @@ func (s *Service) CreatePhysicalInfo(height, weight int, eyeColor, descriptionOf
 		BloodGroupID:        bloodGroupID,
 		GenderID:            genderID,
 		PhysicalStatusID:    physicalStatusID,
-		DescriptionOfHealth: descriptionOfHealth,
+		DescriptionOfHealth: descriptionOfHealth, // Directly use *string
 		DeletedAt:           0,
 	}
 	if err := s.repo.Create(&physicalInfo); err != nil {
@@ -37,7 +37,6 @@ func (s *Service) CreatePhysicalInfo(height, weight int, eyeColor, descriptionOf
 	}
 	return physicalInfo.ID, nil
 }
-
 func (s *Service) GetPhysicalInfoByID(id int64) (*PhysicalInfo, error) {
 	return s.repo.GetByID(id)
 }

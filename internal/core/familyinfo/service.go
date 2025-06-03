@@ -18,11 +18,12 @@ func NewService(db *gorm.DB, auditService audit.ActionLogger) *Service {
 	}
 }
 
-func (s *Service) CreateFamilyInfo(fatherDetails, motherDetails, childsDetails, husbandDetails string, actionBy string) (int64, error) {
+func (s *Service) CreateFamilyInfo(fatherDetails, motherDetails string, childDetails, husbandDetails *string, actionBy string) (int64, error) {
+
 	familyInfo := FamilyInfo{
 		FatherDetails:  fatherDetails,
 		MotherDetails:  motherDetails,
-		ChildsDetails:  childsDetails,
+		ChildsDetails:  childDetails,
 		HusbandDetails: husbandDetails,
 		DeletedAt:      0,
 	}
