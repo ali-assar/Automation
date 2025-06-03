@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (s *HandlerService) CreateHospitalDispatch() gin.HandlerFunc {
+func CreateHospitalDispatch(s *HandlerService)  gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req struct {
 			VisitID       int64  `json:"visit_id" binding:"required"`
@@ -41,7 +41,7 @@ func (s *HandlerService) CreateHospitalDispatch() gin.HandlerFunc {
 	}
 }
 
-func (s *HandlerService) GetHospitalDispatchByID() gin.HandlerFunc {
+func GetHospitalDispatchByID(s *HandlerService)  gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
@@ -57,7 +57,7 @@ func (s *HandlerService) GetHospitalDispatchByID() gin.HandlerFunc {
 	}
 }
 
-func (s *HandlerService) GetAllHospitalDispatches() gin.HandlerFunc {
+func GetAllHospitalDispatches(s *HandlerService)  gin.HandlerFunc {
 	return func(c *gin.Context) {
 		dispatches, err := s.HospitalDispatch.GetAllHospitalDispatches()
 		if err != nil {
@@ -68,7 +68,7 @@ func (s *HandlerService) GetAllHospitalDispatches() gin.HandlerFunc {
 	}
 }
 
-func (s *HandlerService) UpdateHospitalDispatch() gin.HandlerFunc {
+func UpdateHospitalDispatch(s *HandlerService)  gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
@@ -93,7 +93,7 @@ func (s *HandlerService) UpdateHospitalDispatch() gin.HandlerFunc {
 	}
 }
 
-func (s *HandlerService) DeleteHospitalDispatch() gin.HandlerFunc {
+func DeleteHospitalDispatch(s *HandlerService)  gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
@@ -113,7 +113,7 @@ func (s *HandlerService) DeleteHospitalDispatch() gin.HandlerFunc {
 	}
 }
 
-func (s *HandlerService) DeleteHospitalDispatchHard() gin.HandlerFunc {
+func DeleteHospitalDispatchHard(s *HandlerService)  gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {

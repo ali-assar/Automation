@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (s *HandlerService) CreateMedicine() gin.HandlerFunc {
+func CreateMedicine(s *HandlerService)  gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req struct {
 			Name        string `json:"name" binding:"required"`
@@ -39,7 +39,7 @@ func (s *HandlerService) CreateMedicine() gin.HandlerFunc {
 	}
 }
 
-func (s *HandlerService) GetMedicineByID() gin.HandlerFunc {
+func GetMedicineByID(s *HandlerService)  gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idStr := c.Param("id")
 		id, err := strconv.ParseInt(idStr, 10, 64)
@@ -56,7 +56,7 @@ func (s *HandlerService) GetMedicineByID() gin.HandlerFunc {
 	}
 }
 
-func (s *HandlerService) GetAllMedicines() gin.HandlerFunc {
+func GetAllMedicines(s *HandlerService)  gin.HandlerFunc {
 	return func(c *gin.Context) {
 		medicines, err := s.Medicine.GetAllMedicines()
 		if err != nil {
@@ -67,7 +67,7 @@ func (s *HandlerService) GetAllMedicines() gin.HandlerFunc {
 	}
 }
 
-func (s *HandlerService) UpdateMedicine() gin.HandlerFunc {
+func UpdateMedicine(s *HandlerService)  gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idStr := c.Param("id")
 		id, err := strconv.ParseInt(idStr, 10, 64)
@@ -93,7 +93,7 @@ func (s *HandlerService) UpdateMedicine() gin.HandlerFunc {
 	}
 }
 
-func (s *HandlerService) DeleteMedicine() gin.HandlerFunc {
+func DeleteMedicine(s *HandlerService)  gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idStr := c.Param("id")
 		id, err := strconv.ParseInt(idStr, 10, 64)
@@ -114,7 +114,7 @@ func (s *HandlerService) DeleteMedicine() gin.HandlerFunc {
 	}
 }
 
-func (s *HandlerService) DeleteMedicineHard() gin.HandlerFunc {
+func DeleteMedicineHard(s *HandlerService)  gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idStr := c.Param("id")
 		id, err := strconv.ParseInt(idStr, 10, 64)

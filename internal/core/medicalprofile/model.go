@@ -13,7 +13,7 @@ type MedicalProfile struct {
 
 	Allergies             string                                  `gorm:"type:text"`
 	MedicalHistory        string                                  `gorm:"type:text"`
-	Vaccinations          string                                  `gorm:"type:jsonb"`
+	Vaccinations          string                                  `gorm:"type:json"`
 	BloodTypeID           int64                                   `gorm:"not null"`
 	PsychologicalStatusID int64                                   `gorm:"not null"`
 	DeletedAt             int64                                   `gorm:"not null"`

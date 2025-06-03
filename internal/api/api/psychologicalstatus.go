@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (s *HandlerService) CreatePsychologicalStatus() gin.HandlerFunc {
+func CreatePsychologicalStatus(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req struct {
 			Status string `json:"status" binding:"required"`
@@ -34,7 +34,7 @@ func (s *HandlerService) CreatePsychologicalStatus() gin.HandlerFunc {
 	}
 }
 
-func (s *HandlerService) GetPsychologicalStatusByID() gin.HandlerFunc {
+func GetPsychologicalStatusByID(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idStr := c.Param("id")
 		id, err := strconv.ParseInt(idStr, 10, 64)
@@ -51,7 +51,7 @@ func (s *HandlerService) GetPsychologicalStatusByID() gin.HandlerFunc {
 	}
 }
 
-func (s *HandlerService) GetAllPsychologicalStatuses() gin.HandlerFunc {
+func GetAllPsychologicalStatuses(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		statuses, err := s.PsychologicalStatus.GetAllPsychologicalStatuses()
 		if err != nil {
@@ -62,7 +62,7 @@ func (s *HandlerService) GetAllPsychologicalStatuses() gin.HandlerFunc {
 	}
 }
 
-func (s *HandlerService) UpdatePsychologicalStatus() gin.HandlerFunc {
+func UpdatePsychologicalStatus(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idStr := c.Param("id")
 		id, err := strconv.ParseInt(idStr, 10, 64)
@@ -88,7 +88,7 @@ func (s *HandlerService) UpdatePsychologicalStatus() gin.HandlerFunc {
 	}
 }
 
-func (s *HandlerService) DeletePsychologicalStatus() gin.HandlerFunc {
+func DeletePsychologicalStatus(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idStr := c.Param("id")
 		id, err := strconv.ParseInt(idStr, 10, 64)

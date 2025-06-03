@@ -63,6 +63,18 @@ func RegisterRoutes(r *gin.Engine, s *api.HandlerService) {
 
 		// Get Info for person creation
 		staticGroup.GET("/static-tables", api.GetStaticTables(s))
+
+		staticGroup.GET("/hospitaldispatch/:id", api.GetHospitalDispatchByID(s))
+		staticGroup.GET("/hospitaldispatches", api.GetAllHospitalDispatches(s))
+		staticGroup.GET("/medicalprofile/:id", api.GetMedicalProfileByID(s))
+		staticGroup.GET("/medicalprofile/person/:person_id", api.GetMedicalProfileByPersonID(s))
+		staticGroup.GET("/medicalprofiles", api.GetAllMedicalProfiles(s))
+		staticGroup.GET("/medicine/:id", api.GetMedicineByID(s))
+		staticGroup.GET("/medicines", api.GetAllMedicines(s))
+		staticGroup.GET("/prescription/:id", api.GetPrescriptionByID(s))
+		staticGroup.GET("/prescriptions", api.GetAllPrescriptions(s))
+		staticGroup.GET("/psychologicalstatus/:id", api.GetPsychologicalStatusByID(s))
+		staticGroup.GET("/psychologicalstatuses", api.GetAllPsychologicalStatuses(s))
 	}
 
 	// Dynamic Protected Routes (POST, PUT, DELETE)
@@ -118,5 +130,25 @@ func RegisterRoutes(r *gin.Engine, s *api.HandlerService) {
 		dynamicGroup.POST("/skills", api.CreateSkills(s))
 		dynamicGroup.PUT("/skills/:id", api.UpdateSkills(s))
 		dynamicGroup.DELETE("/skills/:id", api.DeleteSkills(s))
+		// Medical-related dynamic routes
+		dynamicGroup.POST("/hospitaldispatch", api.CreateHospitalDispatch(s))
+		dynamicGroup.PUT("/hospitaldispatch/:id", api.UpdateHospitalDispatch(s))
+		dynamicGroup.DELETE("/hospitaldispatch/:id", api.DeleteHospitalDispatch(s))
+		dynamicGroup.DELETE("/hospitaldispatch/hard/:id", api.DeleteHospitalDispatchHard(s))
+		dynamicGroup.POST("/medicalprofile", api.CreateMedicalProfile(s))
+		dynamicGroup.PUT("/medicalprofile/:id", api.UpdateMedicalProfile(s))
+		dynamicGroup.DELETE("/medicalprofile/:id", api.DeleteMedicalProfile(s))
+		dynamicGroup.DELETE("/medicalprofile/hard/:id", api.DeleteMedicalProfileHard(s))
+		dynamicGroup.POST("/medicine", api.CreateMedicine(s))
+		dynamicGroup.PUT("/medicine/:id", api.UpdateMedicine(s))
+		dynamicGroup.DELETE("/medicine/:id", api.DeleteMedicine(s))
+		dynamicGroup.DELETE("/medicine/hard/:id", api.DeleteMedicineHard(s))
+		dynamicGroup.POST("/prescription", api.CreatePrescription(s))
+		dynamicGroup.PUT("/prescription/:id", api.UpdatePrescription(s))
+		dynamicGroup.DELETE("/prescription/:id", api.DeletePrescription(s))
+		dynamicGroup.DELETE("/prescription/hard/:id", api.DeletePrescriptionHard(s))
+		dynamicGroup.POST("/psychologicalstatus", api.CreatePsychologicalStatus(s))
+		dynamicGroup.PUT("/psychologicalstatus/:id", api.UpdatePsychologicalStatus(s))
+		dynamicGroup.DELETE("/psychologicalstatus/:id", api.DeletePsychologicalStatus(s))
 	}
 }

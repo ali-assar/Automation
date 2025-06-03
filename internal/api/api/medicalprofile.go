@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (s *HandlerService) CreateMedicalProfile() gin.HandlerFunc {
+func CreateMedicalProfile(s *HandlerService)  gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req struct {
 			PersonID              string `json:"person_id" binding:"required"`
@@ -47,7 +47,7 @@ func (s *HandlerService) CreateMedicalProfile() gin.HandlerFunc {
 	}
 }
 
-func (s *HandlerService) GetMedicalProfileByID() gin.HandlerFunc {
+func GetMedicalProfileByID(s *HandlerService)  gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idStr := c.Param("id")
 		id, err := strconv.ParseInt(idStr, 10, 64)
@@ -64,7 +64,7 @@ func (s *HandlerService) GetMedicalProfileByID() gin.HandlerFunc {
 	}
 }
 
-func (s *HandlerService) GetMedicalProfileByPersonID() gin.HandlerFunc {
+func GetMedicalProfileByPersonID(s *HandlerService)  gin.HandlerFunc {
 	return func(c *gin.Context) {
 		personID := c.Param("person_id")
 		profile, err := s.MedicalProfile.GetMedicalProfileByPersonID(personID)
@@ -76,7 +76,7 @@ func (s *HandlerService) GetMedicalProfileByPersonID() gin.HandlerFunc {
 	}
 }
 
-func (s *HandlerService) GetAllMedicalProfiles() gin.HandlerFunc {
+func GetAllMedicalProfiles(s *HandlerService)  gin.HandlerFunc {
 	return func(c *gin.Context) {
 		profiles, err := s.MedicalProfile.GetAllMedicalProfiles()
 		if err != nil {
@@ -87,7 +87,7 @@ func (s *HandlerService) GetAllMedicalProfiles() gin.HandlerFunc {
 	}
 }
 
-func (s *HandlerService) UpdateMedicalProfile() gin.HandlerFunc {
+func UpdateMedicalProfile(s *HandlerService)  gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idStr := c.Param("id")
 		id, err := strconv.ParseInt(idStr, 10, 64)
@@ -113,7 +113,7 @@ func (s *HandlerService) UpdateMedicalProfile() gin.HandlerFunc {
 	}
 }
 
-func (s *HandlerService) DeleteMedicalProfile() gin.HandlerFunc {
+func DeleteMedicalProfile(s *HandlerService)  gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idStr := c.Param("id")
 		id, err := strconv.ParseInt(idStr, 10, 64)
@@ -134,7 +134,7 @@ func (s *HandlerService) DeleteMedicalProfile() gin.HandlerFunc {
 	}
 }
 
-func (s *HandlerService) DeleteMedicalProfileHard() gin.HandlerFunc {
+func DeleteMedicalProfileHard(s *HandlerService)  gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idStr := c.Param("id")
 		id, err := strconv.ParseInt(idStr, 10, 64)

@@ -13,8 +13,7 @@ Content-Type: application/json
 ### Get Static Tables (Protected Endpoint)
 GET http://localhost:8080/api/personinfo/static/static-tables
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6IjE4YjExMjQxLTU1MjAtNDkyOS04OTI4LTI2YjIyNjc1MmRhZCIsImV4cCI6MTc0OTAzOTI2Nywicm9sZSI6MX0.qZdkA3wZn1piBIkcvSlhDXkr70gBciGAb2nh1FR1Gvg###
-
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
 ### Create Full Person (Protected Endpoint)
 POST http://localhost:8080/api/personinfo/dynamic/persons/full
 Content-Type: application/json
@@ -85,12 +84,11 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6IjE4YjExMjQx
 }
 
 ### Get Person by ID - Success
-GET http://localhost:8080/api/personinfo/static/person/019333789
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6IjYwMTVjMTUyLTFiNGYtNGIxMS04MGFlLWQyNjlkMTYzNjA5MiIsImV4cCI6MTc0OTAzNjQxNywicm9sZSI6MX0.Nkdb2zXtO7VG0rZesr4WmTZL9CbcIhIHRFvTMVXu5FY
-
+GET  http://localhost:8080/api/personinfo/static/person/019333789
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
 ### Get All Persons - Success
-GET https://api.sorooshdavoodi.ir/api/personinfo/static/persons
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImVkODZjZjAyLWEyZjMtNDU2ZS05ZjI1LWQzN2Q5ZGUzODNiYiIsImV4cCI6MTc0ODYwMDEwOSwicm9sZSI6MX0.jbXVdwwap-0HLh36XyM5fR1sZ18yStSWYyYvCC3-aEs
+GET http://localhost:8080/api/personinfo/static/persons
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
 
 
 ### Get all admins (valid static token)
