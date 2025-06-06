@@ -1,20 +1,22 @@
 package api
 
 import (
-	prescriptions "backend/internal/core/prescription"
+	"backend/internal/core/hospitalvisit"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
-func CreatePrescription(s *HandlerService) gin.HandlerFunc {
+// CreateVisit creates a new hospital visit record
+func CreateVisit(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req struct {
-			VisitID    int64  `json:"visit_id" binding:"required"`
-			MedicineID int64  `json:"medicine_id" binding:"required"`
-			Dose       string `json:"dose" binding:"required"`
-			Duration   string `json:"duration" binding:"required"`
+			PersonID  string `json:"person_id" binding:"required"`
+			Date      int64  `json:"date" binding:"required"`
+			Reason    string `json:"reason"`
+			Diagnosis string `json:"diagnosis"`
+			Treatment string `json:"treatment"`
 		}
 		if err := c.ShouldBindJSON(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -25,14 +27,15 @@ func CreatePrescription(s *HandlerService) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		prescription := &prescriptions.Prescription{
-			VisitID:    req.VisitID,
-			MedicineID: req.MedicineID,
-			Dose:       req.Dose,
-			Duration:   req.Duration,
-			DeletedAt:  0,
+		visit := &hospitalvisit.Visit{
+			PersonID:  req.PersonID,
+			Date:      req.Date,
+			Reason:    req.Reason,
+			Diagnosis: req.Diagnosis,
+			Treatment: req.Treatment,
+			DeletedAt: 0,
 		}
-		id, err := s.Prescription.CreatePrescription(prescription, actionBy)
+		id, err := s.HospitalVisit.CreateVisit(visit, actionBy)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
@@ -41,7 +44,8 @@ func CreatePrescription(s *HandlerService) gin.HandlerFunc {
 	}
 }
 
-func GetPrescriptionByID(s *HandlerService) gin.HandlerFunc {
+// GetVisitByID retrieves a hospital visit by its ID
+func GetVisitByID(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idStr := c.Param("id")
 		id, err := strconv.ParseInt(idStr, 10, 64)
@@ -49,44 +53,42 @@ func GetPrescriptionByID(s *HandlerService) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 			return
 		}
-		prescription, err := s.Prescription.GetPrescriptionByID(id)
+		visit, err := s.HospitalVisit.GetVisitByID(id)
 		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "prescription not found"})
+			c.JSON(http.StatusNotFound, gin.H{"error": "visit not found"})
 			return
 		}
-		c.JSON(http.StatusOK, prescription)
+		c.JSON(http.StatusOK, visit)
 	}
 }
 
-func GetAllPrescriptions(s *HandlerService) gin.HandlerFunc {
+// GetVisitByPersonID retrieves hospital visits by person ID (national ID)
+func GetVisitByPersonID(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		prescriptions, err := s.Prescription.GetAllPrescriptions()
+		personID := c.Param("person_id")
+		visits, err := s.HospitalVisit.GetVisitsByPersonID(personID)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "visits not found for person"})
+			return
+		}
+		c.JSON(http.StatusOK, visits)
+	}
+}
+
+// GetAllVisits retrieves all hospital visits
+func GetAllVisits(s *HandlerService) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		visits, err := s.HospitalVisit.GetAllVisits()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, prescriptions)
+		c.JSON(http.StatusOK, visits)
 	}
 }
 
-func GetPrescriptionsByVisitID(s *HandlerService) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		visitIDStr := c.Param("visit_id")
-		visitID, err := strconv.ParseInt(visitIDStr, 10, 64)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid visit_id"})
-			return
-		}
-		prescriptions, err := s.Prescription.GetPrescriptionsByVisitID(visitID)
-		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "prescriptions not found for visit"})
-			return
-		}
-		c.JSON(http.StatusOK, prescriptions)
-	}
-}
-
-func UpdatePrescription(s *HandlerService) gin.HandlerFunc {
+// UpdateVisit updates a hospital visit by ID
+func UpdateVisit(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idStr := c.Param("id")
 		id, err := strconv.ParseInt(idStr, 10, 64)
@@ -104,15 +106,16 @@ func UpdatePrescription(s *HandlerService) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		if err := s.Prescription.UpdatePrescription(id, updates, actionBy); err != nil {
+		if err := s.HospitalVisit.UpdateVisit(id, updates, actionBy); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"message": "prescription updated"})
+		c.JSON(http.StatusOK, gin.H{"message": "visit updated"})
 	}
 }
 
-func DeletePrescription(s *HandlerService) gin.HandlerFunc {
+// DeleteVisit soft deletes a hospital visit by ID
+func DeleteVisit(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idStr := c.Param("id")
 		id, err := strconv.ParseInt(idStr, 10, 64)
@@ -125,15 +128,16 @@ func DeletePrescription(s *HandlerService) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		if err := s.Prescription.DeletePrescriptionSoft(id, actionBy); err != nil {
+		if err := s.HospitalVisit.DeleteVisitSoft(id, actionBy); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"message": "prescription soft deleted"})
+		c.JSON(http.StatusOK, gin.H{"message": "visit soft deleted"})
 	}
 }
 
-func DeletePrescriptionHard(s *HandlerService) gin.HandlerFunc {
+// DeleteVisitHard permanently deletes a hospital visit by ID
+func DeleteVisitHard(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idStr := c.Param("id")
 		id, err := strconv.ParseInt(idStr, 10, 64)
@@ -146,10 +150,10 @@ func DeletePrescriptionHard(s *HandlerService) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		if err := s.Prescription.DeletePrescriptionHard(id, actionBy); err != nil {
+		if err := s.HospitalVisit.DeleteVisitHard(id, actionBy); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"message": "prescription hard deleted"})
+		c.JSON(http.StatusOK, gin.H{"message": "visit hard deleted"})
 	}
 }

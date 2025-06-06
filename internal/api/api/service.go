@@ -10,6 +10,7 @@ import (
 	"backend/internal/core/familyinfo"
 	"backend/internal/core/gender"
 	"backend/internal/core/hospitaldispatch"
+	"backend/internal/core/hospitalvisit"
 	"backend/internal/core/medicalprofile"
 	"backend/internal/core/medicines"
 	"backend/internal/core/militarydetails"
@@ -50,6 +51,7 @@ type CoreServices struct {
 	Prescription        *prescriptions.Service
 	PsychologicalStatus *psychologicalstatus.Service
 	Medicine            *medicines.Service
+	HospitalVisit       *hospitalvisit.Service
 }
 
 // HandlerService aggregates core services for API handlers.
@@ -78,6 +80,7 @@ type HandlerService struct {
 	Prescription        *prescriptions.Service
 	PsychologicalStatus *psychologicalstatus.Service
 	Medicine            *medicines.Service
+	HospitalVisit       *hospitalvisit.Service
 }
 
 // NewHandlerService creates a new HandlerService instance with the provided core services.
@@ -106,5 +109,6 @@ func NewHandlerService(cs *CoreServices) *HandlerService {
 		PsychologicalStatus: cs.PsychologicalStatus,
 		Medicine:            cs.Medicine,
 		PersonTypeService:   cs.PersonTypeService,
+		HospitalVisit:       cs.HospitalVisit,
 	}
 }

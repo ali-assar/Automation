@@ -35,6 +35,13 @@ func (s *Service) GetVisitByID(id int64) (*Visit, error) {
 func (s *Service) GetAllVisits() ([]Visit, error) {
 	return s.repo.GetAll()
 }
+func (s *Service) GetVisitsByPersonID(personID string) ([]Visit, error) {
+	var visits []Visit
+	if err := s.repo.db.Preload("Person").Where("person_id = ? AND deleted_at = 0", personID).Find(&visits).Error; err != nil {
+		return nil, err
+	}
+	return visits, nil
+}
 
 func (s *Service) UpdateVisit(id int64, updates map[string]interface{}, actionBy string) error {
 	visit, err := s.repo.GetByID(id)

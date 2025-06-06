@@ -13,6 +13,7 @@ import (
 	"backend/internal/core/familyinfo"
 	"backend/internal/core/gender"
 	"backend/internal/core/hospitaldispatch"
+	"backend/internal/core/hospitalvisit"
 	"backend/internal/core/medicalprofile"
 	"backend/internal/core/medicines"
 	"backend/internal/core/militarydetails"
@@ -70,6 +71,7 @@ func main() {
 	prescription := prescriptions.NewService(dbInstance, actionService)
 	psychologicalStatus := psychologicalstatus.NewService(dbInstance, actionService)
 	medicine := medicines.NewService(dbInstance, actionService)
+	hospitalVisit := hospitalvisit.NewService(dbInstance, actionService)
 
 	// Seed database for testing
 	if cfg.IsTest {
@@ -104,6 +106,7 @@ func main() {
 		Prescription:           prescription,
 		PsychologicalStatus:    psychologicalStatus,
 		Medicine:               medicine,
+		HospitalVisit:          hospitalVisit,
 	}
 	gin.SetMode(gin.DebugMode)
 	// Create HandlerService

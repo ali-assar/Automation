@@ -75,6 +75,10 @@ func RegisterRoutes(r *gin.Engine, s *api.HandlerService) {
 		staticGroup.GET("/prescriptions", api.GetAllPrescriptions(s))
 		staticGroup.GET("/psychologicalstatus/:id", api.GetPsychologicalStatusByID(s))
 		staticGroup.GET("/psychologicalstatuses", api.GetAllPsychologicalStatuses(s))
+		staticGroup.GET("/visit/:id", api.GetVisitByID(s))
+		staticGroup.GET("/visit/person/:person_id", api.GetVisitByPersonID(s))
+		staticGroup.GET("/visits", api.GetAllVisits(s))
+		staticGroup.GET("/prescription/visit/:visit_id", api.GetPrescriptionsByVisitID(s))
 	}
 
 	// Dynamic Protected Routes (POST, PUT, DELETE)
@@ -150,5 +154,11 @@ func RegisterRoutes(r *gin.Engine, s *api.HandlerService) {
 		dynamicGroup.POST("/psychologicalstatus", api.CreatePsychologicalStatus(s))
 		dynamicGroup.PUT("/psychologicalstatus/:id", api.UpdatePsychologicalStatus(s))
 		dynamicGroup.DELETE("/psychologicalstatus/:id", api.DeletePsychologicalStatus(s))
+
+		dynamicGroup.POST("/visit", api.CreateVisit(s))
+		dynamicGroup.PUT("/visit/:id", api.UpdateVisit(s))
+		dynamicGroup.DELETE("/visit/:id", api.DeleteVisit(s))
+		dynamicGroup.DELETE("/visit/hard/:id", api.DeleteVisitHard(s))
+
 	}
 }

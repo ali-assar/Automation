@@ -36,7 +36,13 @@ func (s *Service) GetPrescriptionByID(id int64) (*Prescription, error) {
 func (s *Service) GetAllPrescriptions() ([]Prescription, error) {
 	return s.repo.GetAll()
 }
-
+func (s *Service) GetPrescriptionsByVisitID(visitID int64) ([]Prescription, error) {
+	var prescriptions []Prescription
+	if err := s.repo.db.Preload("Visit").Preload("Medicine").Where("visit_id = ? AND deleted_at = 0", visitID).Find(&prescriptions).Error; err != nil {
+		return nil, err
+	}
+	return prescriptions, nil
+}
 func (s *Service) UpdatePrescription(id int64, updates map[string]interface{}, actionBy string) error {
 	delete(updates, "id")
 	delete(updates, "deleted_at")
