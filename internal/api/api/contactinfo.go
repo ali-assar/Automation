@@ -40,11 +40,13 @@ func CreateContactInfo(s *HandlerService) gin.HandlerFunc {
 
 func UpdateContactInfo(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		nationalID := c.Param("national_id")
-		var req struct {
-			ContactInfoID int64 `json:"contact_info_id" binding:"required"`
+		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+			return
 		}
-		if err := c.ShouldBindJSON(&req); err != nil {
+		var updates map[string]interface{}
+		if err := c.ShouldBindJSON(&updates); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
@@ -53,7 +55,7 @@ func UpdateContactInfo(s *HandlerService) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "missing X-Action-By header"})
 			return
 		}
-		if err := s.PersonService.UpdateContactInfo(nationalID, req.ContactInfoID, actionBy); err != nil {
+		if err := s.ContactInfoService.UpdateContactInfo(id, updates, actionBy); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}

@@ -1,0 +1,118 @@
+### Update Education (Protected Endpoint)
+PUT http://localhost:8080/api/personinfo/dynamic/education/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImEwYzMxOGUzLTUwM2YtNDBlYy1hNzc5LTE2NGUzNTFlYmFlYSIsImV4cCI6MTc0OTAzODcyNywicm9sZSI6MX0.fdVg4z0eWy4zJ_0oDUfH9Jz6CQb7BVeBfH-ING_Jjks
+
+{
+  "education_level_id": 3,
+  "description": "Updated: MSc in Computer Science",
+  "university": "Updated University",
+  "start_date": 1514764800,
+  "end_date": 1625097600
+}
+
+###
+
+
+### Update Contact Info (Protected Endpoint)
+PUT http://localhost:8080/api/personinfo/dynamic/contactinfo/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImVmY2RlYzAzLTZjYWYtNDFiMy04MGY3LWUxMzk3ZDVlOTYzNyIsImV4cCI6MTc0OTE5NzgyNCwicm9sZSI6MX0.TXdGJ0EsoxsSoTbumBPyKQgOz5rva0_xWjfl_wDENTE
+
+{
+  "address": "456 Updated St, City, Country",
+  "phone_number": "+9876543210",
+  "emergency_phone_number": "+1234567890",
+  "landline_phone": "987-654-3210",
+  "email_address": "updated.john.doe@example.com",
+  "social_media": "{\"twitter\": \"@updatedjohndoe\", \"linkedin\": \"updatedjohndoe\"}"
+}
+
+###
+
+### Update Family Info (Protected Endpoint)
+PUT http://localhost:8080/api/personinfo/dynamic/familyinfo/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+
+{
+  "father_details": "{\"name\": \"John Sr.\", \"occupation\": \"Senior Engineer\"}",
+  "mother_details": "{\"name\": \"Mary\", \"occupation\": \"Professor\"}",
+  "childs_details": "{\"name\": \"Jane\", \"age\": 10}",
+  "husband_details": null
+}
+
+
+###
+012345678
+### Update Military Details (Protected Endpoint)
+PUT http://localhost:8080/api/personinfo/dynamic/militarydetails/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+
+{
+  "rank_id": 2,
+  "service_start_date": 1514764800,
+  "service_dispatch_date": 1625097600,
+  "service_unit": 102,
+  "battalion_unit": 203,
+  "company_unit": 304
+}
+
+###
+
+### Update Person (Protected Endpoint)
+PUT http://localhost:8080/api/personinfo/dynamic/person/019333789
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+
+{
+  "first_name": "John Updated",
+  "last_name": "Doe Updated",
+  "birth_date": "1990-01-01",
+  "family_info_id": 1,
+  "contact_info_id": 1,
+  "skills_id": 1,
+  "physical_info_id": 1,
+  "religion_id": 2,
+  "person_type_id": 2,
+  "military_details_id": 1
+}
+
+###
+
+### Update Physical Info (Protected Endpoint)
+PUT http://localhost:8080/api/personinfo/dynamic/physicalinfo/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+
+{
+  "height": 180,
+  "weight": 75,
+  "eye_color": "Green",
+  "blood_group_id": 2,
+  "gender_id": 1,
+  "physical_status_id": 2,
+  "description_of_health": "{\"notes\": \"Updated fitness test passed\", \"date\": \"2025-06-04\"}"
+}
+
+###
+
+### Update Skills (Protected Endpoint)
+PUT http://localhost:8080/api/personinfo/dynamic/skills/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+
+{
+  "education_id": 2,
+  "languages": "[\"English\", \"French\", \"Spanish\"]",
+  "skills_description": "Updated: Proficient in Go, Python, Java, and SQL",
+  "certificates": "AWS Certified Developer, PMP, Certified ScrumMaster"
+}
