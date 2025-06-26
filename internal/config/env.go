@@ -23,12 +23,12 @@ type Config struct {
 func Load() *Config {
 	return &Config{
 		AppHost:      getEnv("APP_HOST", "0.0.0.0"),
-		AppPort:      getEnv("APP_PORT", "8080"),
+		AppPort:      getEnv("APP_PORT", "5000"),
 		DBServiceUrl: getEnv("DB_SERVICE_URL", "http://localhost:8081"),
 		DBHost:       getEnv("DB_HOST", "localhost"),
 		DBPort:       getEnv("DB_PORT", "5432"),
-		DBUser:       getEnv("DB_USER", "admin"),
-		DBPassword:   getEnv("DB_PASSWORD", "admin"),
+		DBUser:       getEnv("DB_USER", "postgres"),
+		DBPassword:   getEnv("DB_PASSWORD", "postgres"),
 		DBName:       getEnv("DB_NAME", "military_db"),
 		LogLevel:     getEnv("LOG_LEVEL", "info"),
 		LogFormat:    getEnv("LOG_FORMAT", "json"),
