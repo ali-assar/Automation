@@ -22,7 +22,6 @@ func SeedEducation(db *gorm.DB, auditService audit.ActionLogger, isTest bool) er
 	}{
 		{
 			EducationLevelID: 1, // Placeholder
-			FieldOfStudy:     1, // Placeholder
 			Description:      "BSc in Computer Science",
 			University:       "State University",
 			StartDate:        1577836800, // 2020-01-01
@@ -30,7 +29,6 @@ func SeedEducation(db *gorm.DB, auditService audit.ActionLogger, isTest bool) er
 		},
 		{
 			EducationLevelID: 2,
-			FieldOfStudy:     2,
 			Description:      "MA in Military Strategy",
 			University:       "National Defense Academy",
 			StartDate:        1609459200, // 2021-01-01
@@ -53,16 +51,20 @@ func SeedEducation(db *gorm.DB, auditService audit.ActionLogger, isTest bool) er
 		} else if err != gorm.ErrRecordNotFound {
 			return err
 		}
+		desc := e.Description
+		uni := e.University
+		start := e.StartDate
+		end := e.EndDate
 
 		education := &Education{
 			EducationLevelID: e.EducationLevelID,
-			FieldOfStudy:     e.FieldOfStudy,
-			Description:      e.Description,
-			University:       e.University,
-			StartDate:        e.StartDate,
-			EndDate:          e.EndDate,
+			Description:      &desc,
+			University:       &uni,
+			StartDate:        &start,
+			EndDate:          &end,
 			DeletedAt:        0,
 		}
+
 		if err := repo.Create(education); err != nil {
 			return err
 		}

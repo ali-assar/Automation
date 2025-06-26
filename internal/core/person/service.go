@@ -47,6 +47,51 @@ func (s *Service) UpdatePerson(nationalID string, updates map[string]interface{}
 		return err
 	}
 
+	// Handle sql.NullInt64 fields
+	if val, ok := updates["family_info_id"]; ok {
+		if id, ok := val.(int64); ok {
+			person.SetFamilyInfoID(id)
+			delete(updates, "family_info_id")
+		}
+	}
+	if val, ok := updates["contact_info_id"]; ok {
+		if id, ok := val.(int64); ok {
+			person.SetContactInfoID(id)
+			delete(updates, "contact_info_id")
+		}
+	}
+	if val, ok := updates["physical_info_id"]; ok {
+		if id, ok := val.(int64); ok {
+			person.SetPhysicalInfoID(id)
+			delete(updates, "physical_info_id")
+		}
+	}
+	if val, ok := updates["skills_id"]; ok {
+		if id, ok := val.(int64); ok {
+			person.SetSkillsID(id)
+			delete(updates, "skills_id")
+		}
+	}
+	if val, ok := updates["religion_id"]; ok {
+		if id, ok := val.(int64); ok {
+			person.SetReligionID(id)
+			delete(updates, "religion_id")
+		}
+	}
+	if val, ok := updates["person_type_id"]; ok {
+		if id, ok := val.(int64); ok {
+			person.SetPersonTypeID(id)
+			delete(updates, "person_type_id")
+		}
+	}
+	if val, ok := updates["military_details_id"]; ok {
+		if id, ok := val.(int64); ok {
+			person.SetMilitaryDetailsID(id)
+			delete(updates, "military_details_id")
+		}
+	}
+
+	// Apply remaining updates
 	if err := s.repo.db.Model(person).Updates(updates).Error; err != nil {
 		return err
 	}
@@ -93,7 +138,6 @@ func (s *Service) SearchPersonsByName(firstName, lastName string, actionBy strin
 	if err != nil {
 		return nil, err
 	}
-	// Optional: Log search action if required
 	if _, err := s.auditService.LogAction(4, "Person", actionBy); err != nil {
 		// Log error
 	}
@@ -117,7 +161,7 @@ func (s *Service) UpdateContactInfo(nationalID string, contactInfoID int64, acti
 		return err
 	}
 
-	person.ContactInfoID = contactInfoID
+	person.SetContactInfoID(contactInfoID)
 	if err := s.repo.Update(person); err != nil {
 		return err
 	}
@@ -134,7 +178,7 @@ func (s *Service) UpdateMilitaryDetails(nationalID string, militaryDetailsID int
 		return err
 	}
 
-	person.MilitaryDetailsID = militaryDetailsID
+	person.SetMilitaryDetailsID(militaryDetailsID)
 	if err := s.repo.Update(person); err != nil {
 		return err
 	}

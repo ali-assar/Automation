@@ -57,8 +57,8 @@ func SeedContactInfo(db *gorm.DB, auditService audit.ActionLogger, isTest bool) 
 			PhoneNumber:          c.PhoneNumber,
 			EmergencyPhoneNumber: c.EmergencyPhoneNumber,
 			LandlinePhone:        c.LandlinePhone,
-			EmailAddress:         c.EmailAddress,
-			SocialMedia:          c.SocialMedia,
+			EmailAddress:         &c.EmailAddress,
+			SocialMedia:          &c.SocialMedia,
 			DeletedAt:            0,
 		}
 		if err := repo.Create(contact); err != nil {

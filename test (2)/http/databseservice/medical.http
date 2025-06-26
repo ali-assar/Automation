@@ -1,0 +1,356 @@
+### Create Hospital Dispatch (Protected Endpoint)
+POST http://localhost:8080/api/personinfo/dynamic/hospitaldispatch
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0ODk2NDY0Miwicm9sZSI6MX0.6ZemPBBRFtOql3pP9Tk-BIjzYcQKbbFjutiD6O8ZswI
+
+{
+  "visit_id": 1,
+  "dispatch_date": 1625097600,
+  "doctor_comment": "Patient discharged with follow-up instructions"
+}
+
+###
+
+### Get Hospital Dispatch by ID (Protected Endpoint)
+GET http://localhost:8080/api/personinfo/static/hospitaldispatch/1
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mzg0Miwicm9sZSI6MX0.WQ4wHuwaOfumLXxJHe6oxa6jFTwl1-MfKRXdAUNt8CY
+###
+
+### Get All Hospital Dispatches (Protected Endpoint)
+GET http://localhost:8080/api/personinfo/static/hospitaldispatches
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mzg0Miwicm9sZSI6MX0.WQ4wHuwaOfumLXxJHe6oxa6jFTwl1-MfKRXdAUNt8CY
+###
+
+### Update Hospital Dispatch (Protected Endpoint)
+PUT http://localhost:8080/api/personinfo/dynamic/hospitaldispatch/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0ODk2NDY0Miwicm9sZSI6MX0.6ZemPBBRFtOql3pP9Tk-BIjzYcQKbbFjutiD6O8ZswI
+
+
+{
+  "doctor_comment": "Updated follow-up instructions"
+}
+
+###
+
+### Delete Hospital Dispatch Soft (Protected Endpoint)
+DELETE http://localhost:8080/api/personinfo/dynamic/hospitaldispatch/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0ODk2NDY0Miwicm9sZSI6MX0.6ZemPBBRFtOql3pP9Tk-BIjzYcQKbbFjutiD6O8ZswI
+
+###
+
+### Delete Hospital Dispatch Hard (Protected Endpoint)
+DELETE http://localhost:8080/api/personinfo/dynamic/hospitaldispatch/hard/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0ODk2NDY0Miwicm9sZSI6MX0.6ZemPBBRFtOql3pP9Tk-BIjzYcQKbbFjutiD6O8ZswI
+
+###
+
+### Create Medical Profile (Protected Endpoint)
+POST http://localhost:8080/api/personinfo/dynamic/medicalprofile
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0ODk2NDY0Miwicm9sZSI6MX0.6ZemPBBRFtOql3pP9Tk-BIjzYcQKbbFjutiD6O8ZswI
+
+{
+  "person_id": "019333789",
+  "physical_info_id": 1,
+  "allergies": "Peanuts, Penicillin",
+  "medical_history": "Asthma, Hypertension",
+  "vaccinations": "[\"Tetanus\", \"Influenza\"]",
+  "blood_type_id": 1,
+  "psychological_status_id": 1
+}
+
+###
+
+### Get Medical Profile by ID (Protected Endpoint)
+GET http://localhost:8080/api/personinfo/static/medicalprofile/6
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mzg0Miwicm9sZSI6MX0.WQ4wHuwaOfumLXxJHe6oxa6jFTwl1-MfKRXdAUNt8CY
+###
+
+### Get Medical Profile by Person ID (Protected Endpoint)
+GET http://localhost:8080/api/personinfo/static/medicalprofile/person/019333789
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mzg0Miwicm9sZSI6MX0.WQ4wHuwaOfumLXxJHe6oxa6jFTwl1-MfKRXdAUNt8CY
+
+###
+
+### Get All Medical Profiles (Protected Endpoint)
+GET http://localhost:8080/api/personinfo/static/medicalprofiles
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+
+###
+
+### Update Medical Profile (Protected Endpoint)
+PUT http://localhost:8080/api/personinfo/dynamic/medicalprofile/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0ODk2NDY0Miwicm9sZSI6MX0.6ZemPBBRFtOql3pP9Tk-BIjzYcQKbbFjutiD6O8ZswI
+
+
+{
+  "allergies": "Peanuts, Penicillin, Shellfish",
+  "medical_history": "Asthma, Hypertension, Diabetes"
+}
+
+###
+
+### Delete Medical Profile Soft (Protected Endpoint)
+DELETE http://localhost:8080/api/personinfo/dynamic/medicalprofile/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0ODk2NDY0Miwicm9sZSI6MX0.6ZemPBBRFtOql3pP9Tk-BIjzYcQKbbFjutiD6O8ZswI
+
+
+###
+
+### Delete Medical Profile Hard (Protected Endpoint)
+DELETE http://localhost:8080/api/personinfo/dynamic/medicalprofile/hard/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+
+###
+
+### Create Medicine (Protected Endpoint)
+POST http://localhost:8080/api/personinfo/dynamic/medicine
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0ODk2NDY0Miwicm9sZSI6MX0.6ZemPBBRFtOql3pP9Tk-BIjzYcQKbbFjutiD6O8ZswI
+
+
+{
+  "name": "Ibuprofen",
+  "quantity": 100,
+  "description": "Pain reliever and anti-inflammatory"
+}
+
+###
+
+### Get Medicine by ID (Protected Endpoint)
+GET http://localhost:8080/api/personinfo/static/medicine/1
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mzg0Miwicm9sZSI6MX0.WQ4wHuwaOfumLXxJHe6oxa6jFTwl1-MfKRXdAUNt8CY
+
+###
+
+### Get All Medicines (Protected Endpoint)
+GET http://localhost:8080/api/personinfo/static/medicines
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mzg0Miwicm9sZSI6MX0.WQ4wHuwaOfumLXxJHe6oxa6jFTwl1-MfKRXdAUNt8CY
+
+###
+
+### Update Medicine (Protected Endpoint)
+PUT http://localhost:8080/api/personinfo/dynamic/medicine/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+
+{
+  "quantity": 150,
+  "description": "Updated: Pain reliever and anti-inflammatory"
+}
+
+###
+
+### Delete Medicine Soft (Protected Endpoint)
+DELETE http://localhost:8080/api/personinfo/dynamic/medicine/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+
+###
+
+### Delete Medicine Hard (Protected Endpoint)
+DELETE http://localhost:8080/api/personinfo/dynamic/medicine/hard/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+
+###
+
+### Create Prescription (Protected Endpoint)
+POST http://localhost:8080/api/personinfo/dynamic/prescription
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+
+{
+  "visit_id": 1,
+  "medicine_id": 1,
+  "dose": "200mg twice daily",
+  "duration": "7 days"
+}
+
+###
+
+### Get Prescription by ID (Protected Endpoint)
+GET http://localhost:8080/api/personinfo/static/prescription/1
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+
+###
+
+### Get All Prescriptions (Protected Endpoint)
+GET http://localhost:8080/api/personinfo/static/prescriptions
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mzg0Miwicm9sZSI6MX0.WQ4wHuwaOfumLXxJHe6oxa6jFTwl1-MfKRXdAUNt8CY
+
+###
+
+### Update Prescription (Protected Endpoint)
+PUT http://localhost:8080/api/personinfo/dynamic/prescription/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+
+{
+  "dose": "400mg once daily",
+  "duration": "10 days"
+}
+
+###
+
+### Delete Prescription Soft (Protected Endpoint)
+DELETE http://localhost:8080/api/personinfo/dynamic/prescription/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+
+###
+
+### Delete Prescription Hard (Protected Endpoint)
+DELETE http://localhost:8080/api/personinfo/dynamic/prescription/hard/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+
+###
+
+### Create Psychological Status (Protected Endpoint)
+POST http://localhost:8080/api/personinfo/dynamic/psychologicalstatus
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+
+{
+  "status": "Stable"
+}
+
+###
+
+### Get Psychological Status by ID (Protected Endpoint)
+GET http://localhost:8080/api/personinfo/static/psychologicalstatus/1
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+
+###
+
+### Get All Psychological Statuses (Protected Endpoint)
+GET http://localhost:8080/api/personinfo/static/psychologicalstatuses
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+
+###
+
+### Update Psychological Status (Protected Endpoint)
+PUT http://localhost:8080/api/personinfo/dynamic/psychologicalstatus/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+
+{
+  "status": "Improved"
+}
+
+###
+
+### Delete Psychological Status (Protected Endpoint)
+DELETE http://localhost:8080/api/personinfo/dynamic/psychologicalstatus/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+dynamicGroup.POST("/visit", api.CreateVisit(s))
+		dynamicGroup.PUT("/visit/:id", api.UpdateVisit(s))
+		dynamicGroup.DELETE("/visit/:id", api.DeleteVisit(s))
+		dynamicGroup.DELETE("/visit/hard/:id", api.DeleteVisitHard(s))
+
+### Create Hospital Visit (Protected Endpoint)
+POST http://localhost:8080/api/personinfo/dynamic/visit
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImVmY2RlYzAzLTZjYWYtNDFiMy04MGY3LWUxMzk3ZDVlOTYzNyIsImV4cCI6MTc0OTE5OTkzNCwicm9sZSI6MX0.0cUnqi00I9a77P-qx3-a9HnzisarE0zUsoNCB6Erqkw
+
+{
+  "person_id": "019333789",
+  "date": 1625097600,
+  "reason": "Fever and cough",
+  "diagnosis": "Influenza",
+  "treatment": "Rest and antiviral medication"
+}
+
+###
+
+### Get Hospital Visit by ID (Protected Endpoint)
+GET http://localhost:8080/api/personinfo/static/visit/6
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImVmY2RlYzAzLTZjYWYtNDFiMy04MGY3LWUxMzk3ZDVlOTYzNyIsImV4cCI6MTc0OTI3OTEzNCwicm9sZSI6MX0.8rqHYUWhcOhdC3pXJ30YYJlfYpp-pvzqFjQjEOZvu1U
+###
+
+### Get Hospital Visits by Person ID (Protected Endpoint)
+GET http://localhost:8080/api/personinfo/static/visit/person/019333789
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImVmY2RlYzAzLTZjYWYtNDFiMy04MGY3LWUxMzk3ZDVlOTYzNyIsImV4cCI6MTc0OTI3OTEzNCwicm9sZSI6MX0.8rqHYUWhcOhdC3pXJ30YYJlfYpp-pvzqFjQjEOZvu1U
+
+###
+
+### Get All Hospital Visits (Protected Endpoint)
+GET http://localhost:8080/api/personinfo/static/visits
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImVmY2RlYzAzLTZjYWYtNDFiMy04MGY3LWUxMzk3ZDVlOTYzNyIsImV4cCI6MTc0OTI3OTEzNCwicm9sZSI6MX0.8rqHYUWhcOhdC3pXJ30YYJlfYpp-pvzqFjQjEOZvu1U
+
+###
+
+### Update Hospital Visit (Protected Endpoint)
+PUT http://localhost:8080/api/personinfo/dynamic/visit/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImVmY2RlYzAzLTZjYWYtNDFiMy04MGY3LWUxMzk3ZDVlOTYzNyIsImV4cCI6MTc0OTE5OTkzNCwicm9sZSI6MX0.0cUnqi00I9a77P-qx3-a9HnzisarE0zUsoNCB6Erqkw
+
+{
+  "reason": "Updated: Fever and cough",
+  "diagnosis": "Updated: Influenza confirmed",
+  "treatment": "Updated: Antiviral medication and hydration"
+}
+
+###
+
+### Delete Hospital Visit Soft (Protected Endpoint)
+DELETE http://localhost:8080/api/personinfo/dynamic/visit/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+
+###
+
+### Delete Hospital Visit Hard (Protected Endpoint)
+DELETE http://localhost:8080/api/personinfo/dynamic/visit/hard/1
+Content-Type: application/json
+X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+
+### Get Prescriptions by Visit ID (Protected Endpoint)
+GET http://localhost:8080/api/personinfo/static/prescription/visit/1
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImVmY2RlYzAzLTZjYWYtNDFiMy04MGY3LWUxMzk3ZDVlOTYzNyIsImV4cCI6MTc0OTI3OTEzNCwicm9sZSI6MX0.8rqHYUWhcOhdC3pXJ30YYJlfYpp-pvzqFjQjEOZvu1U

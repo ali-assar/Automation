@@ -48,11 +48,14 @@ func SeedFamilyInfo(db *gorm.DB, auditService audit.ActionLogger, isTest bool) e
 			return err
 		}
 
+		childs := f.ChildsDetails
+		husbend := f.HusbandDetails
+
 		family := &FamilyInfo{
 			FatherDetails:  f.FatherDetails,
 			MotherDetails:  f.MotherDetails,
-			ChildsDetails:  f.ChildsDetails,
-			HusbandDetails: f.HusbandDetails,
+			ChildsDetails:  &childs,
+			HusbandDetails: &husbend,
 			DeletedAt:      0,
 		}
 		if err := repo.Create(family); err != nil {

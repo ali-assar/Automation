@@ -18,7 +18,7 @@ func NewService(db *gorm.DB, auditService audit.ActionLogger) *Service {
 	}
 }
 
-func (s *Service) CreateSkills(educationID int64, languages, skillsDescription, certificates, actionBy string) (int64, error) {
+func (s *Service) CreateSkills(educationID int64, languages, skillsDescription, certificates *string, actionBy string) (int64, error) {
 	skills := Skills{
 		EducationID:       educationID,
 		Languages:         languages,

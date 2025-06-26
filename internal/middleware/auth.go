@@ -1,9 +1,7 @@
-// internal/middleware/auth.go
 package middleware
 
 import (
-	"backend/internal/api/personinfoservice/admin"
-	"backend/internal/api/personinfoservice/credentials"
+	"backend/internal/api/api"
 	"backend/pkg/security"
 	"net/http"
 
@@ -11,29 +9,34 @@ import (
 	"github.com/google/uuid"
 )
 
-func StaticAuth(adminCtrl *admin.Controller, credCtrl *credentials.Controller) gin.HandlerFunc {
+func StaticAuth(s *api.HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("Authorization")
 		if token == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "missing token"})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization header missing"})
 			c.Abort()
 			return
 		}
 		claims, err := security.ValidateToken(token)
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid token"})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token: " + err.Error()})
 			c.Abort()
 			return
 		}
 		adminID, err := uuid.Parse(claims["admin_id"].(string))
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid admin_id"})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid admin_id in token"})
 			c.Abort()
 			return
 		}
-		cred, err := credCtrl.GetByAdminID(adminID)
-		if err != nil || cred.StaticToken != token {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid static token"})
+		cred, err := s.CredentialsService.GetCredentialsByAdminID(adminID)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Credentials not found for admin_id"})
+			c.Abort()
+			return
+		}
+		if cred.StaticToken != token {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Static token mismatch"})
 			c.Abort()
 			return
 		}
@@ -43,34 +46,45 @@ func StaticAuth(adminCtrl *admin.Controller, credCtrl *credentials.Controller) g
 	}
 }
 
-func DynamicAuth(adminCtrl *admin.Controller, credCtrl *credentials.Controller) gin.HandlerFunc {
+func DynamicAuth(s *api.HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("Authorization")
 		if token == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "missing token"})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization header missing"})
 			c.Abort()
 			return
 		}
 		claims, err := security.ValidateToken(token)
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid token"})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token: " + err.Error()})
 			c.Abort()
 			return
 		}
 		adminID, err := uuid.Parse(claims["admin_id"].(string))
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid admin_id"})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid admin_id in token"})
 			c.Abort()
 			return
 		}
-		cred, err := credCtrl.GetByAdminID(adminID)
-		if err != nil || cred.DynamicToken != token {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid dynamic token"})
+		cred, err := s.CredentialsService.GetCredentialsByAdminID(adminID)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Credentials not found for admin_id"})
+			c.Abort()
+			return
+		}
+		if cred.DynamicToken != token {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Dynamic token mismatch"})
+			c.Abort()
+			return
+		}
+		role := int(claims["role"].(float64))
+		if c.Request.Method != "GET" && role != 1 {
+			c.JSON(http.StatusForbidden, gin.H{"error": "Admin role (ID 1) required for write operations"})
 			c.Abort()
 			return
 		}
 		c.Set("adminID", adminID.String())
-		c.Set("role", int(claims["role"].(float64)))
+		c.Set("role", role)
 		c.Next()
 	}
 }

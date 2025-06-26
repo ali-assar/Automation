@@ -25,7 +25,7 @@ func GenerateDynamicToken(adminID uuid.UUID, roleID int) (string, error) {
 	claims := jwt.MapClaims{
 		"admin_id": adminID.String(),
 		"role":     roleID,
-		"exp":      time.Now().Add(15 * time.Minute).Unix(),
+		"exp":      time.Now().Add(2 * time.Hour).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(cfg.JWTSecret))

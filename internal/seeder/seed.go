@@ -8,13 +8,20 @@ import (
 	"backend/internal/core/contactinfo"
 	"backend/internal/core/credentials"
 	"backend/internal/core/education"
+	educationlevel "backend/internal/core/educationLevel"
 	"backend/internal/core/familyinfo"
 	"backend/internal/core/gender"
+	"backend/internal/core/hospitaldispatch"
+	"backend/internal/core/hospitalvisit"
+	"backend/internal/core/medicalprofile"
+	"backend/internal/core/medicines"
 	"backend/internal/core/militarydetails"
 	"backend/internal/core/person"
 	"backend/internal/core/persontype"
 	"backend/internal/core/physicalinfo"
 	"backend/internal/core/physicalstatus"
+	prescriptions "backend/internal/core/prescription"
+	"backend/internal/core/psychologicalstatus"
 	"backend/internal/core/rank"
 	"backend/internal/core/religion"
 	"backend/internal/core/role"
@@ -45,6 +52,8 @@ func Seed(isTest bool, auditService audit.ActionLogger) error {
 		{"Rank", rank.SeedRank},
 		{"Religion", religion.SeedReligion},
 		{"Role", role.SeedRole},
+		{"Role", role.SeedRole},
+		{"EducationLevel",educationlevel.SeedEducationLevels},
 	}
 
 	for _, sf := range seedFunctions {
@@ -71,6 +80,12 @@ func Seed(isTest bool, auditService audit.ActionLogger) error {
 			{"Person", person.SeedPerson},
 			{"Admin", admin.SeedAdmin},
 			{"Credentials", credentials.SeedCredentials},
+			{"visits", hospitalvisit.SeedVisits},
+			{"MedicalProfile", medicalprofile.SeedMedicalProfile},
+			{"Medicine", medicines.SeedMedicines},
+			{"Prescription", prescriptions.SeedPrescriptions},
+			{"HospitalDispatch", hospitaldispatch.SeedHospitalDispatch},
+			{"PsychologicalStatus", psychologicalstatus.SeedPsychologicalStatus},
 		}
 
 		for _, sf := range mockSeedFunctions {

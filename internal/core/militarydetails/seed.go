@@ -18,25 +18,25 @@ func SeedMilitaryDetails(db *gorm.DB, auditService audit.ActionLogger, isTest bo
 		RankName            string
 		ServiceStartDate    int64
 		ServiceDispatchDate int64
-		ServiceUnit         int64
-		BattalionUnit       int64
-		CompanyUnit         int64
+		ServiceUnit         string
+		BattalionUnit       string
+		CompanyUnit         string
 	}{
 		{
 			RankName:            "Private",
 			ServiceStartDate:    1577836800, // 2020-01-01
 			ServiceDispatchDate: 1654041600, // 2022-06-01
-			ServiceUnit:         1,
-			BattalionUnit:       1,
-			CompanyUnit:         1,
+			ServiceUnit:         "1",
+			BattalionUnit:       "1",
+			CompanyUnit:         "1",
 		},
 		{
 			RankName:            "Sergeant",
 			ServiceStartDate:    1609459200, // 2021-01-01
 			ServiceDispatchDate: 1685577600, // 2023-06-01
-			ServiceUnit:         2,
-			BattalionUnit:       2,
-			CompanyUnit:         2,
+			ServiceUnit:         "2",
+			BattalionUnit:       "2",
+			CompanyUnit:         "2",
 		},
 	}
 
@@ -63,13 +63,19 @@ func SeedMilitaryDetails(db *gorm.DB, auditService audit.ActionLogger, isTest bo
 			return err
 		}
 
+		serviceStartDate := md.ServiceStartDate
+		serviceDispatchDate := md.ServiceDispatchDate
+		serviceUint := md.ServiceUnit
+		battalionUnit := md.BattalionUnit
+		companyUnit := md.CompanyUnit
+
 		detail := &MilitaryDetails{
 			RankID:              rank.ID,
-			ServiceStartDate:    md.ServiceStartDate,
-			ServiceDispatchDate: md.ServiceDispatchDate,
-			ServiceUnit:         md.ServiceUnit,
-			BattalionUnit:       md.BattalionUnit,
-			CompanyUnit:         md.CompanyUnit,
+			ServiceStartDate:    &serviceStartDate,
+			ServiceDispatchDate: &serviceDispatchDate,
+			ServiceUnit:         &serviceUint,
+			BattalionUnit:       &battalionUnit,
+			CompanyUnit:         &companyUnit,
 			DeletedAt:           0,
 		}
 		if err := repo.Create(detail); err != nil {

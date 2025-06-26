@@ -1,8 +1,6 @@
 package physicalstatus
 
 import (
-	"time"
-
 	"gorm.io/gorm"
 )
 
@@ -36,21 +34,8 @@ func (r *Repository) GetByStatus(status string) (*PhysicalStatus, error) {
 
 func (r *Repository) GetAll() ([]PhysicalStatus, error) {
 	var physicalStatuses []PhysicalStatus
-	if err := r.db.Where("deleted_at = 0").Find(&physicalStatuses).Error; err != nil {
+	if err := r.db.Find(&physicalStatuses).Error; err != nil {
 		return nil, err
 	}
 	return physicalStatuses, nil
-}
-
-func (r *Repository) Update(physicalStatus *PhysicalStatus) error {
-	return r.db.Save(physicalStatus).Error
-}
-
-func (r *Repository) DeleteSoft(id int64) error {
-	return r.db.Model(&PhysicalStatus{}).Where("id = ?", id).
-		Update("deleted_at", time.Now().Unix()).Error
-}
-
-func (r *Repository) DeleteHard(id int64) error {
-	return r.db.Delete(&PhysicalStatus{}, "id = ?", id).Error
 }

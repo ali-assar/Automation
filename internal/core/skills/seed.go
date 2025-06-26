@@ -7,6 +7,17 @@ import (
 	"gorm.io/gorm"
 )
 
+type skillSeed struct {
+	University        string
+	Languages         *string
+	SkillsDescription *string
+	Certificates      *string
+}
+
+func ptr(s string) *string {
+	return &s
+}
+
 func SeedSkills(db *gorm.DB, auditService audit.ActionLogger, isTest bool) error {
 	if !isTest {
 		return nil
@@ -14,23 +25,19 @@ func SeedSkills(db *gorm.DB, auditService audit.ActionLogger, isTest bool) error
 
 	repo := NewRepository(db)
 	_ = education.NewRepository(db)
-	skills := []struct {
-		University        string // To find EducationID
-		Languages         string
-		SkillsDescription string
-		Certificates      string
-	}{
+
+	skills := []skillSeed{
 		{
 			University:        "State University",
-			Languages:         `["English", "Spanish"]`,
-			SkillsDescription: "Programming, Leadership",
-			Certificates:      "AWS Certified Developer",
+			Languages:         ptr(`["English", "Spanish"]`),
+			SkillsDescription: ptr("Programming, Leadership"),
+			Certificates:      ptr("AWS Certified Developer"),
 		},
 		{
-			University:        "National Defense Academy",
-			Languages:         `["English", "Arabic"]`,
-			SkillsDescription: "Tactical Planning, Communication",
-			Certificates:      "Military Leadership Certificate",
+			University:        "Unknown Academy",
+			Languages:         nil,
+			SkillsDescription: nil,
+			Certificates:      nil,
 		},
 	}
 

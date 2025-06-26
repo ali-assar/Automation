@@ -41,6 +41,14 @@ func (s *Service) GetRankByID(id int64) (*Rank, error) {
 	return rank, nil
 }
 
+func (s *Service) GetRankByName(name string) (string, error) {
+	rank, err := s.repo.GetByName(name)
+	if err != nil {
+		return "", fmt.Errorf("failed to get rank: %v", err)
+	}
+	return rank, nil
+}
+
 func (s *Service) GetAllRanks() ([]Rank, error) {
 	ranks, err := s.repo.GetAll()
 	if err != nil {

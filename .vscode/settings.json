@@ -9,6 +9,16 @@
             "database": "military_db",
             "username": "admin",
             "password": "admin"
+        },
+        {
+            "previewLimit": 50,
+            "server": "65.109.215.201",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "username": "army",
+            "password": "narmy034$$48",
+            "database": "04automation",
+            "name": "04server"
         }
     ]
 }

@@ -13,9 +13,28 @@ func SeedReligion(db *gorm.DB, auditService audit.ActionLogger) error {
 		ReligionName string
 		ReligionType string
 	}{
-		{ID: 1, ReligionName: "Islam", ReligionType: "Monotheistic"},
-		{ID: 2, ReligionName: "Christianity", ReligionType: "Monotheistic"},
-		{ID: 3, ReligionName: "Judaism", ReligionType: "Monotheistic"},
+		// اسلام
+		{ID: 1, ReligionName: "اسلام", ReligionType: "شیعه دوازده‌امامی"},
+		{ID: 2, ReligionName: "اسلام", ReligionType: "شیعه اسماعیلی"},
+		{ID: 3, ReligionName: "اسلام", ReligionType: "سنی حنفی"},
+		{ID: 4, ReligionName: "اسلام", ReligionType: "سنی شافعی"},
+		{ID: 5, ReligionName: "اسلام", ReligionType: "زیدی"},
+		// مسیحیت
+		{ID: 6, ReligionName: "مسیحیت", ReligionType: "ارتدکس ارمنی"},
+		{ID: 7, ReligionName: "مسیحیت", ReligionType: "کلیسای آشوری شرق"},
+		{ID: 8, ReligionName: "مسیحیت", ReligionType: "کلیسای کلدانی"},
+		// یهودیت
+		{ID: 9, ReligionName: "یهودیت", ReligionType: "یهودیت"},
+		// زرتشتی
+		{ID: 10, ReligionName: "زرتشتی", ReligionType: "زرتشتی"},
+		// بهائی
+		{ID: 11, ReligionName: "بهائی", ReligionType: "بهائی"},
+		// یارسان (اهل حق)
+		{ID: 12, ReligionName: "یارسان", ReligionType: "اهل حق"},
+		// مندایی
+		{ID: 13, ReligionName: "مندایی", ReligionType: "مندایی"},
+		// یزیدی
+		{ID: 14, ReligionName: "یزیدی", ReligionType: "یزیدی"},
 	}
 
 	for _, r := range religions {
@@ -48,8 +67,8 @@ func SeedReligion(db *gorm.DB, auditService audit.ActionLogger) error {
 			return err
 		}
 		if _, err := auditService.LogAction(1, "Religion", "seeder"); err != nil {
-            // Log error
-        }
+			// Log error
+		}
 	}
 
 	return nil

@@ -12,9 +12,12 @@ func SeedPersonType(db *gorm.DB, auditService audit.ActionLogger) error {
 		ID   int64
 		Type string
 	}{
-		{ID: 1, Type: "Soldier"},
-		{ID: 2, Type: "Officer"},
-		{ID: 3, Type: "Civilian"},
+		{ID: 1, Type: "پرسنل پایور"},
+		{ID: 2, Type: "سربازآموزشی"},
+		{ID: 3, Type: "سرباز وظیفه"},
+		{ID: 4, Type: "کارمند"},
+		{ID: 5, Type: "بازدید کننده"},
+
 	}
 
 	for _, pt := range personTypes {

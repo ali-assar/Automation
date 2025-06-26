@@ -18,25 +18,22 @@ func NewService(db *gorm.DB, auditService audit.ActionLogger) *Service {
 	}
 }
 
-func (s *Service) CreateContactInfo(address, emailAddress, socialMedia, phoneNumber, emergencyPhoneNumber, landlinePhone string, actionBy string) (int64, error) {
+func (s *Service) CreateContactInfo(address string, emailAddress, socialMedia *string, phoneNumber, emergencyPhoneNumber, landlinePhone string, actionBy string) (int64, error) {
 	contactInfo := ContactInfo{
 		Address:              address,
 		PhoneNumber:          phoneNumber,
 		EmergencyPhoneNumber: emergencyPhoneNumber,
 		LandlinePhone:        landlinePhone,
-		EmailAddress:         emailAddress,
-		SocialMedia:          socialMedia,
+		EmailAddress:         emailAddress, // Directly use *string
+		SocialMedia:          socialMedia,  // Directly use *string
 		DeletedAt:            0,
 	}
 	if err := s.repo.Create(&contactInfo); err != nil {
 		return 0, err
 	}
-	if _, err := s.auditService.LogAction(1, "ContactInfo", actionBy); err != nil {
-		// Log error but don’t fail
-	}
+	// ...
 	return contactInfo.ID, nil
 }
-
 func (s *Service) GetContactInfoByID(id int64) (*ContactInfo, error) {
 	return s.repo.GetByID(id)
 }

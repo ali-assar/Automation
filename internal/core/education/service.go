@@ -18,10 +18,10 @@ func NewService(db *gorm.DB, auditService audit.ActionLogger) *Service {
 	}
 }
 
-func (s *Service) CreateEducation(educationLevelID, fieldOfStudy int64, description, university string, startDate, endDate int64, actionBy string) (int64, error) {
+func (s *Service) CreateEducation(educationLevelID int64, description, university *string, startDate, endDate *int64, actionBy string) (int64, error) {
+
 	education := Education{
 		EducationLevelID: educationLevelID,
-		FieldOfStudy:     fieldOfStudy,
 		Description:      description,
 		University:       university,
 		StartDate:        startDate,
