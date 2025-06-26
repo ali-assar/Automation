@@ -27,7 +27,7 @@ func (s *Service) IsRankUsed(id int64) (bool, error) {
 	}
 	return count > 0, nil
 }
-func (s *Service) CreateMilitaryDetails(rankID int64, serviceStartDate, serviceDispatchDate, serviceUnit, battalionUnit, companyUnit *int64, actionBy string) (int64, error) {
+func (s *Service) CreateMilitaryDetails(rankID int64, serviceStartDate, serviceDispatchDate *int64, serviceUnit, battalionUnit, companyUnit *string, actionBy string) (int64, error) {
 
 	militaryDetails := MilitaryDetails{
 		RankID:              rankID,

@@ -7,9 +7,9 @@ type MilitaryDetails struct {
 	RankID              int64     `gorm:"not null"`
 	ServiceStartDate    *int64    `gorm:""`
 	ServiceDispatchDate *int64    `gorm:""`
-	ServiceUnit         *int64    `gorm:""`
-	BattalionUnit       *int64    `gorm:""`
-	CompanyUnit         *int64    `gorm:""`
+	ServiceUnit         *string   `gorm:""`
+	BattalionUnit       *string   `gorm:""`
+	CompanyUnit         *string   `gorm:""`
 	DeletedAt           int64     `gorm:"not null"`
 	RankRef             rank.Rank `gorm:"foreignKey:RankID;references:ID"`
 }

@@ -152,12 +152,12 @@ type FullPersonRequest struct {
 	} `json:"person_type"`
 
 	MilitaryDetails struct {
-		RankID              int64 `json:"rank_id" binding:"required"`
-		ServiceStartDate    int64 `json:"service_start_date"`    // optional
-		ServiceDispatchDate int64 `json:"service_dispatch_date"` // optional
-		ServiceUnit         int64 `json:"service_unit"`          // optional
-		BattalionUnit       int64 `json:"battalion_unit"`        // optional
-		CompanyUnit         int64 `json:"company_unit"`          // optional
+		RankID              int64  `json:"rank_id" binding:"required"`
+		ServiceStartDate    int64  `json:"service_start_date"`    // optional
+		ServiceDispatchDate int64  `json:"service_dispatch_date"` // optional
+		ServiceUnit         string `json:"service_unit"`          // optional
+		BattalionUnit       string `json:"battalion_unit"`        // optional
+		CompanyUnit         string `json:"company_unit"`          // optional
 	} `json:"military_details"`
 }
 
@@ -305,9 +305,9 @@ func CreateFullPerson(s *HandlerService) gin.HandlerFunc {
 			mdet.RankID,
 			utils.Int64PtrIfNonZero(mdet.ServiceStartDate),
 			utils.Int64PtrIfNonZero(mdet.ServiceDispatchDate),
-			utils.Int64PtrIfNonZero(mdet.ServiceUnit),
-			utils.Int64PtrIfNonZero(mdet.BattalionUnit),
-			utils.Int64PtrIfNonZero(mdet.CompanyUnit),
+			utils.NilIfEmpty(mdet.ServiceUnit),
+			utils.NilIfEmpty(mdet.BattalionUnit),
+			utils.NilIfEmpty(mdet.CompanyUnit),
 			actionBy,
 		)
 		if err != nil {

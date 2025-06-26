@@ -10,12 +10,12 @@ import (
 func CreateMilitaryDetails(s *HandlerService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req struct {
-			RankID              int64 `json:"rank_id" binding:"required"`
-			ServiceStartDate    int64 `json:"service_start_date" binding:"required"`
-			ServiceDispatchDate int64 `json:"service_dispatch_date" binding:"required"`
-			ServiceUnit         int64 `json:"service_unit" binding:"required"`
-			BattalionUnit       int64 `json:"battalion_unit" binding:"required"`
-			CompanyUnit         int64 `json:"company_unit" binding:"required"`
+			RankID              int64  `json:"rank_id" binding:"required"`
+			ServiceStartDate    int64  `json:"service_start_date" binding:"required"`
+			ServiceDispatchDate int64  `json:"service_dispatch_date" binding:"required"`
+			ServiceUnit         string `json:"service_unit" binding:"required"`
+			BattalionUnit       string `json:"battalion_unit" binding:"required"`
+			CompanyUnit         string `json:"company_unit" binding:"required"`
 		}
 		if err := c.ShouldBindJSON(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -59,7 +59,7 @@ func UpdateMilitaryDetails(s *HandlerService) gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"message": "contact info updated"})
+		c.JSON(http.StatusOK, gin.H{"message": "military details updated"})
 	}
 
 }

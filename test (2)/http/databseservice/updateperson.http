@@ -47,12 +47,12 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0
 
 
 ###
-012345678
+
 ### Update Military Details (Protected Endpoint)
-PUT http://localhost:8080/api/personinfo/dynamic/militarydetails/1
+PUT https://api.sorooshdavoodi.ir/api/personinfo/dynamic/militarydetails/1
 Content-Type: application/json
 X-Action-By: a93506dc-e9b0-466b-b8ed-0a55b56eee97
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6ImI3MTVkNGI0LWFhNmYtNGNjMi04YTU4LTgwY2EwMWIzMmYyYSIsImV4cCI6MTc0OTA0Mjk2Mywicm9sZSI6MX0.3WEacjbmJbNNu39So-Ol32aQxhOEAM7fUuG8CNnotAE
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbl9pZCI6IjBiOWI0MTkyLTYzZmMtNDNlMy05YjRmLTJhODAzMGUyNmU4NyIsImV4cCI6MTc0OTIwMTg3NCwicm9sZSI6MX0.biEvujTOczDMH4LwWo4eDNIwfZrQXWuGeyAlGGff0T0
 
 {
   "rank_id": 2,
