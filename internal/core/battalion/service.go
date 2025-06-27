@@ -41,3 +41,14 @@ func FetchForEdit(ctx context.Context, id int64) (*Battalion, error) {
 
 	return &b, nil
 }
+
+func Delete(ctx context.Context, id int64) error {
+	db := db.GetDB()
+
+	err := db.Exec("DELETE FROM battalion WHERE id = ?", id).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

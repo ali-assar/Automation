@@ -14,6 +14,7 @@ func AddRoutes(r *gin.RouterGroup) {
 	g.POST("/create", createBattalion)
 	g.POST("/update", updateBattalion)
 	g.GET("/get/:id", getBattalion)
+	g.DELETE("/delete/:id", deleteBattalion)
 }
 
 func createBattalion(c *gin.Context) {
@@ -70,4 +71,24 @@ func getBattalion(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, b)
+}
+
+func deleteBattalion(c *gin.Context) {
+	ctx := c.Request.Context()
+
+	idStr := c.Param("id")
+
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		return
+	}
+
+	err = battalion.Delete(ctx, id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	return
 }
