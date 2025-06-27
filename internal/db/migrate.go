@@ -24,7 +24,6 @@ import (
 	"backend/internal/core/psychologicalstatus"
 	"backend/internal/core/rank"
 	"backend/internal/core/religion"
-	"backend/internal/core/role"
 	"backend/internal/core/skills"
 )
 
@@ -39,7 +38,6 @@ func Migrate() error {
 		&physicalstatus.PhysicalStatus{},
 		&rank.Rank{},
 		&religion.Religion{},
-		&role.Role{},
 		&education.Education{},
 		&educationlevel.EducationLevel{},
 		&skills.Skills{},

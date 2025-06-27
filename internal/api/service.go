@@ -22,7 +22,6 @@ import (
 	"backend/internal/core/psychologicalstatus"
 	"backend/internal/core/rank"
 	"backend/internal/core/religion"
-	"backend/internal/core/role"
 	"backend/internal/core/skills"
 )
 
@@ -38,7 +37,6 @@ type CoreServices struct {
 	PersonService          *person.Service
 	PhysicalInfoService    *physicalinfo.Service
 	PhysicalStatusService  *physicalstatus.Service
-	RoleService            *role.Service
 	SkillsService          *skills.Service
 	RankService            *rank.Service
 	BloodGroupService      *bloodgroup.Service
@@ -67,7 +65,6 @@ type HandlerService struct {
 	PersonService          *person.Service
 	PhysicalInfoService    *physicalinfo.Service
 	PhysicalStatusService  *physicalstatus.Service
-	RoleService            *role.Service
 	SkillsService          *skills.Service
 	BloodGroupService      *bloodgroup.Service
 	RankService            *rank.Service
@@ -96,7 +93,6 @@ func NewHandlerService(cs *CoreServices) *HandlerService {
 		PersonService:          cs.PersonService,
 		PhysicalInfoService:    cs.PhysicalInfoService,
 		PhysicalStatusService:  cs.PhysicalStatusService,
-		RoleService:            cs.RoleService,
 		SkillsService:          cs.SkillsService,
 		BloodGroupService:      cs.BloodGroupService,
 		RankService:            cs.RankService,

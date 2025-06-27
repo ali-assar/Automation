@@ -1,77 +1,54 @@
 package role
 
 import (
-	"backend/internal/core/audit"
+	"backend/internal/db"
+	"context"
 
 	"gorm.io/gorm"
 )
 
-type Service struct {
-	repo         *Repository
-	auditService audit.ActionLogger
-}
-
-func NewService(db *gorm.DB, auditService audit.ActionLogger) *Service {
-	return &Service{
-		repo:         NewRepository(db),
-		auditService: auditService,
-	}
-}
-
-func (s *Service) CreateRole(typeName, actionBy string) (int64, error) {
-	role := Role{
-		Type:      typeName,
-		DeletedAt: 0,
-	}
-	if err := s.repo.Create(&role); err != nil {
+func Create(ctx context.Context, role *Role) (int64, error) {
+	err := db.RunInTransaction(func(tx *gorm.DB) error {
+		return tx.Create(role).Error
+	})
+	if err != nil {
 		return 0, err
 	}
-	if _, err := s.auditService.LogAction(1, "Role", actionBy); err != nil {
-		// Log error but don’t fail
-	}
+
 	return role.ID, nil
 }
 
-func (s *Service) GetRoleByID(id int64) (*Role, error) {
-	return s.repo.GetByID(id)
+func Update(ctx context.Context, role *Role) (int64, error) {
+	err := db.RunInTransaction(func(tx *gorm.DB) error {
+		return tx.Updates(role).Error
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	return role.ID, nil
 }
 
-func (s *Service) GetRoleByType(typeName string) (*Role, error) {
-	return s.repo.GetByType(typeName)
+func FetchForEdit(ctx context.Context, id int64) (*Role, error) {
+	db := db.GetDB()
+
+	b := Role{}
+
+	err := db.Model(Role{}).Where("id = ?", id).Scan(&b).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &b, nil
 }
 
-func (s *Service) GetAllRoles() ([]Role, error) {
-	return s.repo.GetAll()
-}
+func Delete(ctx context.Context, id int64) error {
+	db := db.GetDB()
 
-func (s *Service) UpdateRole(id int64, typeName, actionBy string) error {
-	role, err := s.repo.GetByID(id)
+	err := db.Exec("DELETE FROM roles WHERE id = ?", id).Error
 	if err != nil {
 		return err
 	}
-	role.Type = typeName
-	if err := s.repo.Update(role); err != nil {
-		return err
-	}
-	if _, err := s.auditService.LogAction(2, "Role", actionBy); err != nil {
-		// Log error
-	}
-	return nil
-}
 
-func (s *Service) DeleteRole(id int64, actionBy string) error {
-	role, err := s.repo.GetByID(id)
-	if err != nil {
-		return err
-	}
-	if role.DeletedAt != 0 {
-		return nil // Already deleted
-	}
-	if err := s.repo.DeleteSoft(id); err != nil {
-		return err
-	}
-	if _, err := s.auditService.LogAction(3, "Role", actionBy); err != nil {
-		// Log error
-	}
 	return nil
 }

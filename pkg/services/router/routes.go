@@ -3,6 +3,7 @@ package router
 import (
 	"backend/internal/api"
 	"backend/internal/api/battalion"
+	"backend/internal/api/role"
 	"backend/internal/middleware"
 
 	"github.com/gin-gonic/gin"
@@ -55,10 +56,7 @@ func RegisterRoutes(r *gin.Engine, s *api.HandlerService) {
 		// PhysicalInfo
 		staticGroup.GET("/physicalinfo/:id", api.GetPhysicalInfoByID(s))
 		staticGroup.GET("/physicalinfos", api.GetAllPhysicalInfos(s))
-		// Role
-		staticGroup.GET("/role/:id", api.GetRoleByID(s))
-		staticGroup.GET("/role/type/:type", api.GetRoleByType(s))
-		staticGroup.GET("/roles", api.GetAllRoles(s))
+
 		// Skills
 		staticGroup.GET("/skills/:id", api.GetSkillsByID(s))
 		staticGroup.GET("/skills/education/:education_id", api.GetSkillsByEducationID(s))
@@ -129,10 +127,7 @@ func RegisterRoutes(r *gin.Engine, s *api.HandlerService) {
 		dynamicGroup.POST("/physicalinfo", api.CreatePhysicalInfo(s))
 		dynamicGroup.PUT("/physicalinfo/:id", api.UpdatePhysicalInfo(s))
 		dynamicGroup.DELETE("/physicalinfo/:id", api.DeletePhysicalInfo(s))
-		// Role
-		dynamicGroup.POST("/role", api.CreateRole(s))
-		dynamicGroup.PUT("/role/:id", api.UpdateRole(s))
-		dynamicGroup.DELETE("/role/:id", api.DeleteRole(s))
+
 		// Skills
 		dynamicGroup.POST("/skills", api.CreateSkills(s))
 		dynamicGroup.PUT("/skills/:id", api.UpdateSkills(s))
@@ -165,5 +160,6 @@ func RegisterRoutes(r *gin.Engine, s *api.HandlerService) {
 	}
 
 	battalion.AddRoutes(apiRouterGroup)
+	role.AddRoutes(apiRouterGroup)
 
 }

@@ -25,7 +25,6 @@ import (
 	"backend/internal/core/psychologicalstatus"
 	"backend/internal/core/rank"
 	"backend/internal/core/religion"
-	"backend/internal/core/role"
 	"backend/internal/core/skills"
 	"backend/internal/db"
 	"backend/internal/logger"
@@ -48,8 +47,7 @@ func main() {
 	actionService := action.NewService(dbInstance)
 
 	// Core services
-	roleService := role.NewService(dbInstance, actionService)
-	adminService := admin.NewService(dbInstance, actionService, roleService)
+	adminService := admin.NewService(dbInstance, actionService)
 	personService := person.NewService(dbInstance, actionService)
 	credService := credentials.NewService(dbInstance, actionService)
 	contactInfoService := contactinfo.NewService(dbInstance, actionService)
@@ -93,7 +91,6 @@ func main() {
 		PersonService:          personService,
 		PhysicalInfoService:    physicalInfoService,
 		PhysicalStatusService:  physicalStatusService,
-		RoleService:            roleService,
 		SkillsService:          skillsService,
 		BloodGroupService:      bloodGroupService,
 		RankService:            rankService,

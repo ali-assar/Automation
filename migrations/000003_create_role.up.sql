@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS roles (
+    id BIGSERIAL PRIMARY KEY,
+    title TEXT NOT NULL
+);

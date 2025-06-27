@@ -2,9 +2,7 @@ package admin
 
 import (
 	"backend/internal/core/audit"
-	"backend/internal/core/role"
 	"backend/pkg/security"
-	"fmt"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -13,22 +11,20 @@ import (
 type Service struct {
 	repo         *Repository
 	auditService audit.ActionLogger
-	roleService  *role.Service
 }
 
-func NewService(db *gorm.DB, auditService audit.ActionLogger, roleService *role.Service) *Service {
+func NewService(db *gorm.DB, auditService audit.ActionLogger) *Service {
 	return &Service{
 		repo:         NewRepository(db),
 		auditService: auditService,
-		roleService:  roleService,
 	}
 }
 
 func (s *Service) CreateAdmin(nationalIDNumber, userName, hashPassword string, roleID, credentialsID int64, actionBy string) (uuid.UUID, error) {
 	// Validate RoleID
-	if _, err := s.roleService.GetRoleByID(roleID); err != nil {
-		return uuid.Nil, fmt.Errorf("invalid RoleID: %w", err)
-	}
+	// if _, err := s.roleService.GetRoleByID(roleID); err != nil {
+	// 	return uuid.Nil, fmt.Errorf("invalid RoleID: %w", err)
+	// }
 	admin := Admin{
 		NationalIDNumber: nationalIDNumber,
 		UserName:         userName,
@@ -113,15 +109,15 @@ func (s *Service) UpdateAdmin(id uuid.UUID, updates map[string]interface{}, acti
 		return err
 	}
 	// Validate RoleID if provided
-	if roleID, ok := updates["role_id"]; ok {
-		roleIDInt, ok := roleID.(float64) // JSON numbers are float64
-		if !ok {
-			return fmt.Errorf("invalid RoleID type")
-		}
-		if _, err := s.roleService.GetRoleByID(int64(roleIDInt)); err != nil {
-			return fmt.Errorf("invalid RoleID: %w", err)
-		}
-	}
+	// if roleID, ok := updates["role_id"]; ok {
+	// roleIDInt, ok := roleID.(float64) // JSON numbers are float64
+	// if !ok {
+	// 	return fmt.Errorf("invalid RoleID type")
+	// }
+	// if _, err := s.roleService.GetRoleByID(int64(roleIDInt)); err != nil {
+	// 	return fmt.Errorf("invalid RoleID: %w", err)
+	// }
+	// }
 	delete(updates, "id")
 	delete(updates, "deleted_at")
 	if err := s.repo.db.Model(admin).Updates(updates).Error; err != nil {

@@ -2,7 +2,6 @@ package admin
 
 import (
 	"backend/internal/core/person"
-	"backend/internal/core/role"
 
 	"github.com/google/uuid"
 )
@@ -16,7 +15,6 @@ type Admin struct {
 	DeletedAt        int64         `gorm:"not null"`
 	CredentialsID    int64         `gorm:"not null"`
 	Person           person.Person `gorm:"foreignKey:NationalIDNumber;references:NationalIDNumber;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;association_autocreate:false;association_autoupdate:false"`
-	Role             role.Role     `gorm:"foreignKey:RoleID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT"`
 }
 
 func (Admin) TableName() string {

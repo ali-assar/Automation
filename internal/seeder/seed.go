@@ -24,7 +24,6 @@ import (
 	"backend/internal/core/psychologicalstatus"
 	"backend/internal/core/rank"
 	"backend/internal/core/religion"
-	"backend/internal/core/role"
 	"backend/internal/core/skills"
 	"backend/internal/db"
 	"errors"
@@ -51,9 +50,7 @@ func Seed(isTest bool, auditService audit.ActionLogger) error {
 		{"PhysicalStatus", physicalstatus.SeedPhysicalStatus},
 		{"Rank", rank.SeedRank},
 		{"Religion", religion.SeedReligion},
-		{"Role", role.SeedRole},
-		{"Role", role.SeedRole},
-		{"EducationLevel",educationlevel.SeedEducationLevels},
+		{"EducationLevel", educationlevel.SeedEducationLevels},
 	}
 
 	for _, sf := range seedFunctions {
