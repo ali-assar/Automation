@@ -1,0 +1,61 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Go App",
+      "type": "shell",
+      "command": "go run main.go",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Migrate Up",
+      "type": "shell",
+      "command": "migrate",
+      "args": [
+        "-path",
+        "migrations",
+        "-database",
+        "postgres://postgres:postgres@localhost:5432/military_db?sslmode=disable",
+        "up"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Migrate Down",
+      "type": "shell",
+      "command": "migrate",
+      "args": [
+        "-path",
+        "migrations",
+        "-database",
+        "postgres://postgres:postgres@localhost:5432/military_db?sslmode=disable",
+        "down"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Create military DB",
+      "type": "shell",
+      "command": "psql",
+      "args": [
+        "-U",
+        "postgres",
+        "-h",
+        "localhost",
+        "-c",
+        "CREATE DATABASE military_db;"
+      ],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    }
+  ]
+}
