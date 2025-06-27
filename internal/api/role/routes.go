@@ -1,6 +1,7 @@
 package role
 
 import (
+	"backend/internal/core/dataviews"
 	"backend/internal/core/role"
 	"net/http"
 	"strconv"
@@ -11,10 +12,16 @@ import (
 func AddRoutes(r *gin.RouterGroup) {
 	g := r.Group("role")
 
+	addDataviews(r)
+
 	g.POST("/create", create)
 	g.POST("/update", update)
 	g.GET("/get/:id", get)
 	g.DELETE("/delete/:id", delete)
+}
+
+func addDataviews(r *gin.RouterGroup) {
+	dataviews.RegisterRoute(r, role.GetRoleListsDataview())
 }
 
 func create(c *gin.Context) {

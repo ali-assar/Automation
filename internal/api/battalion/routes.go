@@ -2,6 +2,7 @@ package battalion
 
 import (
 	"backend/internal/core/battalion"
+	"backend/internal/core/dataviews"
 	"net/http"
 	"strconv"
 
@@ -11,10 +12,16 @@ import (
 func AddRoutes(r *gin.RouterGroup) {
 	g := r.Group("battalion")
 
+	addDataviews(r)
+
 	g.POST("/create", createBattalion)
 	g.POST("/update", updateBattalion)
 	g.GET("/get/:id", getBattalion)
 	g.DELETE("/delete/:id", deleteBattalion)
+}
+
+func addDataviews(r *gin.RouterGroup) {
+	dataviews.RegisterRoute(r, battalion.GetListDataview())
 }
 
 func createBattalion(c *gin.Context) {
