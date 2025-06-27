@@ -28,7 +28,7 @@ func createBattalion(c *gin.Context) {
 
 	id, err := battalion.Create(ctx, &b)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -46,7 +46,7 @@ func updateBattalion(c *gin.Context) {
 
 	id, err := battalion.Update(ctx, &b)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -66,7 +66,7 @@ func getBattalion(c *gin.Context) {
 
 	b, err := battalion.FetchForEdit(ctx, id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -86,7 +86,7 @@ func deleteBattalion(c *gin.Context) {
 
 	err = battalion.Delete(ctx, id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
