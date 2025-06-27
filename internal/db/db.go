@@ -40,6 +40,47 @@ func GetDB() *gorm.DB {
 	return db
 }
 
+func CreateAndGetDBConnection() (*gorm.DB, error) {
+	cfg := config.Load()
+	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		cfg.DBHost, cfg.DBPort, cfg.DBUser, cfg.DBPassword, cfg.DBName)
+
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: false,
+		},
+		DisableForeignKeyConstraintWhenMigrating: true,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return db, nil
+}
+
+func RunInTransaction(fn func(tx *gorm.DB) error) error {
+	db, err := CreateAndGetDBConnection()
+	if err != nil {
+		return err
+	}
+
+	err = WithTransaction(db, fn)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func WithTransaction(db *gorm.DB, fn func(tx *gorm.DB) error) error {
+	return db.Transaction(func(tx *gorm.DB) error {
+		if err := fn(tx); err != nil {
+			return err
+		}
+		return nil
+	})
+}
+
 func enableUUIDExtension(db *gorm.DB) error {
 	return db.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";").Error
 }

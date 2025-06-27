@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"backend/internal/api/api"
+	"backend/internal/api"
 	"backend/pkg/security"
 	"net/http"
 

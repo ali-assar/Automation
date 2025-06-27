@@ -1,7 +1,8 @@
 package router
 
 import (
-	"backend/internal/api/api"
+	"backend/internal/api"
+	"backend/internal/api/battalion"
 	"backend/internal/middleware"
 
 	"github.com/gin-gonic/gin"
@@ -11,8 +12,10 @@ func RegisterRoutes(r *gin.Engine, s *api.HandlerService) {
 
 	r.Use(middleware.CORSMiddleware())
 
+	apiRouterGroup := r.Group("/api")
+
 	// Public Routes
-	public := r.Group("/api/personinfo")
+	public := apiRouterGroup.Group("/personinfo")
 	{
 		public.POST("/login", api.Login(s))
 	}
@@ -159,6 +162,8 @@ func RegisterRoutes(r *gin.Engine, s *api.HandlerService) {
 		dynamicGroup.PUT("/visit/:id", api.UpdateVisit(s))
 		dynamicGroup.DELETE("/visit/:id", api.DeleteVisit(s))
 		dynamicGroup.DELETE("/visit/hard/:id", api.DeleteVisitHard(s))
-
 	}
+
+	battalion.AddRoutes(apiRouterGroup)
+
 }

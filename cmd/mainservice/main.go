@@ -1,7 +1,7 @@
 package main
 
 import (
-	"backend/internal/api/api"
+	"backend/internal/api"
 	"backend/internal/config"
 	"backend/internal/core/action"
 	"backend/internal/core/admin"
