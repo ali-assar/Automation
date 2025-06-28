@@ -16,7 +16,6 @@ import (
 	"backend/internal/core/medicalprofile"
 	"backend/internal/core/medicines"
 	"backend/internal/core/militarydetails"
-	"backend/internal/core/person"
 	"backend/internal/core/persontype"
 	"backend/internal/core/physicalinfo"
 	"backend/internal/core/physicalstatus"
@@ -45,7 +44,6 @@ func Migrate() error {
 		&militarydetails.MilitaryDetails{},
 		&familyinfo.FamilyInfo{},
 		&contactinfo.ContactInfo{},
-		&person.Person{}, // Before admin
 		&admin.Admin{},
 		&credentials.Credentials{},
 		&medicalprofile.MedicalProfile{},
