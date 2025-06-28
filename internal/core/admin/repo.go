@@ -21,7 +21,7 @@ func (r *Repository) Create(admin *Admin) error {
 
 func (r *Repository) GetByID(id uuid.UUID) (*Admin, error) {
     var admin Admin
-    if err := r.db.Preload("Person").Preload("Role").First(&admin, "id = ?", id).Error; err != nil {
+    if err := r.db.Preload("Person").First(&admin, "id = ?", id).Error; err != nil {
         return nil, err
     }
     return &admin, nil
