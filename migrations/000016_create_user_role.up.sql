@@ -1,0 +1,7 @@
+CREATE TABLE IF EXISTS user_role (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES users(id),
+    role_id BIGINT REFERENCES roles(id)
+);
+
+-- CREATE INDEX IF NOT EXISTS 

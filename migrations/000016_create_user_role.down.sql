@@ -1,0 +1,1 @@
+DROP TABLE EXISTS user_role;
