@@ -4,6 +4,7 @@ import (
 	"backend/internal/api"
 	"backend/internal/api/battalion"
 	"backend/internal/api/role"
+	"backend/internal/api/roleaccess"
 	"backend/internal/middleware"
 
 	"github.com/gin-gonic/gin"
@@ -161,5 +162,6 @@ func RegisterRoutes(r *gin.Engine, s *api.HandlerService) {
 
 	battalion.AddRoutes(apiRouterGroup)
 	role.AddRoutes(apiRouterGroup)
+	roleaccess.AddRoutes(apiRouterGroup)
 
 }
