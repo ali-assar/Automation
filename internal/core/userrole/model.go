@@ -9,3 +9,9 @@ type UserRole struct {
 func (UserRole) TableName() string {
 	return "user_role"
 }
+
+type UserRoleDTO struct {
+	RoleID    int64  `json:"roleId"`
+	RoleTitle string `json:"roleTitle"`
+	Checked   bool   `json:"checked"`
+}
